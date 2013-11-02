@@ -60,12 +60,15 @@ import com.rest.utils.*;
 					return Response.ok(user).build();
 				}
 				else {
+					dbcn.closeConn();
 					return Response.ok(new User("false", "Password is wrong for this user")).build();
 				}
 				
 			}
-			else 
+			else {
+			dbcn.closeConn();
 			return Response.ok(new User("false", "Email not found")).build();
+			}
 	    } 
 		
 		
