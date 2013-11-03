@@ -14,15 +14,15 @@ public class User {
 	private List<UserData> ud = new ArrayList<UserData>();
 	private List<LocationData> ld = new ArrayList<LocationData>();
 	private String success;
-	private String errorMsg;
+	private String message;
 	
     public User() {
     	
     }
     
-    public User(String success, String errorMsg) {
+    public User(String success, String message) {
     	this.success = success;
-    	this.errorMsg = errorMsg;
+    	this.message = message;
     	this.ud = null;
     	this.ld = null;
     }
@@ -45,12 +45,12 @@ public class User {
 	}
 	
 	 @XmlElement
-	public String getErrorMsg() {
-		return errorMsg;
+	public String getMessage() {
+		return message;
 	}
 		
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	@XmlElement

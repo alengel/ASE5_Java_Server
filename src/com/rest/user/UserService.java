@@ -53,8 +53,10 @@ import com.rest.utils.*;
 					long timeStamp = System.currentTimeMillis()/1000L;
 					String loginKey = email+timeStamp;
 					loginKey = SHA1.stringToSHA(loginKey);				
-					
 					st.executeUpdate("UPDATE t5_users SET login_key = '" + loginKey + "' WHERE email = '" + email +"'");
+					// to do
+					// insert other fields
+					///
 					User user = new User("true", new UserData (null, null, firstName, lastName, loginKey, null, null, null, null, null, null), null); // creates new User object with userdata which will be converted into json and returned to client
 					dbcn.closeConn();
 					return Response.ok(user).build();
@@ -70,6 +72,51 @@ import com.rest.utils.*;
 			return Response.ok(new User("false", "Email not found")).build();
 			}
 	    } 
+		
+		
+		/****						user/register
+		 * 
+		 * 
+		 * Following method handles registration process
+		 * 
+		 * 
+		 * @param email
+		 * @param passwd
+		 * @param firstName
+		 * @param lastName
+		 * @return
+		 * @throws SQLException
+		 */
+		
+		@POST                                
+		@Path("/register")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		@Produces(MediaType.APPLICATION_JSON)	
+	    public Response register(@FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("email") String firstName, @FormParam("passwd") String lastName) throws SQLException
+	    {
+	           
+			dbcn = new DBCon();
+			st = dbcn.getStatement();
+	//////to do
+			//generate and insert all the other data into the query
+	/////////	
+			ResultSet resEmail = st.executeQuery("SELECT * FROM t5_users WHERE email = '" +email+ "'");
+			if (!resEmail.next()) { // if email is unique
+				int resReg = st.executeUpdate("INSERT INTO t5_users (id, email, passwd, first_name, last_name) VALUES  (NULL, '" + email+ "', '" + passwd + "', '" +firstName + "', '" +lastName +"')");
+				if (resReg==1) {  // if 1 row was created successfully
+					dbcn.closeConn();
+					return Response.ok(new User("true", "Registration is complete")).build(); // then return success: true
+				} else {
+					dbcn.closeConn();
+					return Response.ok(new User("false", "Registration failed")).build(); // 
+				}
+			} else { // if email is not unique
+				dbcn.closeConn();
+				return Response.ok(new User("false", "User with this email already exists")).build(); 				
+			}
+			
+	    } 
+		
 		
 		
 			
