@@ -10,7 +10,8 @@ import com.rest.user.model.data.UserData;
 import com.rest.utils.*;
 
 	@Path("/user")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
-	public class UserService {
+	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
+
 		
 		private DBCon dbcn;
 		private Statement st;		//creates a DB statement object
