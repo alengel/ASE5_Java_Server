@@ -11,6 +11,7 @@ import com.rest.utils.*;
 
 	@Path("/user")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
 	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
+
 		
 		private DBCon dbcn;
 		private Statement st;		//creates a DB statement object
@@ -54,7 +55,7 @@ import com.rest.utils.*;
 					String loginKey = email+timeStamp;
 					loginKey = SHA1.stringToSHA(loginKey);				
 					st.executeUpdate("UPDATE t5_users SET login_key = '" + loginKey + "' WHERE email = '" + email +"'");
-					// to do
+					// TODO
 					// insert other fields
 					///
 					User user = new User("true", new UserData (null, null, firstName, lastName, loginKey, null, null, null, null, null, null), null); // creates new User object with userdata which will be converted into json and returned to client
