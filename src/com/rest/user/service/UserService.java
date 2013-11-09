@@ -1,10 +1,8 @@
-package com.rest.user;
+package com.rest.user.service;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-
 import java.sql.*;
-
 import com.rest.user.model.*;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.*;
@@ -58,7 +56,7 @@ import com.rest.utils.*;
 					// TODO
 					// insert other fields
 					///
-					User user = new User("true", new UserData (null, null, firstName, lastName, loginKey, null, null, null, null, null, null), null); // creates new User object with userdata which will be converted into json and returned to client
+					User user = new User("true", new UserData (null, null, firstName, lastName, loginKey, null, null, null, null, null, null)); // creates new User object with userdata which will be converted into json and returned to client
 					dbcn.closeConn();
 					return Response.ok(user).build();
 				}
@@ -98,7 +96,7 @@ import com.rest.utils.*;
 	           
 			dbcn = new DBCon();
 			st = dbcn.getStatement();
-	//////to do
+	//////TODO
 			//generate and insert all the other data into the query
 	/////////	
 			ResultSet resEmail = st.executeQuery("SELECT * FROM t5_users WHERE email = '" +email+ "'");
@@ -119,7 +117,7 @@ import com.rest.utils.*;
 	    } 
 		
 		
-		
+	
 			
 	   
 
