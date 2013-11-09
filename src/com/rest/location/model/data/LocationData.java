@@ -1,4 +1,4 @@
-package com.rest.user.model.data;
+package com.rest.location.model.data;
 
 public class LocationData {
 	

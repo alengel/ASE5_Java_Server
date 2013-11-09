@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.*;
-
-import com.rest.user.model.data.LocationData;
 import com.rest.user.model.data.UserData;
 
 @XmlRootElement
 public class User {
 	
 	private List<UserData> ud = new ArrayList<UserData>();
-	private List<LocationData> ld = new ArrayList<LocationData>();
 	private String success;
 	private String message;
 	
@@ -24,14 +21,12 @@ public class User {
     	this.success = success;
     	this.message = message;
     	this.ud = null;
-    	this.ld = null;
     }
    
  
-	public User(String success, UserData ud, LocationData ld) {
+	public User(String success, UserData ud) {
 		this.success = success;
 		this.ud.add(0, ud);
-		this.ld.add(0, ld);
     
 		
 	} 
@@ -62,14 +57,6 @@ public class User {
 		this.ud = ud;
 	}
 	
-	@XmlElement
-	public List<LocationData> getLocationData() {
-		return ld;
-	}
-	
-	public void setLocationData(List<LocationData> ld) {
-		this.ld = ld;
-	}
 	
 
 
