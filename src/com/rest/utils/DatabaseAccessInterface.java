@@ -59,23 +59,23 @@ public interface DatabaseAccessInterface {
 	
 	/**
 	 * 
-	 * @param key
+	 * @param userKey
 	 * @param venueId
 	 * @param timestamp
 	 * @return true if change successful, false otherwise
 	 */
-	public boolean storeNewCheckin(String key, String venueId, String timestamp);
+	public boolean checkIn(String userKey, String venueId, String timestamp);
 	
 	/**
 	 * 
-	 * @param key
+	 * @param userKey
 	 * @param minDistance
 	 * @param maxLoginInterval
 	 * @param geoPushInterval
 	 * @param geoCheckInterval
 	 * @return true if change successful, false otherwise
 	 */
-	public boolean updateSettings(String key, int minDistance, int maxLoginInterval, int geoPushInterval, int geoCheckInterval);
+	public boolean updateSettings(String userKey, int minDistance, int maxLoginInterval, int geoPushInterval, int geoCheckInterval);
 	
 	/**
 	 * 

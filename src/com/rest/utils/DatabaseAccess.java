@@ -264,7 +264,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean storeNewCheckin(String key, String venueId, String timestamp) {
+	public boolean checkIn(String key, String venueId, String timestamp) {
 		// TODO Auto-generated method stub
 		
 		DBCon dbConnection = new DBCon();
