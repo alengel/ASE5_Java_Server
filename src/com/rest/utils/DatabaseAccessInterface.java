@@ -44,8 +44,9 @@ public interface DatabaseAccessInterface {
 	 * should remove the loginKey form the DB
 	 * @param loginKey
 	 * @return true, if logout was successful, false otherwise
+	 * @throws ArgumentMissingException 
 	 */
-	public boolean logoutUser(String loginKey);
+	public boolean logoutUser(String loginKey) throws ArgumentMissingException;
 	
 	/**
 	 * 

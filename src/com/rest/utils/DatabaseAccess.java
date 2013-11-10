@@ -186,6 +186,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 			
 			//log in the user
+			//TODO: do we need to set other variables like loginTimestamp or is it deprecated?
 			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
 			int success = statement.executeUpdate(loginUser);
 			if(success != 1) {
@@ -196,9 +197,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			e.printStackTrace();
 			return false;
 		}
-		
-		
-		
+				
 		dbConnection.closeConn();
 		
 		return true;
@@ -207,15 +206,30 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	
 	@Override
-	public boolean logoutUser(String loginKey) {
+	public boolean logoutUser(String loginKey) throws ArgumentMissingException {
 		//TODO 
+		
+		if(loginKey == null || loginKey.isEmpty()) {
+			throw new ArgumentMissingException();
+		}
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
+		String logoutUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= " + "NULL" + WHERE + USER_LOGINKEY + "= '" + loginKey + "';";
+		try {
+			int success = statement.executeUpdate(logoutUser);
+			if(success != 1) {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		dbConnection.closeConn();
 		
-		return false;
+		return true;
 	}
 
 	@Override
