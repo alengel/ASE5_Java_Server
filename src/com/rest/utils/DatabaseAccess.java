@@ -11,6 +11,7 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
 	
+	//maximum allowed inputLenght according to the database ddl
 	private final static int MAX_INPUT_LENGTH = 200;
 	
 	//static Strings for SQL Queries
@@ -42,6 +43,25 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	//static Strings for the table t5_locations
 	private final static String LOCATIONS_TABLE = "t5_locations ";
+	private final static String LOCATIONS_ID = "id ";
+	private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
+	private final static String LOCATIONS_DATED = "dated ";
+	
+	//static Stings for the table t5_users_reviews
+	private static final String REVIEWS_TABLE = "t5_reviews ";
+	private static final String REVIEWS_USER_ID = "users_id ";
+	private static final String REVIEWS_LOCATION_ID = "locations_id ";
+	private static final String REVIEWS_RATING = "rating ";
+	private static final String REVIEWS_REVIEW_TITLE = "review_title ";
+	private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
+	private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
+	private static final String REVIEWS_DATED = "dated ";
+	
+	//static Strings for the table t5_checkins
+	private static final String CHECKIN_TABLE = "t5_checkins ";
+	private static final String CHECKIN_USER_ID = "users_id ";
+	private static final String CHECKIN_LOCATION_ID = "locations_id ";
+	private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
 	
 	
 	@Override
@@ -68,7 +88,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 		
 		//check if another user with email already exists in the database
-		String queryEmailAlreadyExists = SELECT + ALL + FROM + USER_TABLE + WHERE + USER_EMAIL + EQUALS + email;
+		String queryEmailAlreadyExists = SELECT + ALL + FROM + USER_TABLE + WHERE + USER_EMAIL + EQUALS + "'"+email+"'";
 		ResultSet resultEmailAlreadyExists;
 		try {
 			resultEmailAlreadyExists = statement.executeQuery(queryEmailAlreadyExists);
@@ -84,16 +104,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 		
 		String insertStatement = INSERT_INTO + USER_TABLE +
-				"(" + USER_EMAIL + "," + USER_PASSWORD + "," + USER_FIRSTNAME + "," + USER_LASTNAME + ")"
-				+ VALUES + "(" + email + "," + password + "," + firstName + "," + lastName + ")";
-		boolean success;
+				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
+				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
+		int success;
 		try {
-			success = statement.execute(insertStatement);
+			success = statement.executeUpdate(insertStatement);
 		} catch (SQLException e) {
 			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
 		}
 						
-		if(success == false) {
+		if(success != 1) {
 			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
 		}
 		
@@ -125,6 +145,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		if(!email.contains(".")) return false;
 		if(email.startsWith(".")) return false;
 		if(email.endsWith(".")) return false;
+		if(email.contains(" ")) return false;
 		//TODO: add more!
 		
 		return true;
@@ -160,6 +181,31 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 		
 		
+	}
+
+	@Override
+	public boolean changePassword(String userMail, String newPassword) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean storeNewCheckin(String key, String venueId, String timestamp) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean logout(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateSettings(String key, int minDistance,
+			int maxLoginInterval, int geoPushInterval, int geoCheckInterval) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
