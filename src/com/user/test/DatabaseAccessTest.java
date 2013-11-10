@@ -44,13 +44,19 @@ public class DatabaseAccessTest {
 		UserData expected = new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 		
+		dbAccess.clearDatabase();
+		
 		result  = dbAccess.registerNewUser(email, password, null, lastName);
 		expected = new UserData(email, password, null, lastName, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 		
+		dbAccess.clearDatabase();
+		
 		result  = dbAccess.registerNewUser(email, password, firstName, null);
 		expected = new UserData(email, password, firstName, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
+		
+		dbAccess.clearDatabase();
 		
 		result  = dbAccess.registerNewUser(email, password, null, null);
 		expected = new UserData(email, password, null, null, null, null, null, null, null, null, null);
