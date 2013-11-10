@@ -66,6 +66,27 @@ public interface DatabaseAccessInterface {
 	 */
 	public boolean storeNewCheckin(String key, String venueId, String timestamp);
 	
+	/**
+	 * 
+	 * @param key
+	 * @param minDistance
+	 * @param maxLoginInterval
+	 * @param geoPushInterval
+	 * @param geoCheckInterval
+	 * @return true if change successful, false otherwise
+	 */
 	public boolean updateSettings(String key, int minDistance, int maxLoginInterval, int geoPushInterval, int geoCheckInterval);
+	
+	/**
+	 * 
+	 * @param key
+	 * @param venueId
+	 * @param rating
+	 * @param reviewTitle
+	 * @param reviewDescription
+	 * @param imageUri
+	 * @return true if change successful, false otherwise
+	 */
+	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri);
 	
 }

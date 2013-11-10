@@ -289,6 +289,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return false;
 	}
 	
+	@Override
+	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	
 	
 	public void clearDatabase() {
@@ -304,5 +310,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			e.printStackTrace();
 		}
 	}
+
+	
 
 }
