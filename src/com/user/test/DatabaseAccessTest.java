@@ -119,7 +119,7 @@ public class DatabaseAccessTest {
 		dbAccess.registerNewUser(email, password, firstName, lastName);
 	}
 	
-	@Test
+	@Test(expected = InputTooLongException.class)
 	public void testRegisterNewUserInputTooLong() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
 		
 		String email = "test@web.de";
@@ -132,7 +132,7 @@ public class DatabaseAccessTest {
 		assertEquals(expected, result);
 	}
 	
-	@Test
+	@Test(expected = InputTooLongException.class)
 	public void testRegisterNewUserInputTooLong2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
 		
 		String email = "test@web.de";
