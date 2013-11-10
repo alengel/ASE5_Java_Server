@@ -53,8 +53,9 @@ public interface DatabaseAccessInterface {
 	 * @param user
 	 * @param newPassword
 	 * @return true if change was successful, false otherwise
+	 * @throws UserNotFoundException 
 	 */
-	public boolean changePassword(String userMail, String newPassword);
+	public boolean changePassword(String userMail, String newPassword) throws UserNotFoundException;
 	
 	/**
 	 * 

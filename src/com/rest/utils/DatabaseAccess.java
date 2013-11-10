@@ -207,7 +207,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	@Override
 	public boolean logoutUser(String loginKey) throws ArgumentMissingException {
-		//TODO 
 		
 		if(loginKey == null || loginKey.isEmpty()) {
 			throw new ArgumentMissingException();
@@ -233,15 +232,35 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean changePassword(String userMail, String newPassword) {
-		// TODO Auto-generated method stub
+	public boolean changePassword(String userMail, String newPassword) throws UserNotFoundException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
+		//check if user exists and if the password is correct
+		String getUserFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_EMAIL + "= '" + userMail +"';";
+		ResultSet userFromDb;
+		try {
+					
+			userFromDb = statement.executeQuery(getUserFromDb);
+			if(userFromDb.isAfterLast()) {
+				throw new UserNotFoundException();
+			}
+			
+			String setNewPassword = UPDATE + USER_TABLE + SET + USER_PASSWORD + "= '" + newPassword + "' " + WHERE + USER_EMAIL + "= '" + userMail + "';";
+			int success = statement.executeUpdate(setNewPassword);
+			if(success != 1) {
+				return false;
+			}
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		dbConnection.closeConn();
 		
-		return false;
+		return true;
 	}
 
 	@Override
