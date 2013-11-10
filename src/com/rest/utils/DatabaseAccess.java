@@ -7,6 +7,8 @@ import java.sql.Statement;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
@@ -17,6 +19,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	//static Strings for SQL Queries
 	private final static String SELECT = "Select ";
 	private final static String DELETE = "Delete ";
+	private final static String UPDATE = "Update ";
+	private final static String SET = "Set ";
 	private final static String FROM = "from ";
 	private final static String WHERE = "where ";
 	private final static String DISTINCT = "distinct ";
@@ -93,14 +97,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 			resultEmailAlreadyExists = statement.executeQuery(queryEmailAlreadyExists);
 		} catch (SQLException e) {
-			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
+			e.printStackTrace();
+			return null;
 		}
 		try {
 			if(resultEmailAlreadyExists.isAfterLast()) {
-				return new UserData(null, null, null, null, null, null, null, null, null, null, null);
+				return null;
 			}
 		} catch (SQLException e) {
-			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
+			e.printStackTrace();
+			return null;
 		}
 		
 		String insertStatement = INSERT_INTO + USER_TABLE +
@@ -110,11 +116,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 			success = statement.executeUpdate(insertStatement);
 		} catch (SQLException e) {
-			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
+			e.printStackTrace();
+			return null;
 		}
 						
 		if(success != 1) {
-			return new UserData(null, null, null, null, null, null, null, null, null, null, null);
+			return null;
 		}
 		
 		dbConnection.closeConn();
@@ -151,11 +158,50 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
+	
+	
 	@Override
-	public UserData loginUser(String email, String Password) {
-		//TODO 
+	public boolean loginUser(String email, String password, String loginKey) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
 		
-		return null;
+		if(email == null || password == null || loginKey == null || email.isEmpty() || password.isEmpty() || loginKey.isEmpty()) {
+			throw new ArgumentMissingException();
+		}
+		
+		//get access to the database
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if user exists and if the password is correct
+		String getUserFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_EMAIL + "= '" + email +"';";
+		ResultSet userFromDb;
+		try {
+			
+			userFromDb = statement.executeQuery(getUserFromDb);
+			if(userFromDb.isAfterLast()) {
+				throw new UserNotFoundException();
+			}
+			String passwordInDb = userFromDb.getNString(USER_PASSWORD);
+			if(!passwordInDb.equals(password)) {
+				throw new PasswordWrongException();
+			}
+			
+			//log in the user
+			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
+			int success = statement.executeUpdate(loginUser);
+			if(success != 1) {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+		
+		dbConnection.closeConn();
+		
+		return true;
 	}
 	
 	
@@ -164,9 +210,54 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	public boolean logoutUser(String loginKey) {
 		//TODO 
 		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		dbConnection.closeConn();
+		
 		return false;
 	}
 
+	@Override
+	public boolean changePassword(String userMail, String newPassword) {
+		// TODO Auto-generated method stub
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		dbConnection.closeConn();
+		
+		return false;
+	}
+
+	@Override
+	public boolean storeNewCheckin(String key, String venueId, String timestamp) {
+		// TODO Auto-generated method stub
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		dbConnection.closeConn();
+		
+		return false;
+	}
+
+
+	@Override
+	public boolean updateSettings(String key, int minDistance,
+			int maxLoginInterval, int geoPushInterval, int geoCheckInterval) {
+		// TODO Auto-generated method stub
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		dbConnection.closeConn();
+		
+		return false;
+	}
+	
+	
+	
 	public void clearDatabase() {
 		
 		DBCon dbConnection = new DBCon();
@@ -179,33 +270,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-	}
-
-	@Override
-	public boolean changePassword(String userMail, String newPassword) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean storeNewCheckin(String key, String venueId, String timestamp) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean logout(String key) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean updateSettings(String key, int minDistance,
-			int maxLoginInterval, int geoPushInterval, int geoCheckInterval) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

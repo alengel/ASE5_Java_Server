@@ -3,17 +3,29 @@ package com.rest.utils;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public interface DatabaseAccessInterface {
 	
 	/**
+	 * delete everything in the database
+	 */
+	public void clearDatabase();
+	
+	
+	/**
 	 * 
 	 * @param email 
 	 * @param password
-	 * @return the UserData that has been retrieved from the DB + his key. Null if the user is not found or the password is wrong
+	 * @param loginKey 
+	 * @return true if login was successful, false otherwise
+	 * @throws ArgumentMissingException 
+	 * @throws UserNotFoundException 
+	 * @throws PasswordWrongException 
 	 */
-	public UserData loginUser(String email, String password);
+	public boolean loginUser(String email, String password, String loginKey) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException;
 		
 	/**
 	 * register a new User in the database if he does not exist yet
@@ -51,8 +63,6 @@ public interface DatabaseAccessInterface {
 	 * @return true if change successful, false otherwise
 	 */
 	public boolean storeNewCheckin(String key, String venueId, String timestamp);
-	
-	public boolean logout(String key);
 	
 	public boolean updateSettings(String key, int minDistance, int maxLoginInterval, int geoPushInterval, int geoCheckInterval);
 	
