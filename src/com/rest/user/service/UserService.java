@@ -106,7 +106,22 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 			
 	    } 
 		
-		
+		@POST                                
+		@Path("/logout")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response logout(@FormParam("loginKey") String loginKey) {
+			try {
+				dbAccess = new DatabaseAccess();
+				if (dbAccess.logoutUser(loginKey)) {
+					return Response.ok(new User("true", "Logged out successfully")).build();
+				} else {
+					return Response.ok(new User("false", "Error occured. Wrong login key")).build();
+				}
+			} catch (Exception e) {
+				return Response.ok(new User("false", "Error occured")).build();
+			}
+		}
 		
 			
 	   
