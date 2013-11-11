@@ -7,6 +7,7 @@ import java.sql.Statement;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
@@ -23,8 +24,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String SET = "Set ";
 	private final static String FROM = "from ";
 	private final static String WHERE = "where ";
+	private final static String AND = "and ";
 	private final static String DISTINCT = "distinct ";
 	private final static String INSERT_INTO = "Insert into ";
+	private final static String INSERT_IGNORE_INTO = "Insert Ignore into ";
 	private final static String ALL = "* ";
 	private final static String EQUALS = " = ";
 	private final static String VALUES = "values ";
@@ -42,7 +45,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String USER_LAST_LOGIN = "last_login ";
 	private final static String USER_LAST_REQUEST = "last_request ";
 	private final static String USER_LOGOUT_SESSION_TIME = "logout_session_time ";
-	private final static String USER_GPS_PUSH_TIME = "gps_push_time ";
+	private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
+	private final static String USER_MIN_DISTANCE = "min_distance ";
+	private final static String USER_MAX_LOGIN_INTERVAL = "max_login_interval ";
 	private final static String USER_DATED = "dated ";
 	
 	//static Strings for the table t5_locations
@@ -264,35 +269,109 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean checkIn(String key, String venueId, String timestamp) {
-		// TODO Auto-generated method stub
+	public boolean checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
+		if(key == null || venueId == null || timestamp == null || key.isEmpty() || venueId.isEmpty() || timestamp.isEmpty()) {
+			throw new ArgumentMissingException();
+		}
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			//maybe insert the venue
+			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
+			statement.executeUpdate(venueInsert);
+			
+			//insert the checkIn
+			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ")" +
+									VALUES + "(" + 
+									SELECT + DISTINCT + LOCATIONS_ID + ", " + USER_ID + "," + "'" + timestamp + "'" +
+									FROM + LOCATIONS_TABLE + ", " + USER_TABLE +
+									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "';"
+									+ ");";
+			statement.executeUpdate(insertCheckin);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		dbConnection.closeConn();
 		
-		return false;
+		return true;
 	}
 
 
 	@Override
 	public boolean updateSettings(String key, int minDistance,
-			int maxLoginInterval, int geoPushInterval, int geoCheckInterval) {
+			int maxLoginInterval, int geoPushInterval) throws InvalidKeyException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			String updateSettings = UPDATE + USER_TABLE + 
+					SET + USER_MIN_DISTANCE + "= '" + minDistance +"', " + USER_MAX_LOGIN_INTERVAL + "= '" + maxLoginInterval +"', " + USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' " +
+					WHERE + USER_LOGINKEY + "= '" + key + "';";
+			statement.executeUpdate(updateSettings);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
+	
+	@Override
+	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException {
 		// TODO Auto-generated method stub
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
-		dbConnection.closeConn();
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 		
-		return false;
-	}
-	
-	@Override
-	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) {
-		// TODO Auto-generated method stub
-		return false;
+		dbConnection.closeConn();
+
+		
+		return true;
 	}
 	
 	
