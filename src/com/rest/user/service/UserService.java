@@ -116,7 +116,7 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 				if (dbAccess.logoutUser(loginKey)) {
 					return Response.ok(new User("true", "Logged out successfully")).build();
 				} else {
-					return Response.ok(new User("false", "Error occured. Wrong login key")).build();
+					return Response.ok(new User("false", "Error occured")).build();
 				}
 			} catch (Exception e) {
 				return Response.ok(new User("false", "Error occured")).build();
