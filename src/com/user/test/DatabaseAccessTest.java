@@ -10,6 +10,8 @@ import com.rest.user.model.data.UserData;
 import com.rest.utils.DatabaseAccess;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public class DatabaseAccessTest {
@@ -176,7 +178,8 @@ public class DatabaseAccessTest {
 		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
-	/*
+	
+	 /*
 	 * Testing EmailAlreadyExists
 	 */
 	
@@ -201,46 +204,33 @@ public class DatabaseAccessTest {
 	*/
 		
 	@Test
-	public void testUserLoginSuccesful() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void loginUserSuccessful() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	
 		String email = "testUserLogin@web.com";		
 		String password = "Hello";
-		dbAccess.registerNewUser(email, password, null, null);
-	//If a user with this email and password is found true is returned, else  - false.
-		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData(email,password,null,null,null,null,null,null,null,null,null);
+		String loginKey = "LoginKey";
+		
+		boolean result = dbAccess.loginUser(email, password, loginKey);
+		boolean expected = true;
 		assertEquals(expected,result);
 	}
 	
 	@Test
-	//User not registered
-	public void testUserLoginUnsuccesful1() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
-		String email = "testUserLogin2@web.com";
+	public void loginUserUnsuccessful() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+		
+		String email = "testUserLogin@web.com";		
 		String password = "Hello";
+		String loginKey = "LoginKey";
 		
-	//Made the assumption that an unsuccessful login will return UserData of null	
-		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	//Incorrect Password
-	public void testUserLoginUnsuccessful2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
-	//Registering the user
-		String email = "testUserLogin3@web.com";
-		String password = "Heyyy";
-		String wrongpassword = "What?";
-		
-		dbAccess.registerNewUser(email, password, null, null);
-	//Made the assumption that an unsuccessful login will return UserDate of null
-		UserData result = dbAccess.loginUser(email, wrongpassword);
-		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
+		boolean result = dbAccess.loginUser(email, password, loginKey);
+		boolean expected = false;
+		assertEquals(expected,result);
 	}
 	
 	/*
 	* Testing UserLogout
 	*/
+	
 	@Test
 	public void testUserLogoutSuccessful() throws ArgumentMissingException {
 	//Need proper loginKey
@@ -300,6 +290,33 @@ public class DatabaseAccessTest {
 		boolean expected = false;
 		assertEquals(expected, result);
 	}
+	
+	/*
+	* Testing Change Password
+	*/
+	
+	@Test
+	public void testChangePasswordSuccessful() throws UserNotFoundException {
+	
+		String userMail = "user@web.com";
+		String newPassword = "newpaswd";
+	
+		boolean result = dbAccess.changePassword(userMail, newPassword);
+		boolean expected = true;
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	public void testChangePasswordUnsuccessful() throws UserNotFoundException {
+		
+		String userMail = "user@webb.com";
+		String newPassword = "newpasswd";
+	
+		boolean result = dbAccess.changePassword(userMail, newPassword);
+		boolean expected = false;
+		assertEquals(expected, result);
+	}
+	
 	/*
 	* Testing StoreNewCheckIn
 	*/
@@ -326,5 +343,37 @@ public class DatabaseAccessTest {
 		assertEquals (expected, result);
 	}
 
+	/*
+	* Testing StoreNewReview
+	*/
 	
+	@Test
+	public void testStoreNewReviewSuccessful() {
+	
+		String key = "key";
+		String venueId = "venueID";
+		int rating = 1;
+		String reviewTitle = "Horrible place";
+		String reviewDescription = "Disgusting food, will never go there again";
+		String imageUri = "http://whatever";
+	
+	boolean result = dbAccess.storeNewReview(key, venueId, rating, reviewTitle, reviewDescription, imageUri);
+	boolean expected = true;
+	assertEquals (expected, result);
+	}	
+	
+	@Test
+	public void testStoreNewReviewUnsuccessful() {
+	
+		String key = "key";
+		String venueId = "venueID";
+		int rating = 1;
+		String reviewTitle = "Horrible place";
+		String reviewDescription = "Disgusting food, will never go there again";
+		String imageUri = "http://whatever";
+	
+	boolean result = dbAccess.storeNewReview(key, venueId, rating, reviewTitle, reviewDescription, imageUri);
+	boolean expected = false;
+	assertEquals (expected, result);
+	}	
 }
