@@ -10,6 +10,8 @@ import com.rest.user.model.data.UserData;
 import com.rest.utils.DatabaseAccess;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public class DatabaseAccessTest {
@@ -127,7 +129,7 @@ public class DatabaseAccessTest {
 	
 	@Test(expected = InputTooLongException.class)
 	public void testRegisterNewUserInputTooLong() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
-		
+		//firstName too long
 		String email = "test@web.de";
 		String firstName = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.";
 		String lastName = "Schliski";
@@ -140,7 +142,7 @@ public class DatabaseAccessTest {
 	
 	@Test(expected = InputTooLongException.class)
 	public void testRegisterNewUserInputTooLong2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
-		
+		//lastName too long
 		String email = "test@web.de";
 		String lastName = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.";
 		String firstName = "Schliski";
@@ -151,4 +153,227 @@ public class DatabaseAccessTest {
 		assertEquals(expected, result);
 	}
 
+	@Test (expected = InputTooLongException.class)
+	public void testRegisterNewUserInputTooLong3() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+		//E-mail too long
+		String email = "test@LoremdipsumddolordsitdametddconsectetueddadipiscingdelitddAeneandcommododliguladegetddolorddAeneandmassaddCumdsociisdnatoquedpenatibusdetdmagnisddisdparturientdmontesddnasceturdridiculusdmusddDonecdquamdfelisddultriciesdnecddpellentesquedeuddpretiumdquisddsemddNulladconsequatdmassadquisdenimddDonecdwebdde.com";
+		String lastName = "Schliski";
+		String firstName = "Karolina";
+		String password = "Hi98786";
+		
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
+		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		assertEquals(expected, result);
+	}
+	
+	@Test(expected = InputTooLongException.class)
+	public void testRegisterNewUserInputTooLong4() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+		//Password too long
+		String email = "test@web.de";
+		String lastName = "Schliski";
+		String firstName = "Karolina";
+		String password = "Hi98786LoremdipsumddolordsitdametddconsectetueddadipiscingdelitddAeneandcommododliguladegetddolorddAeneandmassaddCumdsociisdnatoquedpenatibusdetdmagnisddisdparturientdmontesddnasceturdridiculusdmusddDonecdquamdfelisddultriciesdnecddpellentesquedeuddpretiumdquisddsemddNulladconsequatdmassadquisdenimddDonecdwebddecom";
+		
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
+		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		assertEquals(expected, result);
+	}
+	
+	 /*
+	 * Testing EmailAlreadyExists
+	 */
+	
+	@Test
+	public void testUserAlreadyExists() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	
+		String email = "test@web.com";
+		String firstName = "Karol";
+		String lastName = "Bral";
+		String password = "Hello";
+	
+		//adding user to database 1st time
+		dbAccess.registerNewUser(email, password, firstName, lastName);
+		
+		//adding user to database 2nd time 
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
+		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		assertEquals(expected, result);
+	}
+	/*
+	* Testing UserLogin
+	*/
+		
+	@Test
+	public void loginUserSuccessful() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	
+		String email = "testUserLogin@web.com";		
+		String password = "Hello";
+		String loginKey = "LoginKey";
+		
+		boolean result = dbAccess.loginUser(email, password, loginKey);
+		boolean expected = true;
+		assertEquals(expected,result);
+	}
+	
+	@Test
+	public void loginUserUnsuccessful() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+		
+		String email = "testUserLogin@web.com";		
+		String password = "Hello";
+		String loginKey = "LoginKey";
+		
+		boolean result = dbAccess.loginUser(email, password, loginKey);
+		boolean expected = false;
+		assertEquals(expected,result);
+	}
+	
+	/*
+	* Testing UserLogout
+	*/
+	
+	@Test
+	public void testUserLogoutSuccessful() throws ArgumentMissingException {
+	//Need proper loginKey
+		String loginKey="whatever";
+		
+		boolean result = dbAccess.logoutUser(loginKey);
+		boolean expected = true;
+		assertEquals(result, expected);
+		}
+			
+	@Test
+	public void testUserLogoutUnsuccessful() throws ArgumentMissingException {
+	//Need proper loginKey	
+		String loginKey="whatever";
+		
+		boolean result = dbAccess.logoutUser(loginKey);
+		boolean expected = false;
+		assertEquals(result, expected);
+	}
+
+	/*
+	* Testing ForgottenPassword
+	*/
+	//public void testForgottenPassword() {
+	//Need to include in DatabaseAccessInterface
+		//String email = "test@web.com"
+		
+		//serData result = dbAccess.
+	//}
+	
+	/*
+	* Testing UpdateSettings
+	*/
+	
+	@Test
+	public void testUpdateSettingsSuccessful(){
+		int minDistance = 10;
+		int maxLoginInterval = 70;
+		int geoPushInterval = 25;
+		int geoCheckInterval = 30;
+		String userKey = "UserKey";
+		
+		boolean result = dbAccess.updateSettings(userKey, minDistance, maxLoginInterval, geoPushInterval, geoCheckInterval);
+		boolean expected = true;
+		assertEquals(expected, result);
+	}
+		
+	@Test
+	public void testUpdateSettingsUnsuccessful() {
+		int minDistance = 10;
+		int maxLoginInterval = 70;
+		int geoPushInterval = 25;
+		int geoCheckInterval = 30;
+		String userKey = "UserKey";
+		
+		boolean result = dbAccess.updateSettings(userKey, minDistance, maxLoginInterval, geoPushInterval, geoCheckInterval);
+		boolean expected = false;
+		assertEquals(expected, result);
+	}
+	
+	/*
+	* Testing Change Password
+	*/
+	
+	@Test
+	public void testChangePasswordSuccessful() throws UserNotFoundException {
+	
+		String userMail = "user@web.com";
+		String newPassword = "newpaswd";
+	
+		boolean result = dbAccess.changePassword(userMail, newPassword);
+		boolean expected = true;
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	public void testChangePasswordUnsuccessful() throws UserNotFoundException {
+		
+		String userMail = "user@webb.com";
+		String newPassword = "newpasswd";
+	
+		boolean result = dbAccess.changePassword(userMail, newPassword);
+		boolean expected = false;
+		assertEquals(expected, result);
+	}
+	
+	/*
+	* Testing StoreNewCheckIn
+	*/
+	
+	@Test
+	public void testCheckInSuccessful(){
+		String key = "key";
+		String venueId = "venueID";
+		String timestamp = "timestamp";
+		
+		boolean result = dbAccess.checkIn(key, venueId, timestamp);
+		boolean expected = true;
+		assertEquals (expected, result);
+	}
+	
+	@Test
+	public void testCheckInUnsuccessful(){
+		String key = "key";
+		String venueId = "venueID";
+		String timestamp = "timestamp";
+		
+		boolean result = dbAccess.checkIn(key, venueId, timestamp);
+		boolean expected = false;
+		assertEquals (expected, result);
+	}
+
+	/*
+	* Testing StoreNewReview
+	*/
+	
+	@Test
+	public void testStoreNewReviewSuccessful() {
+	
+		String key = "key";
+		String venueId = "venueID";
+		int rating = 1;
+		String reviewTitle = "Horrible place";
+		String reviewDescription = "Disgusting food, will never go there again";
+		String imageUri = "http://whatever";
+	
+	boolean result = dbAccess.storeNewReview(key, venueId, rating, reviewTitle, reviewDescription, imageUri);
+	boolean expected = true;
+	assertEquals (expected, result);
+	}	
+	
+	@Test
+	public void testStoreNewReviewUnsuccessful() {
+	
+		String key = "key";
+		String venueId = "venueID";
+		int rating = 1;
+		String reviewTitle = "Horrible place";
+		String reviewDescription = "Disgusting food, will never go there again";
+		String imageUri = "http://whatever";
+	
+	boolean result = dbAccess.storeNewReview(key, venueId, rating, reviewTitle, reviewDescription, imageUri);
+	boolean expected = false;
+	assertEquals (expected, result);
+	}	
 }
