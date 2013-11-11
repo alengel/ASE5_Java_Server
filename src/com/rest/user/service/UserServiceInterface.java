@@ -1,4 +1,4 @@
-package com.rest.user;
+package com.rest.user.service;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;

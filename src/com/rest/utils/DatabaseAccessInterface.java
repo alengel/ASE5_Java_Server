@@ -1,7 +1,10 @@
 package com.rest.utils;
 
+import java.sql.SQLException;
+
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
+import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
@@ -24,8 +27,9 @@ public interface DatabaseAccessInterface {
 	 * @throws ArgumentMissingException 
 	 * @throws UserNotFoundException 
 	 * @throws PasswordWrongException 
+	 * @throws SQLException 
 	 */
-	public boolean loginUser(String email, String password, String loginKey) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException;
+	public UserData loginUser(String email, String password) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException;
 		
 	/**
 	 * register a new User in the database if he does not exist yet
@@ -37,14 +41,15 @@ public interface DatabaseAccessInterface {
 	 * @throws WrongEmailFormatException 
 	 * @throws InputTooLongException 
 	 * @throws ArgumentMissingException 
+	 * @throws SQLException 
 	 */
-	public UserData registerNewUser(String email, String password, String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException;
+	public UserData registerNewUser(String email, String password, String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException;
 	
 	/**
 	 * should remove the loginKey form the DB
 	 * @param loginKey
 	 * @return true, if logout was successful, false otherwise
-	 * @throws ArgumentMissingException 
+	 * @throws ArgumentMissingException d
 	 */
 	public boolean logoutUser(String loginKey) throws ArgumentMissingException;
 	
