@@ -109,7 +109,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			e.printStackTrace();
 			return null;
 		}
-		password = SHA1.stringToSHA(password);
 		String insertStatement = INSERT_INTO + USER_TABLE +
 				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
@@ -179,7 +178,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String firstName;
 		String lastName;
 		String loginKey;
-		password = SHA1.stringToSHA(password);
 
 			userFromDb = statement.executeQuery(getUserFromDb);
 			if(!userFromDb.next()) {
