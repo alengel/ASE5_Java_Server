@@ -1,4 +1,4 @@
-package com.rest.user;
+package com.rest.user.service;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
