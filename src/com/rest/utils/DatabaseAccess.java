@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
+import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
@@ -70,7 +71,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	@Override
 	public UserData registerNewUser(String email, String password, 
-			String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+			String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			throw new ArgumentMissingException();
@@ -101,8 +102,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		try {
-			if(resultEmailAlreadyExists.isAfterLast()) {
-				return null;
+			if(resultEmailAlreadyExists.next()) {
+				throw new EmailAlreadyExistsException();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -112,7 +113,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String insertStatement = INSERT_INTO + USER_TABLE +
 				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
-		int success;
+	int	success = statement.executeUpdate(insertStatement);
+		/*	int success;
 		try {
 			success = statement.executeUpdate(insertStatement);
 		} catch (SQLException e) {
@@ -123,7 +125,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		if(success != 1) {
 			return null;
 		}
-		
+		*/
 		dbConnection.closeConn();
 		
 		return new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
@@ -161,9 +163,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	
 	@Override
-	public boolean loginUser(String email, String password, String loginKey) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	public UserData loginUser(String email, String password) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException {
 		
-		if(email == null || password == null || loginKey == null || email.isEmpty() || password.isEmpty() || loginKey.isEmpty()) {
+		if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			throw new ArgumentMissingException();
 		}
 		
@@ -174,33 +176,39 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		//check if user exists and if the password is correct
 		String getUserFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_EMAIL + "= '" + email +"';";
 		ResultSet userFromDb;
-		try {
-			
+		String firstName;
+		String lastName;
+		String loginKey;
+
 			userFromDb = statement.executeQuery(getUserFromDb);
-			if(userFromDb.isAfterLast()) {
+			if(!userFromDb.next()) {
 				throw new UserNotFoundException();
 			}
-			String passwordInDb = userFromDb.getNString(USER_PASSWORD);
+			String passwordInDb = userFromDb.getString("passwd");
 			if(!passwordInDb.equals(password)) {
 				throw new PasswordWrongException();
 			}
 			
 			//log in the user
 			//TODO: do we need to set other variables like loginTimestamp or is it deprecated?
+			
+			long timeStamp = System.currentTimeMillis()/1000L;
+			loginKey = email+timeStamp;
+			loginKey = SHA1.stringToSHA(loginKey);	
+			firstName = userFromDb.getString("first_name");
+			lastName = userFromDb.getString("last_name");
 			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
 			int success = statement.executeUpdate(loginUser);
 			if(success != 1) {
-				return false;
+				return null;
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-				
-		dbConnection.closeConn();
 		
-		return true;
+				
+		
+		
+		dbConnection.closeConn();
+		return new UserData(email, password, firstName, lastName, loginKey, null, null, null, null, null, null);
 	}
 	
 	
