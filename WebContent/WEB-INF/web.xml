@@ -10,19 +10,34 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
    <servlet>
-    <servlet-name>Jersey REST Service</servlet-name>
+    <servlet-name>User Service</servlet-name>
     <servlet-class>
   com.sun.jersey.spi.container.servlet.ServletContainer
 </servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>com.rest.user</param-value>
+      <param-value>com.rest.user.service</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+   <servlet>
+    <servlet-name>Location Service</servlet-name>
+    <servlet-class>
+  com.sun.jersey.spi.container.servlet.ServletContainer
+</servlet-class>
+    <init-param>
+      <param-name>com.sun.jersey.config.property.packages</param-name>
+      <param-value>com.rest.location.service</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
   <servlet-mapping>
-    <servlet-name>Jersey REST Service</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
+    <servlet-name>User Service</servlet-name>
+    <url-pattern>/user/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Location Service</servlet-name>
+    <url-pattern>/location/*</url-pattern>
   </servlet-mapping>
   <display-name>MySQL DataSource Example</display-name>
   <resource-ref>
