@@ -3,7 +3,12 @@ package com.rest.utils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.rest.location.model.Location;
+import com.rest.location.model.data.LocationData;
+import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
@@ -26,7 +31,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String FROM = "from ";
 		private final static String WHERE = "where ";
 		private final static String AND = "and ";
-		private final static String DISTINCT = "distinct ";
+		private final static String DISTINCT = "Distinct ";
 		private final static String INSERT_INTO = "Insert into ";
 		private final static String INSERT_IGNORE_INTO = "Insert Ignore into ";
 		private final static String ALL = "* ";
@@ -117,8 +122,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String insertStatement = INSERT_INTO + USER_TABLE +
 				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
-	int	success = statement.executeUpdate(insertStatement);
-		/*	int success;
+	
+		int success;
 		try {
 			success = statement.executeUpdate(insertStatement);
 		} catch (SQLException e) {
@@ -129,7 +134,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		if(success != 1) {
 			return null;
 		}
-		*/
+		
 		dbConnection.closeConn();
 		
 		return new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
@@ -276,7 +281,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
+	public Location checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
@@ -288,6 +293,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		//check if key is valid
 		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
 		ResultSet keyFromDb;
+		String message;
+		List<ReviewData> rd = null;
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
@@ -300,22 +307,58 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			statement.executeUpdate(venueInsert);
 			
 			//insert the checkIn
-			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ")" +
-									VALUES + "(" + 
-									SELECT + DISTINCT + LOCATIONS_ID + ", " + USER_ID + "," + "'" + timestamp + "'" +
+			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ") " +
+									 "(" + 
+									SELECT + DISTINCT + "t5_locations." + LOCATIONS_ID + ", t5_users." + USER_ID + ", " + "'" + timestamp + "' " +
 									FROM + LOCATIONS_TABLE + ", " + USER_TABLE +
-									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "';"
+									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"
 									+ ");";
-			statement.executeUpdate(insertCheckin);
+			//String insertCheckin = "INSERT INTO t5_checkins (t5.locations.id, t5_users.id, timestamp) VALUES"
+			int resCheckIn = statement.executeUpdate(insertCheckin);
+			if (resCheckIn == 1) { // if checked in
+				message = "Checked in successfully";
+				ResultSet resReviewsCheck;
+				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId');");
+				if (resReviewsCheck.next()) { // if at least one review exists
+					rd = new ArrayList<ReviewData>();
+					ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId') LIMIT 0, 10;");
+					while (resReviews.next()) {
+						int userId = resReviews.getInt("users_id");
+						int  rating = resReviews.getInt("rating");
+						String title = resReviews.getString("review_title");
+						String review = resReviews.getString("review_description");
+						String picture = resReviews.getString("review_picture");
+						rd.add(new ReviewData(userId, rating, title, review, picture)); // adds reviews into reviews list 
+
+					}
+					dbConnection.closeConn();
+					return new Location("true", message, new LocationData(venueId, rd)); // returns list of reviews
+					
+				} else {					
+					// no reviews left
+					message = message + ". No reviews left for this place";
+					dbConnection.closeConn();
+					return new Location("true", message, new LocationData(venueId, rd)); // returns empty list of reviews
+				}
+				
+				
+				
+			} else {
+				// failed to check in
+				message = "Failed to check in";
+				dbConnection.closeConn();
+				return new Location("false", message, new LocationData(venueId, rd)); //returns false and empty list of reviews
+			}
+			
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 		
-		dbConnection.closeConn();
-		
-		return true;
 	}
 
 

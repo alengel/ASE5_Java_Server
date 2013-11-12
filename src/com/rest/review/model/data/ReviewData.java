@@ -1,46 +1,41 @@
 package com.rest.review.model.data;
 
 public class ReviewData {
-	private String userEmail;
-	private String venueId;
-	private String venueName;
+	private int userId;
 	private int rating;
 	private String title;
 	private String review;
+	private String picture;
 	
 	public ReviewData() {
 		
 	}
 
-	public ReviewData(String userEmail, int rating, String title, String review) {
-		this.userEmail = userEmail;
+	public ReviewData(int userId, int rating, String title, String review, String picture) {
+		this.userId = userId;
 		this.rating = rating;
 		this.title = title;
 		this.review = review;
+		this.picture = picture;
+	}
+	
+	
+	
+
+	public int getUserId() {
+		return userId;
 	}
 
-	public String getUserEmail() {
-		return userEmail;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public String getPicture() {
+		return picture;
 	}
 
-	public String getVenueId() {
-		return venueId;
-	}
-
-	public void setVenueId(String venueId) {
-		this.venueId = venueId;
-	}
-
-	public String getVenueName() {
-		return venueName;
-	}
-
-	public void setVenueName(String venueName) {
-		this.venueName = venueName;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 	public int getRating() {
@@ -66,6 +61,8 @@ public class ReviewData {
 	public void setReview(String review) {
 		this.review = review;
 	}
+	
+	
 	
 	
 	

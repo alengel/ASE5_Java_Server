@@ -2,6 +2,7 @@ package com.rest.utils;
 
 import java.sql.SQLException;
 
+import com.rest.location.model.Location;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
@@ -72,7 +73,7 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @throws ArgumentMissingException 
 	 * @throws InvalidKeyException 
 	 */
-	public boolean checkIn(String userKey, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException;
+	public Location checkIn(String userKey, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException;
 	
 	/**
 	 * 

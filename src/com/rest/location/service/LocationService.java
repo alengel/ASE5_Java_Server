@@ -12,6 +12,8 @@ import com.rest.location.model.Location;
 import com.rest.location.model.data.LocationData;
 import com.rest.review.model.data.ReviewData;
 import com.rest.utils.*;
+import com.rest.utils.exceptions.ArgumentMissingException;
+import com.rest.utils.exceptions.InvalidKeyException;
 
 @Path("/")  	
 public class LocationService {
@@ -19,14 +21,13 @@ public class LocationService {
 	private Statement st;
 	private String success = "true";
 	private String message;
-	List<ReviewData> rd;
-	LocationData ld;
+	private DatabaseAccess dbAccess;
 	
 	@POST                                
 	@Path("/check-in")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response checkIn(@FormParam ("loginKey") String loginKey, @FormParam("locationId") String locationId) throws SQLException {
+    public Response checkIn(@FormParam ("loginKey") String loginKey, @FormParam("venueId") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		//sql queries
 		//1 select userdata with the loginkey
 		//2 insert into table locations user's data, venueid, and venue name
@@ -34,61 +35,12 @@ public class LocationService {
 		//4 put resultset into reviewdata list
 		
 		//1 get the user
-		dbcn = new DBCon();
-		st = dbcn.getStatement();	// connects to db 
-		ResultSet resUser = st.executeQuery("SELECT * FROM t5_users WHERE login_key = '" +loginKey+ "'");
-		if (resUser.next()) {
-			int userId = resUser.getInt("id");
-			String email = resUser.getString("email");
-			//2 check in
-			int resCheckin = st.executeUpdate("INSERT INTO t5_reviews (users_id, locations_id) VALUES ('" + userId + "', '" + locationId +"')");
-			if (resCheckin == 1) { // checked in
-				message = "Checked in successfully";
-				//3 retrieving other reviews
-				ResultSet resReviewsCheck = st.executeQuery("SELECT * FROM t5_reviews WHERE locations_id = '" +locationId+ "' AND review_description <> ''");
-				if (resReviewsCheck.next()) { // if at least 1 review exists
-					rd = new ArrayList<ReviewData>();
-					ResultSet resReviews = st.executeQuery("SELECT * FROM t5_reviews WHERE locations_id = '" +locationId+ "' AND review_description <> '' LIMIT 0, 10");
-					//4 creating review data list
-					while (resReviews.next()) {
-						String userEmail = resReviews.getString("users_email");
-						int  rating = resReviews.getInt("rating");
-						String title = resReviews.getString("review_title");
-						String review = resReviews.getString("review_description");
-						rd.add(new ReviewData(userEmail, rating, title, review)); // adds reviews into reviews list 
-					
-					}					
-					
-					ld = new LocationData(locationId, rd);
-					
-				} else {
-					// reviews not found
-					rd=null;
-					message = message + ". Nobody left a review yet";
-					ld = new LocationData(locationId, rd);
-				}
-				
-				
-				
-			} else {
-				//failed to check in
-				success = "false";
-				message = "Failed to check in";
-				ld = null;
-			}
-			
-
-			
-		} else {
-			//loginkey is wrong
-			success = "false";
-			message = "Error occured. Please, log in again";
-			ld = null;
-		}
-			
+		dbAccess = new DatabaseAccess();
+		long timeStamp = System.currentTimeMillis()/1000L;
+		Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);			
 		
 		
-		return Response.ok(new Location(success, message, ld)).build();
+		return Response.ok(location).build();
 	}
 	
 
