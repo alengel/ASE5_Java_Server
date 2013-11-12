@@ -5,12 +5,14 @@ create table t5_users(
 	passwd varchar(200),
 	first_name varchar(200),
 	last_name varchar(200),
-	login_key varchar(200),
+	login_key varchar(200) unique,
 	login_timestamp varchar(20),
 	last_login varchar(200),
 	last_request varchar(20),
 	logout_session_time int(10),
-	gps_push_time int(10),
+	geo_push_interval int(10),
+	min_distance int(10),
+	max_login_interval int(10),
 
 	dated varchar(20),
 	primary key(id)
