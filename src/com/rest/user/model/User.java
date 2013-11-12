@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.*;
 
-import com.rest.user.model.data.LocationData;
 import com.rest.user.model.data.UserData;
 
 @XmlRootElement

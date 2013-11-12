@@ -7,10 +7,10 @@ create table t5_users(
 	last_name varchar(200),
 	login_key varchar(200),
 	login_timestamp varchar(20),
-	last_login varchar(200),
+	last_login varchar(200),     //
 	last_request varchar(20),
-	logout_session_time int(10),
-	gps_push_time int(10),
+	logout_session_time int(10), //settings
+	gps_push_time int(10),       //settings
 
 	dated varchar(20),
 	primary key(id)

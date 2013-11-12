@@ -26,7 +26,7 @@ public class LocationService {
 	@Path("/check-in")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response checkIn(@FormParam ("loginKey") String loginKey, @FormParam("venueId") String venueId, @FormParam("venueName") String venueName) throws SQLException {
+    public Response checkIn(@FormParam ("loginKey") String loginKey, @FormParam("locationId") String locationId) throws SQLException {
 		//sql queries
 		//1 select userdata with the loginkey
 		//2 insert into table locations user's data, venueid, and venue name
@@ -41,14 +41,14 @@ public class LocationService {
 			int userId = resUser.getInt("id");
 			String email = resUser.getString("email");
 			//2 check in
-			int resCheckin = st.executeUpdate("INSERT INTO t5_users_reviews (users_id, users_email, venue_Id) VALUES ('" + userId + "', '" + email + "', '" + venueId +"')");
+			int resCheckin = st.executeUpdate("INSERT INTO t5_reviews (users_id, locations_id) VALUES ('" + userId + "', '" + locationId +"')");
 			if (resCheckin == 1) { // checked in
 				message = "Checked in successfully";
 				//3 retrieving other reviews
-				ResultSet resReviewsCheck = st.executeQuery("SELECT * FROM t5_users_reviews WHERE venue_id = '" +venueId+ "' AND review_description <> ''");
+				ResultSet resReviewsCheck = st.executeQuery("SELECT * FROM t5_reviews WHERE locations_id = '" +locationId+ "' AND review_description <> ''");
 				if (resReviewsCheck.next()) { // if at least 1 review exists
 					rd = new ArrayList<ReviewData>();
-					ResultSet resReviews = st.executeQuery("SELECT * FROM t5_users_reviews WHERE venue_id = '" +venueId+ "' AND review_description <> '' LIMIT 0, 10");
+					ResultSet resReviews = st.executeQuery("SELECT * FROM t5_reviews WHERE locations_id = '" +locationId+ "' AND review_description <> '' LIMIT 0, 10");
 					//4 creating review data list
 					while (resReviews.next()) {
 						String userEmail = resReviews.getString("users_email");
@@ -59,13 +59,13 @@ public class LocationService {
 					
 					}					
 					
-					ld = new LocationData(venueId, venueName, rd);
+					ld = new LocationData(locationId, rd);
 					
 				} else {
 					// reviews not found
 					rd=null;
 					message = message + ". Nobody left a review yet";
-					ld = new LocationData(venueId, venueName, rd);
+					ld = new LocationData(locationId, rd);
 				}
 				
 				

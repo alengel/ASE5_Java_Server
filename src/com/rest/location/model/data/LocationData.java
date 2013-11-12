@@ -9,7 +9,6 @@ import com.rest.review.model.data.*;
 public class LocationData {
 	
 	private String venueId;
-	private String venueName;
 	private String dated;
 	private List<ReviewData> rd = new ArrayList<ReviewData>(); 
 	
@@ -17,9 +16,8 @@ public class LocationData {
 		
 	}
 	
-	public LocationData(String venueId, String venueName, List<ReviewData> rd) {
+	public LocationData(String venueId, List<ReviewData> rd) {
 		this.venueId = venueId;
-		this.venueName = venueName;
 		this.rd = rd;
 		
 	}
@@ -34,13 +32,6 @@ public class LocationData {
 		this.venueId = venueId;
 	}
 
-	public String getVenueName() {
-		return venueName;
-	}
-
-	public void setVenueName(String venueName) {
-		this.venueName = venueName;
-	}
 
 	public String getDated() {
 		return dated;
