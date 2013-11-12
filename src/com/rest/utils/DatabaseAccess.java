@@ -271,35 +271,125 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean checkIn(String key, String venueId, String timestamp) {
-		// TODO Auto-generated method stub
+	public boolean checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
+		if(key == null || venueId == null || timestamp == null || key.isEmpty() || venueId.isEmpty() || timestamp.isEmpty()) {
+			throw new ArgumentMissingException();
+		}
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			//maybe insert the venue
+			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
+			statement.executeUpdate(venueInsert);
+			
+			//insert the checkIn
+			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ")" +
+									VALUES + "(" + 
+									SELECT + DISTINCT + LOCATIONS_ID + ", " + USER_ID + "," + "'" + timestamp + "'" +
+									FROM + LOCATIONS_TABLE + ", " + USER_TABLE +
+									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "';"
+									+ ");";
+			statement.executeUpdate(insertCheckin);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		dbConnection.closeConn();
 		
-		return false;
+		return true;
 	}
 
 
 	@Override
 	public boolean updateSettings(String key, int minDistance,
-			int maxLoginInterval, int geoPushInterval, int geoCheckInterval) {
-		// TODO Auto-generated method stub
+			int maxLoginInterval, int geoPushInterval) throws InvalidKeyException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			String updateSettings = UPDATE + USER_TABLE + 
+					SET + USER_MIN_DISTANCE + "= '" + minDistance +"', " + USER_MAX_LOGIN_INTERVAL + "= '" + maxLoginInterval +"', " + USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' " +
+					WHERE + USER_LOGINKEY + "= '" + key + "';";
+			statement.executeUpdate(updateSettings);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		dbConnection.closeConn();
 		
-		return false;
+		return true;
 	}
 	
 	@Override
-	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(keyFromDb.isAfterLast()) {
+				throw new InvalidKeyException();
+			}
+			
+			String userId = keyFromDb.getNString(USER_ID);
+			
+			//insert venueId if neccessary
+			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
+			statement.executeUpdate(venueInsert);
+			
+			//get locationId
+			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "';";
+			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
+			
+			String locationId = getVenueIdResult.getNString(LOCATIONS_ID);
+			
+			//insert review
+			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 
+					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ") " +
+					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "');";
+			statement.executeUpdate(insertReview);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+
+		
+		return true;
 	}
 	
 	
