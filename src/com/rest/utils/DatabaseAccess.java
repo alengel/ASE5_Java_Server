@@ -346,7 +346,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	@Override
 	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException {
-		// TODO Auto-generated method stub
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
@@ -361,6 +360,23 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 			
+			String userId = keyFromDb.getNString(USER_ID);
+			
+			//insert venueId if neccessary
+			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
+			statement.executeUpdate(venueInsert);
+			
+			//get locationId
+			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "';";
+			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
+			
+			String locationId = getVenueIdResult.getNString(LOCATIONS_ID);
+			
+			//insert review
+			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 
+					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ") " +
+					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "');";
+			statement.executeUpdate(insertReview);
 			
 			
 		} catch (SQLException e) {
