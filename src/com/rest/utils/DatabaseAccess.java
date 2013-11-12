@@ -11,6 +11,7 @@ import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
+import com.rest.utils.exceptions.InvalidKeyException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
 	

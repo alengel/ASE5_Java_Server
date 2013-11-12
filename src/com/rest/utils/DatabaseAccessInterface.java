@@ -6,6 +6,7 @@ import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
@@ -60,7 +61,7 @@ public interface DatabaseAccessInterface {
 	 * @return true if change was successful, false otherwise
 	 * @throws UserNotFoundException 
 	 */
-	public boolean changePassword(String userMail, String newPassword) throws UserNotFoundException;
+public boolean changePassword(String userMail, String newPassword) throws UserNotFoundException;
 	
 	/**
 	 * 
@@ -68,8 +69,10 @@ public interface DatabaseAccessInterface {
 	 * @param venueId
 	 * @param timestamp
 	 * @return true if change successful, false otherwise
+	 * @throws ArgumentMissingException 
+	 * @throws InvalidKeyException 
 	 */
-	public boolean checkIn(String userKey, String venueId, String timestamp);
+	public boolean checkIn(String userKey, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException;
 	
 	/**
 	 * 
@@ -77,10 +80,10 @@ public interface DatabaseAccessInterface {
 	 * @param minDistance
 	 * @param maxLoginInterval
 	 * @param geoPushInterval
-	 * @param geoCheckInterval
 	 * @return true if change successful, false otherwise
+	 * @throws InvalidKeyException 
 	 */
-	public boolean updateSettings(String userKey, int minDistance, int maxLoginInterval, int geoPushInterval, int geoCheckInterval);
+	public boolean updateSettings(String userKey, int minDistance, int maxLoginInterval, int geoPushInterval) throws InvalidKeyException;
 	
 	/**
 	 * 
@@ -91,7 +94,8 @@ public interface DatabaseAccessInterface {
 	 * @param reviewDescription
 	 * @param imageUri
 	 * @return true if change successful, false otherwise
+	 * @throws InvalidKeyException 
 	 */
-	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri);
+	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException;
 	
 }
