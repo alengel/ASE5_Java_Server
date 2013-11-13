@@ -101,4 +101,11 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 */
 	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException;
 	
+	/**
+	 * 
+	 * @param venueId
+	 * @return
+	 * @throws SQLException
+	 */
+	public Location getReviews(String venueId) throws SQLException;
 }
