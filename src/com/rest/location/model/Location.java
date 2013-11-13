@@ -1,34 +1,34 @@
-package com.rest.user.model;
+package com.rest.location.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.*;
-
-import com.rest.user.model.data.UserData;
+import com.rest.location.model.data.LocationData;
 
 @XmlRootElement
-public class User {
+public class Location {
 	
-	private List<UserData> ud = new ArrayList<UserData>();
+	private List<LocationData> ld = new ArrayList<LocationData>();
 	private String success;
 	private String message;
 	
-    public User() {
+    public Location() {
     	
     }
     
-    public User(String success, String message) {
+    public Location(String success, String message) {
     	this.success = success;
     	this.message = message;
-    	this.ud = null;
+    	this.ld = null;
     }
    
  
-	public User(String success, UserData ud) {
+	public Location(String success, String message, LocationData ud) {
+		
 		this.success = success;
-		this.ud.add(0, ud);
-
+		this.message = message;
+		this.ld.add(0, ud);
     
 		
 	} 
@@ -51,15 +51,15 @@ public class User {
 	}
 	
 	@XmlElement
-	public List<UserData> getUserData() {
-		return ud;
+	public List<LocationData> getLocationData() {
+		return ld;
 	}
 	
-	public void setUserData(List<UserData> ud) {
-		this.ud = ud;
+	public void setLocationData(List<LocationData> ld) {
+		this.ld = ld;
 	}
 	
-
+	
 
 
 	

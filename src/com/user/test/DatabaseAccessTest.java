@@ -2,6 +2,8 @@ package com.user.test;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.junit.Test;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.DatabaseAccess;
 import com.rest.utils.exceptions.ArgumentMissingException;
+import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -33,7 +36,7 @@ public class DatabaseAccessTest {
 	 * Testing registerNewUser
 	 */
 	@Test
-	public void testRegisterNewUserNormal() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserNormal() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String email = "test@web.de";
 		String firstName = "Karolina";
@@ -42,6 +45,8 @@ public class DatabaseAccessTest {
 		
 		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
 		UserData expected = new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
+		
+
 		assertEquals(expected, result);
 		
 		dbAccess.clearDatabase();
@@ -64,7 +69,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
-	public void testRegisterNewUserNoEmail() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserNoEmail() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -74,7 +79,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
-	public void testRegisterNewUserEmailEmpty() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserEmailEmpty() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -84,7 +89,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
-	public void testRegisterNewUserNoPassword() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserNoPassword() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -94,7 +99,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
-	public void testRegisterNewUserPasswordEmpty() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserPasswordEmpty() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -104,7 +109,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = WrongEmailFormatException.class)
-	public void testRegisterNewUserWrongEmailFormat() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserWrongEmailFormat() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -115,7 +120,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = WrongEmailFormatException.class)
-	public void testRegisterNewUserWrongEmailFormat2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserWrongEmailFormat2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -126,7 +131,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = InputTooLongException.class)
-	public void testRegisterNewUserInputTooLong() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserInputTooLong() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String email = "test@web.de";
 		String firstName = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.";
@@ -139,7 +144,7 @@ public class DatabaseAccessTest {
 	}
 	
 	@Test(expected = InputTooLongException.class)
-	public void testRegisterNewUserInputTooLong2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+	public void testRegisterNewUserInputTooLong2() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		String email = "test@web.de";
 		String lastName = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.";

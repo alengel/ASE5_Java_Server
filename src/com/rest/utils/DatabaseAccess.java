@@ -3,79 +3,88 @@ package com.rest.utils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.rest.location.model.Location;
+import com.rest.location.model.data.LocationData;
+import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
+import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
+import com.rest.utils.exceptions.InvalidKeyException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	//maximum allowed inputLenght according to the database ddl
-	private final static int MAX_INPUT_LENGTH = 200;
-	
-	//static Strings for SQL Queries
-	private final static String SELECT = "Select ";
-	private final static String DELETE = "Delete ";
-	private final static String UPDATE = "Update ";
-	private final static String SET = "Set ";
-	private final static String FROM = "from ";
-	private final static String WHERE = "where ";
-	private final static String AND = "and ";
-	private final static String DISTINCT = "distinct ";
-	private final static String INSERT_INTO = "Insert into ";
-	private final static String INSERT_IGNORE_INTO = "Insert Ignore into ";
-	private final static String ALL = "* ";
-	private final static String EQUALS = " = ";
-	private final static String VALUES = "values ";
-	
-	
-	//static Strings for the table t5_user
-	private final static String USER_TABLE = "t5_users ";
-	private final static String USER_ID = "id ";
-	private final static String USER_EMAIL = "email ";
-	private final static String USER_PASSWORD = "passwd ";
-	private final static String USER_FIRSTNAME = "first_name ";
-	private final static String USER_LASTNAME = "last_name ";
-	private final static String USER_LOGINKEY = "login_key ";
-	private final static String USER_LOGIN_TIMESTAMP = "login_timestamp ";
-	private final static String USER_LAST_LOGIN = "last_login ";
-	private final static String USER_LAST_REQUEST = "last_request ";
-	private final static String USER_LOGOUT_SESSION_TIME = "logout_session_time ";
-	private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
-	private final static String USER_MIN_DISTANCE = "min_distance ";
-	private final static String USER_MAX_LOGIN_INTERVAL = "max_login_interval ";
-	private final static String USER_DATED = "dated ";
-	
-	//static Strings for the table t5_locations
-	private final static String LOCATIONS_TABLE = "t5_locations ";
-	private final static String LOCATIONS_ID = "id ";
-	private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
-	private final static String LOCATIONS_DATED = "dated ";
-	
-	//static Stings for the table t5_users_reviews
-	private static final String REVIEWS_TABLE = "t5_reviews ";
-	private static final String REVIEWS_USER_ID = "users_id ";
-	private static final String REVIEWS_LOCATION_ID = "locations_id ";
-	private static final String REVIEWS_RATING = "rating ";
-	private static final String REVIEWS_REVIEW_TITLE = "review_title ";
-	private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
-	private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
-	private static final String REVIEWS_DATED = "dated ";
-	
-	//static Strings for the table t5_checkins
-	private static final String CHECKIN_TABLE = "t5_checkins ";
-	private static final String CHECKIN_USER_ID = "users_id ";
-	private static final String CHECKIN_LOCATION_ID = "locations_id ";
-	private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
-	
+
+		private final static int MAX_INPUT_LENGTH = 200;
+		
+		//static Strings for SQL Queries
+		private final static String SELECT = "Select ";
+		private final static String DELETE = "Delete ";
+		private final static String UPDATE = "Update ";
+		private final static String SET = "Set ";
+		private final static String FROM = "from ";
+		private final static String WHERE = "where ";
+		private final static String AND = "and ";
+		private final static String DISTINCT = "Distinct ";
+		private final static String INSERT_INTO = "Insert into ";
+		private final static String INSERT_IGNORE_INTO = "Insert Ignore into ";
+		private final static String ALL = "* ";
+		private final static String EQUALS = " = ";
+		private final static String VALUES = "values ";
+		
+		
+		//static Strings for the table t5_user
+		private final static String USER_TABLE = "t5_users ";
+		private final static String USER_ID = "id ";
+		private final static String USER_EMAIL = "email ";
+		private final static String USER_PASSWORD = "passwd ";
+		private final static String USER_FIRSTNAME = "first_name ";
+		private final static String USER_LASTNAME = "last_name ";
+		private final static String USER_LOGINKEY = "login_key ";
+		private final static String USER_LOGIN_TIMESTAMP = "login_timestamp ";
+		private final static String USER_LAST_LOGIN = "last_login ";
+		private final static String USER_LAST_REQUEST = "last_request ";
+		private final static String USER_LOGOUT_SESSION_TIME = "logout_session_time ";
+		private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
+		private final static String USER_MIN_DISTANCE = "min_distance ";
+		private final static String USER_MAX_LOGIN_INTERVAL = "max_login_interval ";
+		private final static String USER_DATED = "dated ";
+		
+		//static Strings for the table t5_locations
+		private final static String LOCATIONS_TABLE = "t5_locations ";
+		private final static String LOCATIONS_ID = "id ";
+		private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
+		private final static String LOCATIONS_DATED = "dated ";
+		
+		//static Stings for the table t5_users_reviews
+		private static final String REVIEWS_TABLE = "t5_reviews ";
+		private static final String REVIEWS_USER_ID = "users_id ";
+		private static final String REVIEWS_LOCATION_ID = "locations_id ";
+		private static final String REVIEWS_RATING = "rating ";
+		private static final String REVIEWS_REVIEW_TITLE = "review_title ";
+		private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
+		private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
+		private static final String REVIEWS_DATED = "dated ";
+		
+		//static Strings for the table t5_checkins
+		private static final String CHECKIN_TABLE = "t5_checkins ";
+		private static final String CHECKIN_USER_ID = "users_id ";
+		private static final String CHECKIN_LOCATION_ID = "locations_id ";
+		private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
+		
+
 	
 	@Override
 	public UserData registerNewUser(String email, String password, 
-			String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException {
+			String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			throw new ArgumentMissingException();
@@ -106,17 +115,17 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		try {
-			if(resultEmailAlreadyExists.isAfterLast()) {
-				return null;
+			if(resultEmailAlreadyExists.next()) {
+				throw new EmailAlreadyExistsException();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		
 		String insertStatement = INSERT_INTO + USER_TABLE +
 				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
+	
 		int success;
 		try {
 			success = statement.executeUpdate(insertStatement);
@@ -166,9 +175,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	
 	@Override
-	public boolean loginUser(String email, String password, String loginKey) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	public UserData loginUser(String email, String password) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException {
 		
-		if(email == null || password == null || loginKey == null || email.isEmpty() || password.isEmpty() || loginKey.isEmpty()) {
+		if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			throw new ArgumentMissingException();
 		}
 		
@@ -179,33 +188,39 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		//check if user exists and if the password is correct
 		String getUserFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_EMAIL + "= '" + email +"';";
 		ResultSet userFromDb;
-		try {
-			
+		String firstName;
+		String lastName;
+		String loginKey;
+
 			userFromDb = statement.executeQuery(getUserFromDb);
-			if(userFromDb.isAfterLast()) {
+			if(!userFromDb.next()) {
 				throw new UserNotFoundException();
 			}
-			String passwordInDb = userFromDb.getNString(USER_PASSWORD);
+			String passwordInDb = userFromDb.getString("passwd");
 			if(!passwordInDb.equals(password)) {
 				throw new PasswordWrongException();
 			}
 			
 			//log in the user
 			//TODO: do we need to set other variables like loginTimestamp or is it deprecated?
+			
+			long timeStamp = System.currentTimeMillis()/1000L;
+			loginKey = email+timeStamp;
+			loginKey = SHA1.stringToSHA(loginKey);	
+			firstName = userFromDb.getString("first_name");
+			lastName = userFromDb.getString("last_name");
 			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
 			int success = statement.executeUpdate(loginUser);
 			if(success != 1) {
-				return false;
+				return null;
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-				
-		dbConnection.closeConn();
 		
-		return true;
+				
+		
+		
+		dbConnection.closeConn();
+		return new UserData(email, password, firstName, lastName, loginKey, null, null, null, null, null, null);
 	}
 	
 	
@@ -220,7 +235,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 		
-		String logoutUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= " + "NULL" + WHERE + USER_LOGINKEY + "= '" + loginKey + "';";
+		String logoutUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= " + "NULL " + WHERE + USER_LOGINKEY + "= '" + loginKey + "';";
 		try {
 			int success = statement.executeUpdate(logoutUser);
 			if(success != 1) {
@@ -269,7 +284,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
+
+	public Location checkIn(String key, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException {
+
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
@@ -281,6 +298,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		//check if key is valid
 		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
 		ResultSet keyFromDb;
+
+		String message;
+		List<ReviewData> rd = null;
+
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
@@ -293,22 +314,60 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			statement.executeUpdate(venueInsert);
 			
 			//insert the checkIn
-			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ")" +
-									VALUES + "(" + 
-									SELECT + DISTINCT + LOCATIONS_ID + ", " + USER_ID + "," + "'" + timestamp + "'" +
+
+			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "(" + CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", " + CHECKIN_CHECKIN_TIMESTAMP + ") " +
+									 "(" + 
+									SELECT + DISTINCT + "t5_locations." + LOCATIONS_ID + ", t5_users." + USER_ID + ", " + "'" + timestamp + "' " +
 									FROM + LOCATIONS_TABLE + ", " + USER_TABLE +
-									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "';"
+									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"
 									+ ");";
-			statement.executeUpdate(insertCheckin);
+			//String insertCheckin = "INSERT INTO t5_checkins (t5.locations.id, t5_users.id, timestamp) VALUES"
+			int resCheckIn = statement.executeUpdate(insertCheckin);
+			if (resCheckIn == 1) { // if checked in
+				message = "Checked in successfully";
+				ResultSet resReviewsCheck;
+				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId');");
+				if (resReviewsCheck.next()) { // if at least one review exists
+					rd = new ArrayList<ReviewData>();
+					ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId') LIMIT 0, 10;");
+					while (resReviews.next()) {
+						int userId = resReviews.getInt("users_id");
+						int  rating = resReviews.getInt("rating");
+						String title = resReviews.getString("review_title");
+						String review = resReviews.getString("review_description");
+						String picture = resReviews.getString("review_picture");
+						rd.add(new ReviewData(userId, rating, title, review, picture)); // adds reviews into reviews list 
+
+					}
+					dbConnection.closeConn();
+					return new Location("true", message, new LocationData(venueId, rd)); // returns list of reviews
+					
+				} else {					
+					// no reviews left
+					message = message + ". No reviews left for this place";
+					dbConnection.closeConn();
+					return new Location("true", message, new LocationData(venueId, rd)); // returns empty list of reviews
+				}
+				
+				
+				
+			} else {
+				// failed to check in
+				message = "Failed to check in";
+				dbConnection.closeConn();
+				return new Location("false", message, new LocationData(venueId, rd)); //returns false and empty list of reviews
+			}
+			
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 		
-		dbConnection.closeConn();
-		
-		return true;
+
 	}
 
 
