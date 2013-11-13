@@ -319,11 +319,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				message = "Checked in successfully";
 				ResultSet resReviewsCheck;
 				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
-														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId');");
+														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
 				if (resReviewsCheck.next()) { // if at least one review exists
 					rd = new ArrayList<ReviewData>();
 					ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
-							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId') LIMIT 0, 10;");
+							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
 					while (resReviews.next()) {
 						int userId = resReviews.getInt("users_id");
 						int  rating = resReviews.getInt("rating");
