@@ -336,6 +336,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
 				if (resReviewsCheck.next()) { // if at least one review exists
 					rd = new ArrayList<ReviewData>();
+			
 					ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
 							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
 					while (resReviews.next()) {
@@ -344,7 +345,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 						String title = resReviews.getString("review_title");
 						String review = resReviews.getString("review_description");
 						String picture = resReviews.getString("review_picture");
-						rd.add(new ReviewData(userId, rating, title, review, picture)); // adds reviews into reviews list 
+						DBCon dbConnection1 = new DBCon();
+						Statement statement1 = dbConnection1.getStatement();
+						ResultSet resUserById = null;
+						resUserById = statement1.executeQuery(SELECT + "* " + FROM + USER_TABLE + WHERE + "id = " + userId);
+						resUserById.next();
+						String userFirstName = resUserById.getString("first_name");
+						String userLastName = resUserById.getString("last_name");
+						String userEmail = resUserById.getString("email");
+						dbConnection1.closeConn();
+						rd.add(new ReviewData(userId, userFirstName, userLastName, userEmail, rating, title, review, picture)); // adds reviews into reviews list 
 
 					}
 					dbConnection.closeConn();
