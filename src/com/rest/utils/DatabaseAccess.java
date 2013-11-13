@@ -406,11 +406,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
-			if(keyFromDb.isAfterLast()) {
+			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
 			}
 			
-			String userId = keyFromDb.getNString(USER_ID);
+			String userId = keyFromDb.getString("id");
 			
 			//insert venueId if neccessary
 			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
@@ -419,8 +419,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			//get locationId
 			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "';";
 			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
-			
-			String locationId = getVenueIdResult.getNString(LOCATIONS_ID);
+			getVenueIdResult.next();
+			String locationId = getVenueIdResult.getString("id");
 			
 			//insert review
 			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 

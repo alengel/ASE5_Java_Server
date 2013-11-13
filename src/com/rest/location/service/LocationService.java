@@ -43,6 +43,25 @@ public class LocationService {
 		return Response.ok(location).build();
 	}
 	
+	@POST                                
+	@Path("/reviews")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("loginKey") String loginKey, @FormParam("venueId") String venueId,  @FormParam("rating") int rating, @FormParam("reviewTitle") String reviewTitle, @FormParam("reviewDescription") String reviewDescription, @FormParam("imageUri") String imageUri) throws SQLException, ArgumentMissingException, InvalidKeyException {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		if (dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri)) {
+			success = "true";
+			message = "Review sent successfully";
+		} else {
+			success = "false";
+			message = "Failed to send the review";
+		}
+		return Response.ok(new Location(success, message)).build();
+		
+	}
+	
 
 
 }
