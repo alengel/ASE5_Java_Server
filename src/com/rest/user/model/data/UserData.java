@@ -13,14 +13,14 @@ public class UserData {
 	private String lastRequest;
 	private String logoutSessiontime;
 	private String gpsPushtime;
-	private String dated;
+	private String minDistance;
 		
 	public UserData() {
 		
 		
 	}
 	
-	public UserData(String email, String passwd, String firstName, String lastName, String loginKey, String loginTimestamp, String lastLogin, String lastRequest, String logoutSessiontime, String gpsPushtime, String dated) {
+	public UserData(String email, String passwd, String firstName, String lastName, String loginKey, String loginTimestamp, String lastLogin, String lastRequest, String logoutSessiontime, String gpsPushtime, String minDistance) {
 		this.email = email;
 		this.passwd = passwd;
 		this.firstName = firstName;
@@ -31,7 +31,7 @@ public class UserData {
 		this.lastRequest = lastRequest;
 		this.logoutSessiontime = logoutSessiontime;
 		this.gpsPushtime = gpsPushtime;
-		this.dated = dated;
+		this.minDistance = minDistance;
 		
 	}
 
@@ -123,12 +123,12 @@ public class UserData {
 		this.gpsPushtime = gpsPushtime;
 	}
 
-	public String getDated() {
-		return dated;
+	public String getMinDistance() {
+		return minDistance;
 	}
 
-	public void setDated(String dated) {
-		this.dated = dated;
+	public void setMinDistance(String minDistance) {
+		this.minDistance = minDistance;
 	}
 	
 	

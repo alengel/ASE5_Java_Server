@@ -123,8 +123,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		String insertStatement = INSERT_INTO + USER_TABLE +
-				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ") "
-				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "');";
+				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", logout_session_time, geo_push_interval, min_distance) "
+				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "', 60, 30, 100);";
 	
 		int success;
 		try {
@@ -191,6 +191,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String firstName;
 		String lastName;
 		String loginKey;
+		int logoutSessionTime;
+		int geoPushInterval;
+		int minDistance;
 
 			userFromDb = statement.executeQuery(getUserFromDb);
 			if(!userFromDb.next()) {
@@ -209,7 +212,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			loginKey = SHA1.stringToSHA(loginKey);	
 			firstName = userFromDb.getString("first_name");
 			lastName = userFromDb.getString("last_name");
-			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
+			logoutSessionTime = userFromDb.getInt("logout_session_time");
+			geoPushInterval = userFromDb.getInt("geo_push_interval");
+			minDistance = userFromDb.getInt("min_distance");
+			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '" + loginKey + "', login_timestamp = '" + timeStamp + "' " + WHERE + USER_EMAIL + "= '" + email + "';";
 			int success = statement.executeUpdate(loginUser);
 			if(success != 1) {
 				return null;
@@ -220,7 +226,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		
 		dbConnection.closeConn();
-		return new UserData(email, password, firstName, lastName, loginKey, null, null, null, null, null, null);
+		return new UserData(email, password, firstName, lastName, loginKey, ""+timeStamp, null, null, ""+logoutSessionTime, ""+geoPushInterval, ""+minDistance);
 	}
 	
 	
@@ -327,11 +333,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				message = "Checked in successfully";
 				ResultSet resReviewsCheck;
 				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
-														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId');");
+														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
 				if (resReviewsCheck.next()) { // if at least one review exists
 					rd = new ArrayList<ReviewData>();
 					ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
-							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= 'venueId') LIMIT 0, 10;");
+							FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
 					while (resReviews.next()) {
 						int userId = resReviews.getInt("users_id");
 						int  rating = resReviews.getInt("rating");
@@ -373,7 +379,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 	@Override
 	public boolean updateSettings(String key, int minDistance,
-			int maxLoginInterval, int geoPushInterval) throws InvalidKeyException {
+			int logoutSessionTime, int geoPushInterval) throws InvalidKeyException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
@@ -384,12 +390,13 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
-			if(keyFromDb.isAfterLast()) {
+			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
+				
 			}
 			
 			String updateSettings = UPDATE + USER_TABLE + 
-					SET + USER_MIN_DISTANCE + "= '" + minDistance +"', " + USER_MAX_LOGIN_INTERVAL + "= '" + maxLoginInterval +"', " + USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' " +
+					SET + USER_MIN_DISTANCE + "= '" + minDistance +"', logout_session_time  = '" + logoutSessionTime +"', " + USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' " +
 					WHERE + USER_LOGINKEY + "= '" + key + "';";
 			statement.executeUpdate(updateSettings);
 			
@@ -415,11 +422,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
-			if(keyFromDb.isAfterLast()) {
+			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
 			}
 			
-			String userId = keyFromDb.getNString(USER_ID);
+			String userId = keyFromDb.getString("id");
 			
 			//insert venueId if neccessary
 			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "(" + LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('" + venueId +"');";
@@ -428,8 +435,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			//get locationId
 			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "';";
 			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
-			
-			String locationId = getVenueIdResult.getNString(LOCATIONS_ID);
+			getVenueIdResult.next();
+			String locationId = getVenueIdResult.getString("id");
 			
 			//insert review
 			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 

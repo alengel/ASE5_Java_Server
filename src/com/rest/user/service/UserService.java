@@ -11,6 +11,7 @@ import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
+import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
@@ -123,6 +124,22 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 			}
 		}
 		
+		@POST                                
+		@Path("/settings")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response updateSettings(@FormParam("loginKey") String loginKey, @FormParam("minDistance") int minDistance, @FormParam("logoutSessionTime") int logoutSessionTime, @FormParam("geoPushInterval") int geoPushInterval) {
+			try {
+				dbAccess = new DatabaseAccess();
+				if (dbAccess.updateSettings(loginKey, minDistance, logoutSessionTime, geoPushInterval)) {
+					return Response.ok(new User("true", "Settings are updated successfully")).build();
+				} else {
+					return Response.ok(new User("false", "Failed to update settings")).build();
+				}
+			} catch (InvalidKeyException e) {
+				return Response.ok(new User("false", "LoginKey is wrong")).build();
+			}
+		}
 			
 	   
 

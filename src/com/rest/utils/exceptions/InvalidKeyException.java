@@ -1,10 +1,7 @@
 package com.rest.utils.exceptions;
 
-<<<<<<< HEAD
-public class InvalidKeyException extends Exception {
-=======
+
 public class InvalidKeyException extends Exception{
->>>>>>> users_locations
 
 	/**
 	 * 
