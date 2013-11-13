@@ -327,11 +327,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 									FROM + LOCATIONS_TABLE + ", " + USER_TABLE +
 									WHERE + USER_LOGINKEY + "= '" + key + "' " + AND + LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"
 									+ ");";
-			//String insertCheckin = "INSERT INTO t5_checkins (t5.locations.id, t5_users.id, timestamp) VALUES"
+		
 			int resCheckIn = statement.executeUpdate(insertCheckin);
 			if (resCheckIn == 1) { // if checked in
 				message = "Checked in successfully";
-				ResultSet resReviewsCheck;
+				return this.getReviews(venueId);
+		/*	ResultSet resReviewsCheck;
 				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
 														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
 				if (resReviewsCheck.next()) { // if at least one review exists
@@ -368,7 +369,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				}
 				
 				
-				
+				*/
 			} else {
 				// failed to check in
 				message = "Failed to check in";
