@@ -330,8 +330,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 			int resCheckIn = statement.executeUpdate(insertCheckin);
 			if (resCheckIn == 1) { // if checked in
-				message = "Checked in successfully";
-				return this.getReviews(venueId);
+				
+				return this.getReviews(venueId, true);
+				
 		/*	ResultSet resReviewsCheck;
 				resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
 														FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
@@ -387,7 +388,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 	}
 	
-	public Location getReviews(String venueId) throws SQLException {
+	public Location getReviews(String venueId, boolean checkedIn) throws SQLException {
 		
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
@@ -420,12 +421,20 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			}
 			dbConnection.closeConn();
+			if (checkedIn) {
+				message = "Checked in successfully";
+			} else {
 			message = "List of reviews for this place";
+			}
 			return new Location("true", message, new LocationData(venueId, rd)); // returns list of reviews
 			
 		} else {					
 			// no reviews left
-			message = "No reviews left for this place";
+			if (checkedIn) {
+				message = "Checked in successfully. Nobody left a review yet";
+			} else {
+			message = "Nobody left a review yet";
+			}
 			dbConnection.closeConn();
 			return new Location("true", message, new LocationData(venueId, rd)); // returns empty list of reviews
 		}

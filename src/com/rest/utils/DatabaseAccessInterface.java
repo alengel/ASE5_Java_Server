@@ -104,8 +104,9 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	/**
 	 * 
 	 * @param venueId
+	 * @param checkId
 	 * @return
 	 * @throws SQLException
 	 */
-	public Location getReviews(String venueId) throws SQLException;
+	public Location getReviews(String venueId, boolean checkedIn) throws SQLException;
 }
