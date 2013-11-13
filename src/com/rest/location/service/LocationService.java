@@ -62,6 +62,18 @@ public class LocationService {
 		
 	}
 	
+	@GET                                
+	@Path("{venueId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response getReviews(@PathParam ("venueId") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		Location location = dbAccess.getReviews(venueId);
+		return Response.ok(location).build();
+	}
+
 
 
 }

@@ -385,6 +385,55 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 
 	}
+	
+	public Location getReviews(String venueId) throws SQLException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		ResultSet resReviewsCheck;
+		List<ReviewData> rd = null;
+		String message;
+	try {	resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+												FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "');");
+		if (resReviewsCheck.next()) { // if at least one review exists
+			rd = new ArrayList<ReviewData>();
+	
+			ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
+					FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
+			while (resReviews.next()) {
+				int userId = resReviews.getInt("users_id");
+				int  rating = resReviews.getInt("rating");
+				String title = resReviews.getString("review_title");
+				String review = resReviews.getString("review_description");
+				String picture = resReviews.getString("review_picture");
+				DBCon dbConnection1 = new DBCon();
+				Statement statement1 = dbConnection1.getStatement();
+				ResultSet resUserById = null;
+				resUserById = statement1.executeQuery(SELECT + "* " + FROM + USER_TABLE + WHERE + "id = " + userId);
+				resUserById.next();
+				String userFirstName = resUserById.getString("first_name");
+				String userLastName = resUserById.getString("last_name");
+				String userEmail = resUserById.getString("email");
+				dbConnection1.closeConn();
+				rd.add(new ReviewData(userId, userFirstName, userLastName, userEmail, rating, title, review, picture)); // adds reviews into reviews list 
+
+			}
+			dbConnection.closeConn();
+			message = "List of reviews for this place";
+			return new Location("true", message, new LocationData(venueId, rd)); // returns list of reviews
+			
+		} else {					
+			// no reviews left
+			message = "No reviews left for this place";
+			dbConnection.closeConn();
+			return new Location("true", message, new LocationData(venueId, rd)); // returns empty list of reviews
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+		return null;
+	}
+
+	}
 
 
 	@Override
