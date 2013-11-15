@@ -348,24 +348,44 @@ public class DatabaseAccessTest {
 	*/
 	
 	@Test
-	public void testCheckInSuccessful() throws ArgumentMissingException, InvalidKeyException{
-		String key = "key";
+	public void testCheckInSuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		dbAccess.registerNewUser(email, password, firstName, lastName);
+		
+		UserData userLoggedIn = dbAccess.loginUser(email, password);
+		
+		String loginKey = userLoggedIn.getLoginKey();
+		
 		String venueId = "venueID";
 		String timestamp = "timestamp";
 		
-		Location result = dbAccess.checkIn(key, venueId, timestamp);
-		boolean expected = true;
+		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
+		Location expected = true;
 		assertEquals (expected, result);
 	}
 	
 	@Test
-	public void testCheckInUnsuccessful() throws ArgumentMissingException, InvalidKeyException{
-		String key = "key";
+	public void testCheckInUnsuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		dbAccess.registerNewUser(email, password, firstName, lastName);
+		
+		UserData userLoggedIn = dbAccess.loginUser(email, password);
+		
+		String loginKey = userLoggedIn.getLoginKey();
+		
 		String venueId = "venueID";
 		String timestamp = "timestamp";
 		
-Location result = dbAccess.checkIn(key, venueId, timestamp);
-		boolean expected = false;
+		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
+		Location expected = false;
 		assertEquals (expected, result);
 	}
 
