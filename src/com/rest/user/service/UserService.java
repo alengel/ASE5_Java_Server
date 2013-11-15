@@ -128,9 +128,9 @@ import javax.servlet.http.HttpSession;
 			UserData userData;
 			//String file = servletRequest.getSession().getServletContext().getRealPath("/");
 			
-			String file = servletRequest.getSession().getServletContext().getRealPath("/");
+			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			//String encodedParam = URLEncoder.encode(file, "UTF-8");
-			String uploadedFileLocation =   file + "/img/" + fileDetail.getFileName();
+			String uploadedFileLocation =   rootFolder + "/img/" + fileDetail.getFileName();
 			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+fileDetail.getFileName();
 	
 
