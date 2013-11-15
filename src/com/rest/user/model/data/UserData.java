@@ -14,13 +14,15 @@ public class UserData {
 	private String logoutSessiontime;
 	private String gpsPushtime;
 	private String minDistance;
+	private String picture;
 		
 	public UserData() {
 		
 		
 	}
-	
-	public UserData(String email, String passwd, String firstName, String lastName, String loginKey, String loginTimestamp, String lastLogin, String lastRequest, String logoutSessiontime, String gpsPushtime, String minDistance) {
+
+
+	public UserData(String email, String passwd, String firstName, String lastName, String picture, String loginKey, String loginTimestamp, String lastLogin, String lastRequest, String logoutSessiontime, String gpsPushtime, String minDistance) {
 		this.email = email;
 		this.passwd = passwd;
 		this.firstName = firstName;
@@ -32,6 +34,7 @@ public class UserData {
 		this.logoutSessiontime = logoutSessiontime;
 		this.gpsPushtime = gpsPushtime;
 		this.minDistance = minDistance;
+		this.picture = picture;
 		
 	}
 
@@ -73,6 +76,14 @@ public class UserData {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 	public String getLoginKey() {

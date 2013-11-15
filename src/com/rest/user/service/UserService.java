@@ -1,8 +1,8 @@
 package com.rest.user.service;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
 
+import java.net.URLEncoder;
 import java.sql.*;
 
 import com.rest.user.model.*;
@@ -16,6 +16,28 @@ import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+
+
 	@Path("/")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
 	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
 
@@ -23,6 +45,7 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 		private DBCon dbcn;
 		private Statement st;		//creates a DB statement object
 		private DatabaseAccess dbAccess;
+		
 		
 		/******											user/login
 		 * 
@@ -47,6 +70,8 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 		 * @throws UserNotFoundException 
 		 * @throws ArgumentMissingException 
 		 */
+		
+		
 
 		@POST                                
 		@Path("/login")                      
@@ -71,6 +96,8 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 	    } 
 		
 		
+		
+		
 		/****						user/register
 		 * 
 		 * 
@@ -86,26 +113,68 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 		 * @throws ArgumentMissingException 
 		 * @throws InputTooLongException 
 		 * @throws WrongEmailFormatException 
+		 * @throws UnsupportedEncodingException 
 		 */
 		
 		@POST                                
 		@Path("/register")
-		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		@Consumes(MediaType.MULTIPART_FORM_DATA)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("firstName") String firstName, @FormParam("lastName") String lastName) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException
-	    {
-	           
+	    public Response register(@Context HttpServletRequest servletRequest, @FormDataParam ("email") String email, @FormDataParam("passwd") String passwd, @FormDataParam ("firstName") String firstName, @FormDataParam("lastName") String lastName, @FormDataParam("file") InputStream uploadedInputStream,
+	    		@FormDataParam("file") FormDataContentDisposition fileDetail) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, UnsupportedEncodingException {	
+			
+			
 			UserData userData;
+			//String file = servletRequest.getSession().getServletContext().getRealPath("/");
+			
+			String file = servletRequest.getSession().getServletContext().getRealPath("/");
+			//String encodedParam = URLEncoder.encode(file, "UTF-8");
+			String uploadedFileLocation =   file + "/img/" + fileDetail.getFileName();
+			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+fileDetail.getFileName();
+	
+
+			// save it
+			this.writeToFile(uploadedInputStream, uploadedFileLocation);
+			
+			String output = "File uploaded to : " + uploadedFileLocation;
+			
+			
 			try {
 				dbAccess = new DatabaseAccess();
-				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName);
+				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
 				return Response.ok(new User("true", "Registration is complete")).build();
 			} catch (EmailAlreadyExistsException e) {
 				return Response.ok(new User("false", "User with this email already exists")).build(); 				
 			}
 			
 			
-	    } 
+	    }
+		
+		// save uploaded file to new location
+		private void writeToFile(InputStream uploadedInputStream,
+			String uploadedFileLocation) {
+			
+	 
+			try {
+				OutputStream out = new FileOutputStream(new File(
+						uploadedFileLocation));
+				int read = 0;
+				byte[] bytes = new byte[1024];
+	 
+				out = new FileOutputStream(new File(uploadedFileLocation));
+				while ((read = uploadedInputStream.read(bytes)) != -1) {
+					out.write(bytes, 0, read);
+				}
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+	 
+				e.printStackTrace();
+			}
+			
+		}
+
 		
 		@POST                                
 		@Path("/logout")
