@@ -32,9 +32,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
-
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.ByteArrayInputStream;
@@ -45,8 +42,6 @@ import java.io.ByteArrayInputStream;
 	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
 
 		
-		private DBCon dbcn;
-		private Statement st;		//creates a DB statement object
 		private DatabaseAccess dbAccess;
 		
 		
@@ -132,8 +127,7 @@ import java.io.ByteArrayInputStream;
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			
-			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());
-			
+			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
 			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+email+"picture.jpg");
 			
 			Base64.decode(encInpStr, decOutStr);
@@ -142,12 +136,7 @@ import java.io.ByteArrayInputStream;
 			decOutStr.close();
 	
 			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
-	
-
-			// save it
-		//	this.writeToFile(outputStream, uploadedFileLocation);
-			
-			
+				
 			try {
 				dbAccess = new DatabaseAccess();
 				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
@@ -159,29 +148,6 @@ import java.io.ByteArrayInputStream;
 			
 	    }
 		
-		// save uploaded file to new location
-		private void writeToFile(InputStream uploadedInputStream,
-			String uploadedFileLocation) {
-			
-	 
-			try {
-				OutputStream out = new FileOutputStream(new File(
-						uploadedFileLocation));
-				int read = 0;
-				byte[] bytes = new byte[1024];
-	 
-				out = new FileOutputStream(new File(uploadedFileLocation));
-				while ((read = uploadedInputStream.read(bytes)) != -1) {
-					out.write(bytes, 0, read);
-				}
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-	 
-				e.printStackTrace();
-			}
-			
-		}
 
 		
 		@POST                                
