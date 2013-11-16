@@ -1,5 +1,7 @@
 package com.rest.user.service;
 
+import it.sauronsoftware.base64.Base64;
+
 import javax.ws.rs.*;
 
 import java.net.URLEncoder;
@@ -34,7 +36,8 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
+import java.io.ByteArrayInputStream;
 
 
 
@@ -113,31 +116,36 @@ import javax.servlet.http.HttpSession;
 		 * @throws ArgumentMissingException 
 		 * @throws InputTooLongException 
 		 * @throws WrongEmailFormatException 
-		 * @throws UnsupportedEncodingException 
+		 * @throws IOException 
 		 */
 		
 		@POST                                
 		@Path("/register")
-	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-		@Consumes(MediaType.MULTIPART_FORM_DATA)
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	//	@Consumes(MediaType.MULTIPART_FORM_DATA)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@Context HttpServletRequest servletRequest, @FormDataParam ("email") String email, @FormDataParam("passwd") String passwd, @FormDataParam ("firstName") String firstName, @FormDataParam("lastName") String lastName, @FormDataParam("file") InputStream uploadedInputStream,
-	    		@FormDataParam("file") FormDataContentDisposition fileDetail) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, UnsupportedEncodingException {	
+	    public Response register(@Context HttpServletRequest servletRequest, @FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("file") String  encodedImage
+	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
 			
 			
 			UserData userData;
-			//String file = servletRequest.getSession().getServletContext().getRealPath("/");
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
-			//String encodedParam = URLEncoder.encode(file, "UTF-8");
-			String uploadedFileLocation =   rootFolder + "/img/" + fileDetail.getFileName();
-			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+fileDetail.getFileName();
+			
+			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());
+			
+			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+email+"picture.jpg");
+			
+			Base64.decode(encInpStr, decOutStr);
+			
+			encInpStr.close();
+			decOutStr.close();
+	
+			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
 	
 
 			// save it
-			this.writeToFile(uploadedInputStream, uploadedFileLocation);
-			
-			String output = "File uploaded to : " + uploadedFileLocation;
+		//	this.writeToFile(outputStream, uploadedFileLocation);
 			
 			
 			try {
