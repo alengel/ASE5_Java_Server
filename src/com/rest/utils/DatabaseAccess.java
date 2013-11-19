@@ -84,7 +84,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	
 	@Override
 	public UserData registerNewUser(String email, String password, 
-			String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
+			String firstName, String lastName, String picture) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
 		if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
 			throw new ArgumentMissingException();
@@ -123,8 +123,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		String insertStatement = INSERT_INTO + USER_TABLE +
-				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", logout_session_time, geo_push_interval, min_distance) "
-				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "', 60, 30, 100);";
+				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", picture, logout_session_time, geo_push_interval, min_distance) "
+				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + picture + "', 60, 30, 100);";
 	
 		int success;
 		try {
@@ -140,7 +140,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		dbConnection.closeConn();
 		
-		return new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
+		return new UserData(email, password, firstName, lastName, picture, null, null, null, null, null, null, null);
 	}
 	
 	/**
@@ -191,6 +191,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String firstName;
 		String lastName;
 		String loginKey;
+		String picture;
 		int logoutSessionTime;
 		int geoPushInterval;
 		int minDistance;
@@ -212,6 +213,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			loginKey = SHA1.stringToSHA(loginKey);	
 			firstName = userFromDb.getString("first_name");
 			lastName = userFromDb.getString("last_name");
+			picture = userFromDb.getString("picture");
 			logoutSessionTime = userFromDb.getInt("logout_session_time");
 			geoPushInterval = userFromDb.getInt("geo_push_interval");
 			minDistance = userFromDb.getInt("min_distance");
@@ -226,7 +228,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		
 		dbConnection.closeConn();
-		return new UserData(email, password, firstName, lastName, loginKey, ""+timeStamp, null, null, ""+logoutSessionTime, ""+geoPushInterval, ""+minDistance);
+		return new UserData(email, password, firstName, lastName, picture, loginKey, ""+timeStamp, null, null, ""+logoutSessionTime, ""+geoPushInterval, ""+minDistance);
 	}
 	
 	

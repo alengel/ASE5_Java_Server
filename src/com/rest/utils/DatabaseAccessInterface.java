@@ -45,7 +45,7 @@ public interface DatabaseAccessInterface {
 	 * @throws ArgumentMissingException 
 	 * @throws SQLException 
 	 */
-	public UserData registerNewUser(String email, String password, String firstName, String lastName) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException;
+	public UserData registerNewUser(String email, String password, String firstName, String lastName, String picture) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException;
 	
 	/**
 	 * should remove the loginKey form the DB

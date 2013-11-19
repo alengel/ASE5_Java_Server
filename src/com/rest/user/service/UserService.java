@@ -1,8 +1,10 @@
 package com.rest.user.service;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import it.sauronsoftware.base64.Base64;
 
+import javax.ws.rs.*;
+
+import java.net.URLEncoder;
 import java.sql.*;
 
 import com.rest.user.model.*;
@@ -16,13 +18,32 @@ import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.io.ByteArrayInputStream;
+
+
+
 	@Path("/")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
 	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
 
 		
-		private DBCon dbcn;
-		private Statement st;		//creates a DB statement object
 		private DatabaseAccess dbAccess;
+		
 		
 		/******											user/login
 		 * 
@@ -47,6 +68,8 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 		 * @throws UserNotFoundException 
 		 * @throws ArgumentMissingException 
 		 */
+		
+		
 
 		@POST                                
 		@Path("/login")                      
@@ -71,6 +94,8 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 	    } 
 		
 		
+		
+		
 		/****						user/register
 		 * 
 		 * 
@@ -86,26 +111,44 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 		 * @throws ArgumentMissingException 
 		 * @throws InputTooLongException 
 		 * @throws WrongEmailFormatException 
+		 * @throws IOException 
 		 */
 		
 		@POST                                
 		@Path("/register")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	//	@Consumes(MediaType.MULTIPART_FORM_DATA)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("firstName") String firstName, @FormParam("lastName") String lastName) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException
-	    {
-	           
+	    public Response register(@Context HttpServletRequest servletRequest, @FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("file") String  encodedImage
+	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
+			
+			
 			UserData userData;
+			
+			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
+			
+			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
+			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+email+"picture.jpg");
+			
+			Base64.decode(encInpStr, decOutStr);
+			
+			encInpStr.close();
+			decOutStr.close();
+	
+			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
+				
 			try {
 				dbAccess = new DatabaseAccess();
-				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName);
+				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
 				return Response.ok(new User("true", "Registration is complete")).build();
 			} catch (EmailAlreadyExistsException e) {
 				return Response.ok(new User("false", "User with this email already exists")).build(); 				
 			}
 			
 			
-	    } 
+	    }
+		
+
 		
 		@POST                                
 		@Path("/logout")
