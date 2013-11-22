@@ -199,8 +199,7 @@ public class DatabaseAccessTest {
 		//adding user to database 1st time
 		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
-		//adding user to database 2nd time 
-		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 	}
 	/*
@@ -236,7 +235,7 @@ public class DatabaseAccessTest {
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
-		String loginKey = userLoggedIn.getLoginKey();
+		userLoggedIn.getLoginKey();
 		
 		UserData result = dbAccess.loginUser(email, password);
 		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null, null);

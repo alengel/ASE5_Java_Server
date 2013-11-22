@@ -21,13 +21,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +35,7 @@ import java.io.ByteArrayInputStream;
 
 
 	@Path("/")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
-	public class UserService /*TODO: uncomment!   implements UserServiceInterface  */ {
+	public class UserService {
 
 		
 		private DatabaseAccess dbAccess;
@@ -119,6 +119,7 @@ import java.io.ByteArrayInputStream;
 	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
 			
 			
+			@SuppressWarnings("unused")
 			UserData userData;
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");

@@ -5,22 +5,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.rest.location.model.Location;
-import com.rest.location.model.data.LocationData;
-import com.rest.review.model.data.ReviewData;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InvalidKeyException;
 
 @Path("/")  	
 public class LocationService {
-	private DBCon dbcn;
-	private Statement st;
-	private String success = "true";
-	private String message;
 	private DatabaseAccess dbAccess;
 	
 	@POST                                
