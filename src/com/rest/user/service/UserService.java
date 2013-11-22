@@ -4,7 +4,6 @@ import it.sauronsoftware.base64.Base64;
 
 import javax.ws.rs.*;
 
-import java.net.URLEncoder;
 import java.sql.*;
 
 import com.rest.user.model.*;
@@ -18,13 +17,10 @@ import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
