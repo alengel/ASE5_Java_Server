@@ -17,7 +17,6 @@ import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
-import com.rest.utils.exceptions.InvalidKeyException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
 	
@@ -49,21 +48,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String USER_FIRSTNAME = "first_name ";
 		private final static String USER_LASTNAME = "last_name ";
 		private final static String USER_LOGINKEY = "login_key ";
-		private final static String USER_LOGIN_TIMESTAMP = "login_timestamp ";
-		private final static String USER_LAST_LOGIN = "last_login ";
-		private final static String USER_LAST_REQUEST = "last_request ";
-		private final static String USER_LOGOUT_SESSION_TIME = "logout_session_time ";
 		private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
 		private final static String USER_MIN_DISTANCE = "min_distance ";
-		private final static String USER_MAX_LOGIN_INTERVAL = "max_login_interval ";
-		private final static String USER_DATED = "dated ";
-		
 		//static Strings for the table t5_locations
 		private final static String LOCATIONS_TABLE = "t5_locations ";
 		private final static String LOCATIONS_ID = "id ";
 		private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
-		private final static String LOCATIONS_DATED = "dated ";
-		
 		//static Stings for the table t5_users_reviews
 		private static final String REVIEWS_TABLE = "t5_reviews ";
 		private static final String REVIEWS_USER_ID = "users_id ";
@@ -72,8 +62,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String REVIEWS_REVIEW_TITLE = "review_title ";
 		private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
 		private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
-		private static final String REVIEWS_DATED = "dated ";
-		
 		//static Strings for the table t5_checkins
 		private static final String CHECKIN_TABLE = "t5_checkins ";
 		private static final String CHECKIN_USER_ID = "users_id ";
@@ -167,7 +155,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		if(email.startsWith(".")) return false;
 		if(email.endsWith(".")) return false;
 		if(email.contains(" ")) return false;
-		//TODO: add more!
 		
 		return true;
 	}
@@ -205,9 +192,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new PasswordWrongException();
 			}
 			
-			//log in the user
-			//TODO: do we need to set other variables like loginTimestamp or is it deprecated?
-			
+			//log in the user			
 			long timeStamp = System.currentTimeMillis()/1000L;
 			loginKey = email+timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);	

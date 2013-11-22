@@ -5,14 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.naming.*;
-import javax.sql.DataSource;
-
 
 
 public class DBCon { 
-	private DataSource ds;
-	private Context ctx;
 	private Connection conn;
 	private Statement st;
 	

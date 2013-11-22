@@ -47,26 +47,26 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
-		UserData expected = new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null);
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		UserData expected = new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 		
 		dbAccess.clearDatabase();
 		
-		result  = dbAccess.registerNewUser(email, password, null, lastName);
-		expected = new UserData(email, password, null, lastName, null, null, null, null, null, null, null);
+		result  = dbAccess.registerNewUser(email, password, null, lastName, null);
+		expected = new UserData(email, password, null, lastName, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 		
 		dbAccess.clearDatabase();
 		
-		result  = dbAccess.registerNewUser(email, password, firstName, null);
-		expected = new UserData(email, password, firstName, null, null, null, null, null, null, null, null);
+		result  = dbAccess.registerNewUser(email, password, firstName, null, null);
+		expected = new UserData(email, password, firstName, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 		
 		dbAccess.clearDatabase();
 		
-		result  = dbAccess.registerNewUser(email, password, null, null);
-		expected = new UserData(email, password, null, null, null, null, null, null, null, null, null);
+		result  = dbAccess.registerNewUser(email, password, null, null, null);
+		expected = new UserData(email, password, null, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
 	
@@ -77,7 +77,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(null, password, firstName, lastName);
+		dbAccess.registerNewUser(null, password, firstName, lastName, null);
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
@@ -87,7 +87,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser("", password, firstName, lastName);
+		dbAccess.registerNewUser("", password, firstName, lastName, null);
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
@@ -97,7 +97,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String email = "test@web.de";
 		
-		dbAccess.registerNewUser(email, null, firstName, lastName);
+		dbAccess.registerNewUser(email, null, firstName, lastName, null);
 	}
 	
 	@Test(expected = ArgumentMissingException.class)
@@ -107,7 +107,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String email = "test@web.de";
 		
-		dbAccess.registerNewUser(email, "", firstName, lastName);
+		dbAccess.registerNewUser(email, "", firstName, lastName, null);
 	}
 	
 	@Test(expected = WrongEmailFormatException.class)
@@ -118,7 +118,7 @@ public class DatabaseAccessTest {
 		String email = "test";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 	}
 	
 	@Test(expected = WrongEmailFormatException.class)
@@ -129,7 +129,7 @@ public class DatabaseAccessTest {
 		String email = "test@ web.de";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 	}
 	
 	@Test(expected = InputTooLongException.class)
@@ -140,8 +140,8 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		UserData result = dbAccess.registerNewUser(email, password, firstName.replaceAll(" ", ""), lastName);
-		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		UserData result = dbAccess.registerNewUser(email, password, firstName.replaceAll(" ", ""), lastName, null);
+		UserData expected = new UserData(null, null, null, null, null, null,  null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
 	
@@ -153,8 +153,8 @@ public class DatabaseAccessTest {
 		String firstName = "Schliski";
 		String password = "Hi98786";
 		
-		UserData result = dbAccess.registerNewUser(email, password, firstName.replaceAll(" ", ""), lastName.replaceAll(" ", ""));
-		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		UserData result = dbAccess.registerNewUser(email, password, firstName.replaceAll(" ", ""), lastName.replaceAll(" ", ""), null);
+		UserData expected = new UserData(null, null, null, null,  null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
 
@@ -166,8 +166,8 @@ public class DatabaseAccessTest {
 		String firstName = "Karolina";
 		String password = "Hi98786";
 		
-		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
-		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
 	
@@ -179,8 +179,8 @@ public class DatabaseAccessTest {
 		String firstName = "Karolina";
 		String password = "Hi98786LoremdipsumddolordsitdametddconsectetueddadipiscingdelitddAeneandcommododliguladegetddolorddAeneandmassaddCumdsociisdnatoquedpenatibusdetdmagnisddisdparturientdmontesddnasceturdridiculusdmusddDonecdquamdfelisddultriciesdnecddpellentesquedeuddpretiumdquisddsemddNulladconsequatdmassadquisdenimddDonecdwebddecom";
 		
-		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
-		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null);
+		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		UserData expected = new UserData(null, null, null, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected, result);
 	}
 	
@@ -197,10 +197,9 @@ public class DatabaseAccessTest {
 		String password = "Hello";
 	
 		//adding user to database 1st time
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
-		//adding user to database 2nd time 
-		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 	}
 	/*
@@ -214,14 +213,14 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
 		String loginKey = userLoggedIn.getLoginKey();
 		
 		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData (email, password, firstName, lastName, loginKey, null, null, null, null, null, null);
+		UserData expected = new UserData (email, password, firstName, lastName, loginKey, null, null, null, null, null, null, null);
 		assertEquals(expected,result);
 	}
 	
@@ -232,14 +231,14 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
-		String loginKey = userLoggedIn.getLoginKey();
+		userLoggedIn.getLoginKey();
 		
 		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null);
+		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null, null);
 		assertEquals(expected,result);
 	}
 	
@@ -280,7 +279,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
@@ -302,7 +301,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
@@ -354,7 +353,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
@@ -364,7 +363,7 @@ public class DatabaseAccessTest {
 		String timestamp = "timestamp";
 		
 		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
-		Location expected = true;
+		boolean expected = true;
 		assertEquals (expected, result);
 	}
 	
@@ -375,7 +374,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
@@ -385,7 +384,7 @@ public class DatabaseAccessTest {
 		String timestamp = "timestamp";
 		
 		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
-		Location expected = false;
+		boolean expected = false;
 		assertEquals (expected, result);
 	}
 
@@ -401,7 +400,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
@@ -425,7 +424,7 @@ public class DatabaseAccessTest {
 		String lastName = "Schliski";
 		String password = "Hi98786";
 		
-		dbAccess.registerNewUser(email, password, firstName, lastName);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
