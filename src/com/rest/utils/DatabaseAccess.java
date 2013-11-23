@@ -62,6 +62,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String REVIEWS_REVIEW_TITLE = "review_title ";
 		private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
 		private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
+		private static final String REVIEWS_TOTAL_VOTE_UP = "total_vote_up";
+		private static final String REVIEWS_TOTAL_VOTE_DOWN = "total_vote_down";
+		private static final String REVIEWS_SPAMS = "spams";
 		//static Strings for the table t5_checkins
 		private static final String CHECKIN_TABLE = "t5_checkins ";
 		private static final String CHECKIN_USER_ID = "users_id ";
