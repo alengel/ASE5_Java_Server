@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response;
  */
 public interface UserServiceInterface {
 	
+	//TODO: it is deprecated!!!
+	
 	/**
 	 * method for a user to login
 	 * @param email
@@ -33,4 +35,6 @@ public interface UserServiceInterface {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
     public Response register(@FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("email") String firstName, @FormParam("passwd") String lastName);
+	
+	
 }

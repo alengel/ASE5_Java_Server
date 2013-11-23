@@ -528,6 +528,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 	}
 
+	public boolean follow(String key, String reviewer_id) {
+		
+		return false;
+	}
+
 	
 
 }
