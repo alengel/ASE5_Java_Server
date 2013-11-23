@@ -521,8 +521,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			
 			//insert review
 			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 
-					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ") " +
-					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "');";
+					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN + "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") " +
+					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "', '0', '0', '0" + "');";
 			statement.executeUpdate(insertReview);
 			
 			
