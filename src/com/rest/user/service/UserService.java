@@ -86,9 +86,9 @@ import java.io.ByteArrayInputStream;
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {
-	        	return  Response.ok(new User("false", "Email and/or password not found")).build();	        	
+	        	return  Response.ok(new User("false", "Email not found")).build();	        	
 	        } catch (PasswordWrongException e) {
-	        	return  Response.ok(new User("false", "Email and/or password not found")).build();	        	
+	        	return  Response.ok(new User("false", "Password is wrong for this user")).build();	        	
         }
 			
 	    } 
@@ -159,7 +159,7 @@ import java.io.ByteArrayInputStream;
 		@Path("/logout")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response logout(@FormParam("key") String loginKey) {
+		public Response logout(@FormParam("loginKey") String loginKey) {
 			try {
 				dbAccess = new DatabaseAccess();
 				if (dbAccess.logoutUser(loginKey)) {
@@ -176,7 +176,7 @@ import java.io.ByteArrayInputStream;
 		@Path("/settings")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response updateSettings(@FormParam("key") String loginKey, @FormParam("min_distance") int minDistance, @FormParam("logout_session_time") int logoutSessionTime, @FormParam("geo_push_interval") int geoPushInterval) {
+		public Response updateSettings(@FormParam("loginKey") String loginKey, @FormParam("minDistance") int minDistance, @FormParam("logoutSessionTime") int logoutSessionTime, @FormParam("geoPushInterval") int geoPushInterval) {
 			try {
 				dbAccess = new DatabaseAccess();
 				if (dbAccess.updateSettings(loginKey, minDistance, logoutSessionTime, geoPushInterval)) {
@@ -233,6 +233,7 @@ import java.io.ByteArrayInputStream;
 
             return Response.ok(u).build();
         }
+                               
 		
 		
 	
@@ -247,7 +248,6 @@ import java.io.ByteArrayInputStream;
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			System.out.println(rootFolder);			
-						
 			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
 		}
 	}
