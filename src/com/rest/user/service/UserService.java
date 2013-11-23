@@ -195,11 +195,11 @@ import java.io.ByteArrayInputStream;
 			dbAccess = new DatabaseAccess();
 			boolean success = false;
 			try {
-				success = dbAccess.vote(key, reviewer_id, 1);
+				success = dbAccess.follow(key, reviewer_id);
 			} catch (InvalidKeyException e) {
 				return Response.ok(new User("false", "LoginKey is wrong")).build();
-			} catch (ReviewNotFoundException e) {
-				return Response.ok(new User("false", "Review not found")).build();
+			} catch (UserNotFoundException e) {
+				return Response.ok(new User("false", "User not found")).build();
 			}
 			
 			if(success) {
@@ -228,5 +228,22 @@ import java.io.ByteArrayInputStream;
 
             return Response.ok(u).build();
         }
+		
+		
+	
+		
+		
+		//this method is for checking some stuff at the server, not used in real app
+		@GET                                
+		@Path("/info")
+	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	//	@Produces(MediaType.APPLICATION_JSON)
+		public Response getInfo(@Context HttpServletRequest servletRequest) {
+			
+			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
+			System.out.println(rootFolder);
+			
+			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
+		}
 	}
 
