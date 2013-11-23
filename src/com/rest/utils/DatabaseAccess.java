@@ -609,5 +609,49 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	
+	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException {
+
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String userId = keyFromDb.getString("id");
+			
+			//check if reviewId is valid
+			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
+			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
+			
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+	
+			
+			//insert the comment
+			String insertComment = INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE + 
+					"( " + REVIEWS_COMMENTS_USER_ID + ", " + REVIEWS_COMMENTS_USER_REVIEWS_ID + ", " + REVIEWS_COMMENTS_COMMENT + ") " +
+					VALUES + "( '" + userId + "', '" + reviewId + "', '" + comment + "');";
+			statement.executeUpdate(insertComment);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
+
+	
 
 }

@@ -90,4 +90,32 @@ public class LocationService {
 	}
 	
 	
+	@POST                                
+	@Path("/put-comment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("comment") String comment) {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		try {
+			if (dbAccess.putComment(key, reviewId, comment)) {
+				success = "true";
+				message = "Comment successful";
+			} else {
+				success = "false";
+				message = "Failed to comment";
+			}
+		} catch(InvalidKeyException e) {
+			success = "false";
+			message = "Key not found";
+		} catch (ReviewNotFoundException e) {
+			success = "false";
+			message = "Review not found";
+		}
+		return Response.ok(new Location(success, message)).build();
+		
+	}
+	
+	
 }
