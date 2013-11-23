@@ -5,10 +5,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
+
 import com.rest.location.model.Location;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InvalidKeyException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 
 @Path("/")  	
 public class LocationService {
@@ -58,5 +60,34 @@ public class LocationService {
 	}
 
 
-
+	
+	@POST                                
+	@Path("/vote")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("vote") int vote) {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		try {
+			if (dbAccess.vote(key, reviewId, vote)) {
+				success = "true";
+				message = "Voted successfully";
+			} else {
+				success = "false";
+				message = "Failed to vote";
+			}
+		} catch (InvalidKeyException e) {
+			success = "false";
+			message = "Invalid key";
+			e.printStackTrace();
+		} catch (ReviewNotFoundException e) {
+			success = "false";
+			message = "Review not found";
+		}
+		return Response.ok(new Location(success, message)).build();
+		
+	}
+	
+	
 }
