@@ -66,18 +66,18 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String REVIEWS_TOTAL_VOTE_DOWN = "total_vote_down";
 		private static final String REVIEWS_SPAMS = "spams";
 		//static Strings for t5_users_reviews_comments
-		private static final String REVIEWS_COMMENTS_TABLE = "t5_users_reviews_comments";
-		private static final String REVIEWS_COMMENTS_ID = "id";
-		private static final String REVIEWS_COMMENTS_USER_ID = "user_id";
-		private static final String REVIEWS_COMMENTS_USER_REVIEWS_ID = "user_reviews_id";
-		private static final String REVIEWS_COMMENTS_COMMENT = "comment";
+		private static final String REVIEWS_COMMENTS_TABLE = "t5_users_reviews_comments ";
+		private static final String REVIEWS_COMMENTS_ID = "id ";
+		private static final String REVIEWS_COMMENTS_USER_ID = "user_id ";
+		private static final String REVIEWS_COMMENTS_USER_REVIEWS_ID = "user_reviews_id ";
+		private static final String REVIEWS_COMMENTS_COMMENT = "comment ";
 		//static Strings for t5_users_votes
-		private static final String USERS_VOTES_TABLE = "t5_users_votes";
-		private static final String USERS_VOTES_ID = "id";
-		private static final String USERS_VOTES_USER_ID = "user_id";
-		private static final String USERS_VOTES_USER_REVIEWS_ID = "user_reviews_id";
-		private static final String USERS_VOTES_VOTE_FLAG = "vote_flag";
-		private static final String USERS_VOTES_DATED = "dated";
+		private static final String USERS_VOTES_TABLE = "t5_users_votes ";
+		private static final String USERS_VOTES_ID = "id ";
+		private static final String USERS_VOTES_USER_ID = "user_id ";
+		private static final String USERS_VOTES_USER_REVIEWS_ID = "user_reviews_id ";
+		private static final String USERS_VOTES_VOTE_FLAG = "vote_flag ";
+		private static final String USERS_VOTES_DATED = "dated ";
 		//static Strings for the table t5_checkins
 		private static final String CHECKIN_TABLE = "t5_checkins ";
 		private static final String CHECKIN_USER_ID = "users_id ";
