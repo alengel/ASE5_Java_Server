@@ -192,7 +192,14 @@ import java.io.ByteArrayInputStream;
 	    public Response register(@FormParam ("key") String key, @FormParam("reviewer_id") String reviewer_id) {
 			
 			dbAccess = new DatabaseAccess();
-			boolean success = dbAccess.follow(key, reviewer_id);
+			boolean success = false;
+			try {
+				success = dbAccess.follow(key, reviewer_id);
+			} catch (InvalidKeyException e) {
+				return Response.ok(new User("false", "LoginKey is wrong")).build();
+			} catch (UserNotFoundException e) {
+				return Response.ok(new User("false", "User not found")).build();
+			}
 			
 			if(success) {
 				return Response.ok(new User("true", "")).build();
