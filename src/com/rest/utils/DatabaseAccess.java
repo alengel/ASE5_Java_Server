@@ -67,6 +67,15 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String CHECKIN_USER_ID = "users_id ";
 		private static final String CHECKIN_LOCATION_ID = "locations_id ";
 		private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
+		//static Strings for the table t5_connections
+		private static final String CONNECTIONS_TABLE = "t5_connections";
+		private static final String CONNECTIONS_ID = "id";
+		private static final String CONNECTIONS_MY_ID = "my_id";
+		private static final String CONNECTIONS_FRIENDS_ID = "friends_id";
+		private static final String CONNECTIONS_STATUS = "status";
+		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status";
+		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag";
+		private static final String CONNECTIONS_DATED = "dated";
 		
 
 	
@@ -526,6 +535,47 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+					
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String my_id = keyFromDb.getString(USER_ID);
+			
+			//check if reviewer_id exists
+			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + reviewer_id +"';";
+			ResultSet getIdResult = statement.executeQuery(getId);
+			if(!keyFromDb.next()) {
+				throw new UserNotFoundException();
+			}
+			
+			String setNewFollow = INSERT_IGNORE_INTO + CONNECTIONS_TABLE + 
+					"( " + CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") " + VALUES + "( '" +
+					my_id + "', '" + reviewer_id + "');";
+			statement.executeUpdate(setNewFollow);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+
+		
+		return true;
 	}
 
 	

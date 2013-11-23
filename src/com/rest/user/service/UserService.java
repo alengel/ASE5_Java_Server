@@ -23,8 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -182,6 +184,28 @@ import java.io.ByteArrayInputStream;
 		}
 			
 	   
-
+		
+		@POST                                
+		@Path("/follow")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		@Produces(MediaType.APPLICATION_JSON)	
+	    public Response register(@FormParam ("key") String key, @FormParam("reviewer_id") String reviewer_id) {
+			
+			dbAccess = new DatabaseAccess();
+			boolean success = false;
+			try {
+				success = dbAccess.follow(key, reviewer_id);
+			} catch (InvalidKeyException e) {
+				return Response.ok(new User("false", "LoginKey is wrong")).build();
+			} catch (UserNotFoundException e) {
+				return Response.ok(new User("false", "User not found")).build();
+			}
+			
+			if(success) {
+				return Response.ok(new User("true", "")).build();
+			} else {
+				return Response.ok(new User("false", "")).build();
+			}
+		}
 	}
 

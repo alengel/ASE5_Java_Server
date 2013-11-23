@@ -109,4 +109,6 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @throws SQLException
 	 */
 	public Location getReviews(String venueId, boolean checkedIn) throws SQLException;
+	
+	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException;
 }
