@@ -9,6 +9,7 @@ import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -109,4 +110,7 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @throws SQLException
 	 */
 	public Location getReviews(String venueId, boolean checkedIn) throws SQLException;
+	
+	
+	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
 }

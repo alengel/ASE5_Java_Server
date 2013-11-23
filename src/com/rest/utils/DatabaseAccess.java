@@ -15,6 +15,7 @@ import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -56,15 +57,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
 		//static Stings for the table t5_users_reviews
 		private static final String REVIEWS_TABLE = "t5_reviews ";
+		private static final String REVIEWS_ID = "id";
 		private static final String REVIEWS_USER_ID = "users_id ";
 		private static final String REVIEWS_LOCATION_ID = "locations_id ";
 		private static final String REVIEWS_RATING = "rating ";
 		private static final String REVIEWS_REVIEW_TITLE = "review_title ";
 		private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
 		private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
-		private static final String REVIEWS_TOTAL_VOTE_UP = "total_vote_up";
-		private static final String REVIEWS_TOTAL_VOTE_DOWN = "total_vote_down";
-		private static final String REVIEWS_SPAMS = "spams";
+		private static final String REVIEWS_TOTAL_VOTE_UP = "total_vote_up ";
+		private static final String REVIEWS_TOTAL_VOTE_DOWN = "total_vote_down ";
+		private static final String REVIEWS_SPAMS = "spams ";
 		//static Strings for t5_users_reviews_comments
 		private static final String REVIEWS_COMMENTS_TABLE = "t5_users_reviews_comments ";
 		private static final String REVIEWS_COMMENTS_ID = "id ";
@@ -542,6 +544,59 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String userId = keyFromDb.getString("id");
+			
+			//check if reviewId is valid
+			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
+			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
+			
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+	
+			
+			//update the review
+			String updateReview;
+			int newVote;
+			if(vote == 0) {
+				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_DOWN) + 1;
+				updateReview = UPDATE + REVIEWS_TABLE + 
+						SET + REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " " +
+						WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+			} else {
+				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_UP) + 1;
+				updateReview = UPDATE + REVIEWS_TABLE + 
+						SET + REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " +
+						WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+			}
+			statement.executeUpdate(updateReview);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
 	}
 
 	
