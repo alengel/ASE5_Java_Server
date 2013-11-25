@@ -5,7 +5,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
+
 import com.rest.location.model.Location;
+import com.rest.review.model.Review;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InvalidKeyException;
@@ -48,13 +50,13 @@ public class LocationService {
 	}
 	
 	@GET                                
-	@Path("{venueId}")
+	@Path("venue/{venue_id}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
     public Response getReviews(@PathParam ("venue_id") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		dbAccess = new DatabaseAccess();
-		Location location = dbAccess.getReviews(venueId, false);
-		return Response.ok(location).build();
+		Review review = dbAccess.getReviews(venueId);
+		return Response.ok(review).build();
 	}
 
 
