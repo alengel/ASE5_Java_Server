@@ -28,11 +28,11 @@ public class Comment {
     }
    
  
-	public Comment(String success, String message, CommentData ud) {
+	public Comment(String success, String message, ArrayList<CommentData> cd) {
 		
 		this.success = success;
 		this.message = message;
-		this.cd.add(0, ud);
+		this.cd = cd;
 	}
 	
 	@XmlElement
