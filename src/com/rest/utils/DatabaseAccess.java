@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.location.model.data.LocationData;
 import com.rest.review.model.data.ReviewData;
@@ -641,6 +642,36 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		dbConnection.closeConn();
 		
 		return true;
+	}
+
+	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException {
+		
+		ArrayList<CommentData> result = new ArrayList<CommentData>();
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if reviewId is valid
+		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_COMMENTS_TABLE + WHERE + REVIEWS_COMMENTS_ID + "= '" + reviewId +"';";
+		ResultSet reviewIdFromDb;
+		try {
+							
+			reviewIdFromDb = statement.executeQuery(getReviewIdFromDb);
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return result;
+		}
+		
+		dbConnection.closeConn();
+		
+		return result;
+		
 	}
 
 	
