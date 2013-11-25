@@ -1,5 +1,7 @@
 package com.rest.user.model.data;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class UserData {
 	
 	private String id;
@@ -62,6 +64,7 @@ public class UserData {
 		this.passwd = passwd;
 	}
 
+	@XmlElement(name = "first_name")	
 	public String getFirstName() {
 		return firstName;
 	}

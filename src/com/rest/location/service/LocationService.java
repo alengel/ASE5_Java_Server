@@ -23,7 +23,7 @@ public class LocationService {
 	@Path("/check-in")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response checkIn(@FormParam ("loginKey") String loginKey, @FormParam("venueId") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
+    public Response checkIn(@FormParam ("key") String loginKey, @FormParam("venue_id") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		
 		dbAccess = new DatabaseAccess();
 		long timeStamp = System.currentTimeMillis()/1000L;
@@ -37,7 +37,7 @@ public class LocationService {
 	@Path("/reviews")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("loginKey") String loginKey, @FormParam("venueId") String venueId,  @FormParam("rating") int rating, @FormParam("reviewTitle") String reviewTitle, @FormParam("reviewDescription") String reviewDescription, @FormParam("imageUri") String imageUri) throws SQLException, ArgumentMissingException, InvalidKeyException {
+    public Response sendReview(@FormParam ("key") String loginKey, @FormParam("venue_id") String venueId,  @FormParam("rating") int rating, @FormParam("review_title") String reviewTitle, @FormParam("review_description") String reviewDescription, @FormParam("location_image") String imageUri) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -56,7 +56,7 @@ public class LocationService {
 	@Path("{venueId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response getReviews(@PathParam ("venueId") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
+    public Response getReviews(@PathParam ("venue_id") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		dbAccess = new DatabaseAccess();
 		Location location = dbAccess.getReviews(venueId, false);
 		return Response.ok(location).build();
