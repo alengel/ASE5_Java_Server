@@ -3,6 +3,8 @@ package com.rest.location.model.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+
 import com.rest.review.model.data.*;
 
 
@@ -23,7 +25,7 @@ public class LocationData {
 	}
 
 
-
+	@XmlElement(name = "venue_id")
 	public String getVenueId() {
 		return venueId;
 	}
