@@ -34,8 +34,7 @@ public DBCon()  {
 			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/javatest");
 		} catch (NamingException e) {			
 			e.printStackTrace();
-		}
-		
+		}		
 		try {
 			conn = ds.getConnection();
 			st = conn.createStatement();

@@ -5,6 +5,7 @@ import it.sauronsoftware.base64.Base64;
 import javax.ws.rs.*;
 
 import java.sql.*;
+import java.util.Arrays;
 
 import com.rest.user.model.*;
 import com.rest.user.model.data.UserData;
@@ -84,9 +85,9 @@ import java.io.ByteArrayInputStream;
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {
-	        	return  Response.ok(new User("false", "Email not found")).build();	        	
+	        	return  Response.ok(new User("false", "Email and/or password not found")).build();	        	
 	        } catch (PasswordWrongException e) {
-	        	return  Response.ok(new User("false", "Password is wrong for this user")).build();	        	
+	        	return  Response.ok(new User("false", "Email and/or password not found")).build();	        	
         }
 			
 	    } 
@@ -117,13 +118,17 @@ import java.io.ByteArrayInputStream;
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	//	@Consumes(MediaType.MULTIPART_FORM_DATA)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@Context HttpServletRequest servletRequest, @FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("file") String  encodedImage
+	    public Response register(@Context HttpServletRequest servletRequest, @FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("first_name") String firstName, @FormParam("last_name") String lastName, @FormParam("profile_image") String  encodedImage
 	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
 			
 			
 			@SuppressWarnings("unused")
 			UserData userData;
 			
+			
+			String hrefToFile = null;
+				
+			if (encodedImage != null) {
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			
 			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
@@ -134,8 +139,8 @@ import java.io.ByteArrayInputStream;
 			encInpStr.close();
 			decOutStr.close();
 	
-			String hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
-				
+			hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
+			}	
 			try {
 				dbAccess = new DatabaseAccess();
 				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
@@ -153,7 +158,7 @@ import java.io.ByteArrayInputStream;
 		@Path("/logout")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response logout(@FormParam("loginKey") String loginKey) {
+		public Response logout(@FormParam("key") String loginKey) {
 			try {
 				dbAccess = new DatabaseAccess();
 				if (dbAccess.logoutUser(loginKey)) {
@@ -170,7 +175,7 @@ import java.io.ByteArrayInputStream;
 		@Path("/settings")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response updateSettings(@FormParam("loginKey") String loginKey, @FormParam("minDistance") int minDistance, @FormParam("logoutSessionTime") int logoutSessionTime, @FormParam("geoPushInterval") int geoPushInterval) {
+		public Response updateSettings(@FormParam("key") String loginKey, @FormParam("min_distance") int minDistance, @FormParam("logout_session_time") int logoutSessionTime, @FormParam("geo_push_interval") int geoPushInterval) {
 			try {
 				dbAccess = new DatabaseAccess();
 				if (dbAccess.updateSettings(loginKey, minDistance, logoutSessionTime, geoPushInterval)) {
@@ -220,8 +225,8 @@ import java.io.ByteArrayInputStream;
 		public Response getInfo(@Context HttpServletRequest servletRequest) {
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
-			System.out.println(rootFolder);
-			
+			System.out.println(rootFolder);			
+						
 			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
 		}
 	}
