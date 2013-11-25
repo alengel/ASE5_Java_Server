@@ -5,7 +5,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 
+import com.rest.comment.model.Comment;
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -118,4 +121,26 @@ public class LocationService {
 	}
 	
 	
+	
+	@GET                                
+	@Path("{reviewId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response getCommentsForReview(@PathParam ("reviewId") String reviewId) {
+		
+		String success = "false";
+		String message = "";
+		
+		dbAccess = new DatabaseAccess();
+		ArrayList<CommentData> comments = null;
+		try {
+			comments = dbAccess.getCommentsForReview(reviewId);
+			success = "true";
+		} catch (ReviewNotFoundException e) {
+			message = "Review not found.";
+		}
+		
+		Comment comment = new Comment(success, message, comments);
+		return Response.ok(comment).build();
+	}
 }

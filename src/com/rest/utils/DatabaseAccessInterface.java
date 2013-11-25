@@ -1,7 +1,9 @@
 package com.rest.utils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -115,4 +117,6 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
 	
 	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException;
+	
+	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException;
 }
