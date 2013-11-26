@@ -56,9 +56,19 @@ public interface LocationServiceInterface {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)		
     public Response addReview(@FormParam ("venueId") String venueId, @FormParam("rating") int raiting, @FormParam ("review") String review, @FormParam ("loginKey") String loginKey);
-
 	
 	
+	@POST                                
+	@Path("/vote")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("vote") int vote);
+	
+	@POST                                
+	@Path("/put-comment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("comment") String comment);
 
 }
 
