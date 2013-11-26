@@ -670,6 +670,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new ReviewNotFoundException();
 			}
 			
+			String getComments = SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE + WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '" + reviewId + "';";
+			ResultSet commentsFromDb = statement.executeQuery(getComments);
+			
+			while(commentsFromDb.next()) {
+				result.add(new CommentData(commentsFromDb.getString(REVIEWS_COMMENTS_ID), commentsFromDb.getString(REVIEWS_COMMENTS_USER_ID), commentsFromDb.getString(REVIEWS_COMMENTS_USER_REVIEWS_ID), commentsFromDb.getString(REVIEWS_COMMENTS_COMMENT)));
+			}
 			
 			
 		} catch (SQLException e) {
