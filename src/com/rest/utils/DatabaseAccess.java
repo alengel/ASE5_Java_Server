@@ -52,6 +52,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String USER_LOGINKEY = "login_key ";
 		private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
 		private final static String USER_MIN_DISTANCE = "min_distance ";
+		private final static String USER_PICTURE = "picture ";
+		private final static String USER_LOGOUT_TIME = "logout_session_time ";
 		//static Strings for the table t5_locations
 		private final static String LOCATIONS_TABLE = "t5_locations ";
 		private final static String LOCATIONS_ID = "id ";
@@ -139,7 +141,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		String insertStatement = INSERT_INTO + USER_TABLE +
-				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", picture, logout_session_time, geo_push_interval, min_distance) "
+				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME + ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + picture + "', 60, 30, 100);";
 	
 		int success;
@@ -220,7 +222,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new PasswordWrongException();
 			}
 			
-			//log in the user			
+			//log in the user
+			//TODO: this needs refactoring. Use the STATIC Strings instead of hard coded stuff !!!
 			long timeStamp = System.currentTimeMillis()/1000L;
 			loginKey = email+timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);	
@@ -687,6 +690,39 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		return result;
 		
+	}
+
+	public boolean updateUser(String loginKey, String password, String firstName,
+			String lastName, String profileImage) throws InvalidKeyException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + loginKey +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String updateUser = UPDATE + USER_TABLE + 
+					SET + USER_PASSWORD + "= '" + password + "', " + USER_FIRSTNAME + "= '" + firstName + "', " + USER_LASTNAME + "= '" + lastName + "', " + USER_PICTURE + "= '" + profileImage + "';";
+			int success = statement.executeUpdate(updateUser);
+			if(success != 1) {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
 	}
 
 	

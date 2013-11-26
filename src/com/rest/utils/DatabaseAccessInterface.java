@@ -119,4 +119,7 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException;
 	
 	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException;
+	
+	public boolean updateUser(String loginKey, String password, String firstName,
+			String lastName, String profileImage) throws InvalidKeyException;
 }
