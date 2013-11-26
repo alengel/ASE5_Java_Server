@@ -82,7 +82,8 @@ import java.io.ByteArrayInputStream;
 	        
 	        try {
 	        	userData = dbAccess.loginUser(email, passwd);
-	           	User user = new User("true", userData);
+	        	String loginKey = userData.getLoginKey();
+	           	User user = new User("true", loginKey, userData);
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {
@@ -132,15 +133,19 @@ import java.io.ByteArrayInputStream;
 			if (encodedImage != null) {
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			
+			long timeStamp = System.currentTimeMillis();
+			String imageName = SHA1.stringToSHA(email+timeStamp);
+			
+			
 			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
-			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+email+"picture.jpg");
+			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+imageName+".jpg");
 			
 			Base64.decode(encInpStr, decOutStr);
 			
 			encInpStr.close();
 			decOutStr.close();
 	
-			hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
+			hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+imageName+".jpg";
 			}	
 			try {
 				dbAccess = new DatabaseAccess();

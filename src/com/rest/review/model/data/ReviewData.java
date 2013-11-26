@@ -7,29 +7,41 @@ public class ReviewData {
 	private int rating;
 	private String title;
 	private String review;
-	private String picture;
+	private String locPicture;
 	private String userFirstName;
 	private String userLastName;
 	private String userEmail;
+	private String userPicture;
 	
 	public ReviewData() {
 		
 	}
 
-	public ReviewData(int userId, String userFirstName, String userLastName, String userEmail, int rating, String title, String review, String picture) {
+	public ReviewData(int userId, String userFirstName, String userLastName, String userEmail, String userPicture, int rating, String title, String review, String locPicture) {
 		this.userId = userId;
 		this.rating = rating;
 		this.title = title;
 		this.review = review;
-		this.picture = picture;
+		this.locPicture = locPicture;
 		this.userFirstName = userFirstName;
 		this.userLastName = userLastName;
 		this.userEmail = userEmail;
+		this.userPicture = userPicture;
 	}
 	
 	
 	
 
+
+	@XmlElement(name = "profile_image")
+	public String getUserPicture() {
+		return userPicture;
+	}
+
+	public void setUserPicture(String userPicture) {
+		this.userPicture = userPicture;
+	}
+	@XmlElement(name = "users_id")
 	public int getUserId() {
 		return userId;
 	}
@@ -40,11 +52,11 @@ public class ReviewData {
 
 	@XmlElement(name = "location_image")
 	public String getPicture() {
-		return picture;
+		return locPicture;
 	}
 
 	public void setPicture(String picture) {
-		this.picture = picture;
+		this.locPicture = picture;
 	}
 
 	public int getRating() {

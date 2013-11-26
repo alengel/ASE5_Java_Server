@@ -9,9 +9,9 @@ public class UserData {
 	private String passwd;
 	private String firstName;
 	private String lastName;
-	private String loginKey;
 	private String loginTimestamp;
 	private String lastLogin;
+	private String loginKey;
 	private String lastRequest;
 	private String logoutSessiontime;
 	private String gpsPushtime;
@@ -29,7 +29,6 @@ public class UserData {
 		this.passwd = passwd;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.loginKey = loginKey;
 		this.loginTimestamp = loginTimestamp;
 		this.lastLogin = lastLogin;
 		this.lastRequest = lastRequest;
@@ -37,6 +36,7 @@ public class UserData {
 		this.gpsPushtime = gpsPushtime;
 		this.minDistance = minDistance;
 		this.picture = picture;
+		this.loginKey = loginKey;
 		
 	}
 
@@ -99,7 +99,7 @@ public class UserData {
 	public void setLoginKey(String loginKey) {
 		this.loginKey = loginKey;
 	}
-
+	
 	public String getLoginTimestamp() {
 		return loginTimestamp;
 	}
