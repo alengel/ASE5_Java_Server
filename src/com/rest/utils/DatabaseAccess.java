@@ -661,7 +661,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 		
 		//check if reviewId is valid
-		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_COMMENTS_TABLE + WHERE + REVIEWS_COMMENTS_ID + "= '" + reviewId +"';";
+		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
 		ResultSet reviewIdFromDb;
 		try {
 							
