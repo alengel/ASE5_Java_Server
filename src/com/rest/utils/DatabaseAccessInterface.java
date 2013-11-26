@@ -115,6 +115,7 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	
 	
 	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
+	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException;
 	
 	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException;
 	

@@ -208,5 +208,27 @@ import java.io.ByteArrayInputStream;
 				return Response.ok(new User("false", "")).build();
 			}
 		}
+		
+		@GET
+        @Path("{profile}")
+        @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response getUserProfile(@PathParam ("key") String key) {
+
+            dbAccess = new DatabaseAccess();
+            User u;
+            try {
+                u = dbAccess.getUserProfile(key);
+            } catch (InvalidKeyException e) {
+                u = new User("false", "Key not found");
+            }
+            if(u != null) {
+                u.setSuccess("true");
+            } else {
+                u = new User("false", "");
+            }
+
+            return Response.ok(u).build();
+        }
 	}
 

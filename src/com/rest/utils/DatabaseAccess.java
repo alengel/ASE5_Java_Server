@@ -10,6 +10,7 @@ import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.location.model.data.LocationData;
 import com.rest.review.model.data.ReviewData;
+import com.rest.user.model.User;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
@@ -611,7 +612,45 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		return true;
 	}
-
+	
+	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String my_id = keyFromDb.getString(USER_ID);
+				
+			//check if reviewer_id exists
+			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + reviewer_id +"';";
+			ResultSet getIdResult = statement.executeQuery(getId);
+			
+			if(!keyFromDb.next()) {
+			throw new UserNotFoundException();
+			}
+			
+			String setNewFollow = INSERT_IGNORE_INTO + CONNECTIONS_TABLE + 
+					  "( " + CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") " + VALUES + "( '" +
+					  my_id + "', '" + reviewer_id + "');";
+					  statement.executeUpdate(setNewFollow);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
 	
 	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException {
 
@@ -724,7 +763,59 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		return true;
 	}
-
 	
+	public User getUserProfile(String key) throws InvalidKeyException {
 
+        String firstName = "";
+        String lastName = "";
+        String email = "";
+        String picture = "";
+        List<UserData> friends = new ArrayList<UserData>();
+
+        DBCon dbConnection = new DBCon();
+        Statement statement = dbConnection.getStatement();
+
+        //check if key is valid
+        String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+        ResultSet userFromDb;
+        try {
+
+            userFromDb = statement.executeQuery(getUser);
+            if(!userFromDb.next()) {
+                throw new InvalidKeyException();
+            }
+
+            //set the user data
+            firstName = userFromDb.getString(USER_FIRSTNAME);
+            lastName = userFromDb.getString(USER_LASTNAME);
+            email = userFromDb.getString(USER_EMAIL);
+            picture = userFromDb.getString(USER_PICTURE);
+
+            //get the friends of the user
+            String getFriends = SELECT + CONNECTIONS_FRIENDS_ID + FROM +
+                    CONNECTIONS_TABLE + WHERE +
+                    CONNECTIONS_MY_ID + "= '" + userFromDb.getString(USER_ID) + "';";
+            ResultSet friendsIds = statement.executeQuery(getFriends);
+
+            while(friendsIds.next()) {
+
+                String id = friendsIds.getString(CONNECTIONS_FRIENDS_ID);
+
+                String getUserDetails = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + id + "';";
+                ResultSet friendFromDb = statement.executeQuery(getUserDetails);
+
+                UserData friend = new UserData(friendFromDb.getString(USER_EMAIL), "" , friendFromDb.getString(USER_FIRSTNAME), friendFromDb.getString(USER_LASTNAME), friendFromDb.getString(USER_PICTURE), "", "", "", "", "", "", "");
+                friends.add(friend);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        dbConnection.closeConn();
+
+        return new User("true", new UserData(email, "", firstName, lastName, picture, "", "", "", "", "", "", ""));
+    }
 }
