@@ -56,7 +56,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String LOCATIONS_ID = "id ";
 		private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
 		//static Stings for the table t5_users_reviews
-		private static final String REVIEWS_TABLE = "t5_reviews ";
+		private static final String REVIEWS_TABLE = "t5_users_reviews ";
 		private static final String REVIEWS_USER_ID = "users_id ";
 		private static final String REVIEWS_LOCATION_ID = "locations_id ";
 		private static final String REVIEWS_RATING = "rating ";
@@ -203,7 +203,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 			
 			//log in the user			
-			long timeStamp = System.currentTimeMillis()/1000L;
+			long timeStamp = System.currentTimeMillis();
 			loginKey = email+timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);	
 			firstName = userFromDb.getString("first_name");
@@ -223,7 +223,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		
 		dbConnection.closeConn();
-		return new UserData(email, password, firstName, lastName, picture, loginKey, ""+timeStamp, null, null, ""+logoutSessionTime, ""+geoPushInterval, ""+minDistance);
+		return new UserData(email, password, firstName, lastName, picture, loginKey, null, ""+timeStamp, null, ""+logoutSessionTime, ""+geoPushInterval, ""+minDistance);
 	}
 	
 	
@@ -376,8 +376,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				String userFirstName = resUserById.getString("first_name");
 				String userLastName = resUserById.getString("last_name");
 				String userEmail = resUserById.getString("email");
+				String profilePicture = resUserById.getString("picture");
+				if (profilePicture == null) {
+					profilePicture = "";
+				}
 				dbConnection1.closeConn();
-				rd.add(new ReviewData(userId, userFirstName, userLastName, userEmail, rating, title, review, picture)); // adds reviews into reviews list 
+				rd.add(new ReviewData(userId, userFirstName, userLastName, userEmail, profilePicture, rating, title, review, picture)); // adds reviews into reviews list 
 
 			}
 			dbConnection.closeConn();
