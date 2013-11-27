@@ -90,14 +90,14 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String CHECKIN_LOCATION_ID = "locations_id ";
 		private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
 		//static Strings for the table t5_connections
-		private static final String CONNECTIONS_TABLE = "t5_connections";
-		private static final String CONNECTIONS_ID = "id";
-		private static final String CONNECTIONS_MY_ID = "my_id";
-		private static final String CONNECTIONS_FRIENDS_ID = "friends_id";
-		private static final String CONNECTIONS_STATUS = "status";
-		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status";
-		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag";
-		private static final String CONNECTIONS_DATED = "dated";
+		private static final String CONNECTIONS_TABLE = "t5_connections ";
+		private static final String CONNECTIONS_ID = "id ";
+		private static final String CONNECTIONS_MY_ID = "my_id ";
+		private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
+		private static final String CONNECTIONS_STATUS = "status ";
+		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status ";
+		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag ";
+		private static final String CONNECTIONS_DATED = "dated ";
 		
 
 	
