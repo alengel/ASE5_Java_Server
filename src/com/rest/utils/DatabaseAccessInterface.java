@@ -1,8 +1,13 @@
 package com.rest.utils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
+
+import com.rest.user.model.User;
+
 import com.rest.review.model.Review;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -10,6 +15,7 @@ import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -110,6 +116,17 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @throws SQLException
 	 */
 	public Review getReviews(String venueId) throws SQLException;
+
 	
+	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
 	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException;
+	
+	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException;
+	
+	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException;
+	
+	public boolean updateUser(String loginKey, String password, String firstName,
+			String lastName, String profileImage) throws InvalidKeyException;
+	
+	public User getUserProfile(String key) throws InvalidKeyException;
 }

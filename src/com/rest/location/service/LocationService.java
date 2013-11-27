@@ -6,11 +6,18 @@ import javax.ws.rs.core.*;
 
 import java.sql.*;
 
+import java.util.ArrayList;
+
+import com.rest.comment.model.Comment;
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
+
+
 import com.rest.review.model.Review;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InvalidKeyException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 
 @Path("/")  	
 public class LocationService {
@@ -60,5 +67,84 @@ public class LocationService {
 	}
 
 
-
+	
+	@POST                                
+	@Path("/vote")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("vote") int vote) {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		try {
+			if (dbAccess.vote(key, reviewId, vote)) {
+				success = "true";
+				message = "Voted successfully";
+			} else {
+				success = "false";
+				message = "Failed to vote";
+			}
+		} catch (InvalidKeyException e) {
+			success = "false";
+			message = "Invalid key";
+			e.printStackTrace();
+		} catch (ReviewNotFoundException e) {
+			success = "false";
+			message = "Review not found";
+		}
+		return Response.ok(new Location(success, message)).build();
+		
+	}
+	
+	
+	@POST                                
+	@Path("/put-comment")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("comment") String comment) {
+		dbAccess = new DatabaseAccess();
+		String success;
+		String message;
+		try {
+			if (dbAccess.putComment(key, reviewId, comment)) {
+				success = "true";
+				message = "Comment successful";
+			} else {
+				success = "false";
+				message = "Failed to comment";
+			}
+		} catch(InvalidKeyException e) {
+			success = "false";
+			message = "Key not found";
+		} catch (ReviewNotFoundException e) {
+			success = "false";
+			message = "Review not found";
+		}
+		return Response.ok(new Location(success, message)).build();
+		
+	}
+	
+	
+	
+	@GET                                
+	@Path("{reviewId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response getCommentsForReview(@PathParam ("reviewId") String reviewId) {
+		
+		String success = "false";
+		String message = "";
+		
+		dbAccess = new DatabaseAccess();
+		ArrayList<CommentData> comments = null;
+		try {
+			comments = dbAccess.getCommentsForReview(reviewId);
+			success = "true";
+		} catch (ReviewNotFoundException e) {
+			message = "Review not found.";
+		}
+		
+		Comment comment = new Comment(success, message, comments);
+		return Response.ok(comment).build();
+	}
 }

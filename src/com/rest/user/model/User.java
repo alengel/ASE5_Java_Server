@@ -15,17 +15,19 @@ public class User {
 	private String message;
 	private String loginKey;
 	
+
     public User() {
-    	
+            
     }
     
     public User(String success, String message) {
-    	this.success = success;
-    	this.message = message;
-    	this.ud = null;
+            this.success = success;
+            this.message = message;
+            this.ud = null;
     }
    
  
+
 	public User(String success, String loginKey, UserData ud) {
 		this.success = success;
 		this.loginKey = loginKey;

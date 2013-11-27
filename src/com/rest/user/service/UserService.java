@@ -5,7 +5,7 @@ import it.sauronsoftware.base64.Base64;
 import javax.ws.rs.*;
 
 import java.sql.*;
-import java.util.Arrays;
+
 
 import com.rest.user.model.*;
 import com.rest.user.model.data.UserData;
@@ -82,7 +82,9 @@ import java.io.ByteArrayInputStream;
 	        try {
 	        	userData = dbAccess.loginUser(email, passwd);
 	        	String loginKey = userData.getLoginKey();
+
 	           	User user = new User("true", loginKey, userData);
+
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {
@@ -127,7 +129,7 @@ import java.io.ByteArrayInputStream;
 			UserData userData;
 			
 			
-			String hrefToFile = null;
+			String hrefToFile = "";
 				
 			if (encodedImage != null) {
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
@@ -218,9 +220,29 @@ import java.io.ByteArrayInputStream;
 			}
 		}
 		
+
+		@GET
+        @Path("{profile}")
+        @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response getUserProfile(@PathParam ("key") String key) {
+
+            dbAccess = new DatabaseAccess();
+            User u;
+            try {
+                u = dbAccess.getUserProfile(key);
+            } catch (InvalidKeyException e) {
+                u = new User("false", "Key not found");
+            }
+            if(u == null) {
+                u = new User("false", "");
+            }
+
+            return Response.ok(u).build();
+        }
+                               
 		
-	
-		
+
 		
 		//this method is for checking some stuff at the server, not used in real app
 		@GET                                
@@ -231,7 +253,7 @@ import java.io.ByteArrayInputStream;
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			System.out.println(rootFolder);			
-						
+
 			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
 		}
 	}
