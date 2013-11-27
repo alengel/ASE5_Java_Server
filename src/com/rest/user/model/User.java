@@ -13,20 +13,24 @@ public class User {
 	private List<UserData> ud = new ArrayList<UserData>();
 	private String success;
 	private String message;
+	private String loginKey;
 	
+
     public User() {
-    	
+            
     }
     
     public User(String success, String message) {
-    	this.success = success;
-    	this.message = message;
-    	this.ud = null;
+            this.success = success;
+            this.message = message;
+            this.ud = null;
     }
    
  
-	public User(String success, UserData ud) {
+
+	public User(String success, String loginKey, UserData ud) {
 		this.success = success;
+		this.loginKey = loginKey;
 		this.ud.add(0, ud);
 
     
@@ -50,7 +54,17 @@ public class User {
 		this.message = message;
 	}
 	
-	@XmlElement
+	@XmlElement(name = "key")
+	public String getLoginKey() {
+		return loginKey;
+	}
+
+	public void setLoginKey(String loginKey) {
+		this.loginKey = loginKey;
+	}
+
+	
+	@XmlElement (name = "data")
 	public List<UserData> getUserData() {
 		return ud;
 	}

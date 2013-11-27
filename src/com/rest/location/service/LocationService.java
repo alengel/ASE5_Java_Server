@@ -5,13 +5,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
+
 import java.util.ArrayList;
 
 import com.rest.comment.model.Comment;
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 
-import com.rest.location.model.Location;
+
 import com.rest.review.model.Review;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -71,7 +72,7 @@ public class LocationService {
 	@Path("/vote")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("vote") int vote) {
+    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") String reviewId,  @FormParam("vote") int vote) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -100,7 +101,7 @@ public class LocationService {
 	@Path("/put-comment")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("reviewId") String reviewId,  @FormParam("comment") String comment) {
+    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") String reviewId,  @FormParam("comment") String comment) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -126,7 +127,7 @@ public class LocationService {
 	
 	
 	@GET                                
-	@Path("{reviewId}")
+	@Path("reviews/{reviewId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
     public Response getCommentsForReview(@PathParam ("reviewId") String reviewId) {

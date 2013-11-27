@@ -5,7 +5,7 @@ import it.sauronsoftware.base64.Base64;
 import javax.ws.rs.*;
 
 import java.sql.*;
-import java.util.Arrays;
+
 
 import com.rest.user.model.*;
 import com.rest.user.model.data.UserData;
@@ -15,7 +15,6 @@ import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
-import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -82,7 +81,10 @@ import java.io.ByteArrayInputStream;
 	        
 	        try {
 	        	userData = dbAccess.loginUser(email, passwd);
-	           	User user = new User("true", userData);
+	        	String loginKey = userData.getLoginKey();
+
+	           	User user = new User("true", loginKey, userData);
+
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {
@@ -123,29 +125,38 @@ import java.io.ByteArrayInputStream;
 	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
 			
 			
-			@SuppressWarnings("unused")
+			
 			UserData userData;
 			
 			
-			String hrefToFile = null;
+			String hrefToFile = "";
 				
 			if (encodedImage != null) {
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			
+			long timeStamp = System.currentTimeMillis();
+			String imageName = SHA1.stringToSHA(email+timeStamp);
+			
+			
 			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
-			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+email+"picture.jpg");
+			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+imageName+".jpg");
 			
 			Base64.decode(encInpStr, decOutStr);
 			
 			encInpStr.close();
 			decOutStr.close();
 	
-			hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+email+"picture.jpg";
+			hrefToFile = "http://"+servletRequest.getServerName()+":"+servletRequest.getServerPort()+"/JerseyServer/img/"+imageName+".jpg";
 			}	
 			try {
 				dbAccess = new DatabaseAccess();
 				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
+				if (userData != null) {
 				return Response.ok(new User("true", "Registration is complete")).build();
+				}
+				else {
+					return Response.ok(new User("false", "Error occured")).build();
+				}
 			} catch (EmailAlreadyExistsException e) {
 				return Response.ok(new User("false", "User with this email already exists")).build(); 				
 			}
@@ -214,8 +225,9 @@ import java.io.ByteArrayInputStream;
 			}
 		}
 		
+
 		@GET
-        @Path("{profile}")
+        @Path("profile/{key}")
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Produces(MediaType.APPLICATION_JSON)
         public Response getUserProfile(@PathParam ("key") String key) {
@@ -233,10 +245,9 @@ import java.io.ByteArrayInputStream;
 
             return Response.ok(u).build();
         }
+                               
 		
-		
-	
-		
+
 		
 		//this method is for checking some stuff at the server, not used in real app
 		@GET                                
@@ -247,7 +258,7 @@ import java.io.ByteArrayInputStream;
 			
 			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
 			System.out.println(rootFolder);			
-						
+
 			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
 		}
 	}

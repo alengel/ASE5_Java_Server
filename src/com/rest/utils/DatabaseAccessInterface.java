@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
+
 import com.rest.user.model.User;
 
-import com.rest.location.model.Location;
 import com.rest.review.model.Review;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -116,7 +116,7 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @throws SQLException
 	 */
 	public Review getReviews(String venueId) throws SQLException;
-	
+
 	
 	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
 	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException;
