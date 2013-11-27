@@ -1,5 +1,7 @@
 package com.rest.review.model.data;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class ReviewData {
 	private int userId;
 	private int rating;
@@ -22,7 +24,7 @@ public class ReviewData {
 		this.picture = picture;
 		this.userFirstName = userFirstName;
 		this.userLastName = userLastName;
-		this. userEmail = userEmail;
+		this.userEmail = userEmail;
 	}
 	
 	
@@ -36,6 +38,7 @@ public class ReviewData {
 		this.userId = userId;
 	}
 
+	@XmlElement(name = "location_image")
 	public String getPicture() {
 		return picture;
 	}
@@ -52,6 +55,7 @@ public class ReviewData {
 		this.rating = rating;
 	}
 
+	@XmlElement(name = "review_title")
 	public String getTitle() {
 		return title;
 	}
@@ -68,6 +72,7 @@ public class ReviewData {
 		this.review = review;
 	}
 
+	@XmlElement(name = "first_name")
 	public String getUserFirstName() {
 		return userFirstName;
 	}
@@ -76,6 +81,7 @@ public class ReviewData {
 		this.userFirstName = userFirstName;
 	}
 
+	@XmlElement(name = "last_name")
 	public String getUserLastName() {
 		return userLastName;
 	}
@@ -84,6 +90,7 @@ public class ReviewData {
 		this.userLastName = userLastName;
 	}
 
+	@XmlElement(name = "email")
 	public String getUserEmail() {
 		return userEmail;
 	}

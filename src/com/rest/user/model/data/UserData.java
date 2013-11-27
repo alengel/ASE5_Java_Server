@@ -1,5 +1,7 @@
 package com.rest.user.model.data;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class UserData {
 	
 	private String id;
@@ -62,6 +64,7 @@ public class UserData {
 		this.passwd = passwd;
 	}
 
+	@XmlElement(name = "first_name")	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -70,6 +73,7 @@ public class UserData {
 		this.firstName = firstName;
 	}
 
+	@XmlElement(name = "last_name")
 	public String getLastName() {
 		return lastName;
 	}
@@ -78,6 +82,7 @@ public class UserData {
 		this.lastName = lastName;
 	}
 	
+	@XmlElement(name = "profile_image")
 	public String getPicture() {
 		return picture;
 	}
@@ -86,6 +91,7 @@ public class UserData {
 		this.picture = picture;
 	}
 
+	@XmlElement(name = "key")
 	public String getLoginKey() {
 		return loginKey;
 	}
@@ -102,6 +108,7 @@ public class UserData {
 		this.loginTimestamp = loginTimestamp;
 	}
 
+	@XmlElement(name = "last_login")
 	public String getLastLogin() {
 		return lastLogin;
 	}
@@ -110,6 +117,7 @@ public class UserData {
 		this.lastLogin = lastLogin;
 	}
 
+	@XmlElement(name = "last_request")
 	public String getLastRequest() {
 		return lastRequest;
 	}
@@ -118,6 +126,7 @@ public class UserData {
 		this.lastRequest = lastRequest;
 	}
 
+	@XmlElement(name = "max_login_interval")
 	public String getLogoutSessiontime() {
 		return logoutSessiontime;
 	}
@@ -126,6 +135,7 @@ public class UserData {
 		this.logoutSessiontime = logoutSessiontime;
 	}
 
+	@XmlElement(name = "gps_push_interval")
 	public String getGpsPushtime() {
 		return gpsPushtime;
 	}
@@ -134,6 +144,7 @@ public class UserData {
 		this.gpsPushtime = gpsPushtime;
 	}
 
+	@XmlElement(name = "min_distance")
 	public String getMinDistance() {
 		return minDistance;
 	}

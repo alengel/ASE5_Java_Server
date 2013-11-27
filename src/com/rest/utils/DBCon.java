@@ -5,12 +5,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 
 
 public class DBCon { 
+	
 	private Connection conn;
 	private Statement st;
-	
+	private InitialContext ctx;
+	private DataSource ds;
+		
 	private String url = "jdbc:mysql://localhost:3306/";
 	private String dbName = "javatest";
 	private String driver = "com.mysql.jdbc.Driver";
@@ -19,27 +26,28 @@ public class DBCon {
 	
 public DBCon()  {
 	
-
+	
 //Tomcat connection configuration
-		/*
+	
 		try {
 			ctx = new InitialContext();
 			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/javatest");
 		} catch (NamingException e) {			
 			e.printStackTrace();
-		}
-		
+		}		
 		try {
 			conn = ds.getConnection();
 			st = conn.createStatement();
 		} catch (SQLException e) {			
 			e.printStackTrace();
-		} */
+		} 
 		
  //--Tomcat
 		
 		
+		
 ///// connection for jUnit
+		/*
 		try {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(url+dbName, userName, password);
@@ -47,12 +55,11 @@ public DBCon()  {
 			st = conn.createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} */
 		
-///--jUnit connection		
+///--jUnit connection				
+	
 		
-		
- //
 	}
 public Statement getStatement() {
 	return st;
