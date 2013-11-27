@@ -12,6 +12,7 @@ public class ReviewData {
 	private String userLastName;
 	private String userEmail;
 	private String userPicture;
+	private String locationId;
 	
 	public ReviewData() {
 		
@@ -27,6 +28,19 @@ public class ReviewData {
 		this.userLastName = userLastName;
 		this.userEmail = userEmail;
 		this.userPicture = userPicture;
+	}
+	
+	public ReviewData(int userId, String userFirstName, String userLastName, String userEmail, String userPicture, int rating, String title, String review, String locPicture, String locationId) {
+		this.userId = userId;
+		this.rating = rating;
+		this.title = title;
+		this.review = review;
+		this.locPicture = locPicture;
+		this.userFirstName = userFirstName;
+		this.userLastName = userLastName;
+		this.userEmail = userEmail;
+		this.userPicture = userPicture;
+		this.locationId = locationId;
 	}
 	
 	
@@ -109,6 +123,15 @@ public class ReviewData {
 
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+	
+	@XmlElement(name = "locationId")
+	public String getLocationId() {
+		return locationId;
+	}
+
+	public void setLocationId(String locationId) {
+		this.locationId = locationId;
 	}
 	
 	
