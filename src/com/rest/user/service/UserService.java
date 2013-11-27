@@ -222,7 +222,7 @@ import java.io.ByteArrayInputStream;
 		
 
 		@GET
-        @Path("{profile}")
+        @Path("profile/{key}")
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Produces(MediaType.APPLICATION_JSON)
         public Response getUserProfile(@PathParam ("key") String key) {
