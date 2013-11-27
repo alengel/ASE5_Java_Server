@@ -288,7 +288,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 					
 			userFromDb = statement.executeQuery(getUserFromDb);
-			if(userFromDb.isAfterLast()) {
+			if(!userFromDb.next()) {
 				throw new UserNotFoundException();
 			}
 			
@@ -330,7 +330,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
-			if(keyFromDb.isAfterLast()) {
+			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
 			}
 			
@@ -422,6 +422,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
 					FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
 			while (resReviews.next()) {
+				//TODO: refactor, use static STrings instead
 				int userId = resReviews.getInt("users_id");
 				int  rating = resReviews.getInt("rating");
 				String title = resReviews.getString("review_title");
