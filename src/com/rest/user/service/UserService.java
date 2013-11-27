@@ -222,9 +222,7 @@ import java.io.ByteArrayInputStream;
             } catch (InvalidKeyException e) {
                 u = new User("false", "Key not found");
             }
-            if(u != null) {
-                u.setSuccess("true");
-            } else {
+            if(u == null) {
                 u = new User("false", "");
             }
 
