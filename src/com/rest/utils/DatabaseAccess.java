@@ -6,15 +6,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.location.model.data.LocationData;
 import com.rest.review.model.data.ReviewData;
+import com.rest.user.model.User;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
+import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -50,32 +53,51 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private final static String USER_LOGINKEY = "login_key ";
 		private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
 		private final static String USER_MIN_DISTANCE = "min_distance ";
+		private final static String USER_PICTURE = "picture ";
+		private final static String USER_LOGOUT_TIME = "logout_session_time ";
 		//static Strings for the table t5_locations
 		private final static String LOCATIONS_TABLE = "t5_locations ";
 		private final static String LOCATIONS_ID = "id ";
 		private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
 		//static Stings for the table t5_users_reviews
 		private static final String REVIEWS_TABLE = "t5_reviews ";
+		private static final String REVIEWS_ID = "id";
 		private static final String REVIEWS_USER_ID = "users_id ";
 		private static final String REVIEWS_LOCATION_ID = "locations_id ";
 		private static final String REVIEWS_RATING = "rating ";
 		private static final String REVIEWS_REVIEW_TITLE = "review_title ";
 		private static final String REVIEWS_REVIEW_DESCRIPTION = "review_description ";
 		private static final String REVIEWS_REVIEW_PICTURE = "review_picture ";
+		private static final String REVIEWS_TOTAL_VOTE_UP = "total_vote_up ";
+		private static final String REVIEWS_TOTAL_VOTE_DOWN = "total_vote_down ";
+		private static final String REVIEWS_SPAMS = "spams ";
+		//static Strings for t5_users_reviews_comments
+		private static final String REVIEWS_COMMENTS_TABLE = "t5_users_reviews_comments ";
+		private static final String REVIEWS_COMMENTS_ID = "id ";
+		private static final String REVIEWS_COMMENTS_USER_ID = "user_id ";
+		private static final String REVIEWS_COMMENTS_USER_REVIEWS_ID = "user_reviews_id ";
+		private static final String REVIEWS_COMMENTS_COMMENT = "comment ";
+		//static Strings for t5_users_votes
+		private static final String USERS_VOTES_TABLE = "t5_users_votes ";
+		private static final String USERS_VOTES_ID = "id ";
+		private static final String USERS_VOTES_USER_ID = "user_id ";
+		private static final String USERS_VOTES_USER_REVIEWS_ID = "user_reviews_id ";
+		private static final String USERS_VOTES_VOTE_FLAG = "vote_flag ";
+		private static final String USERS_VOTES_DATED = "dated ";
 		//static Strings for the table t5_checkins
 		private static final String CHECKIN_TABLE = "t5_checkins ";
 		private static final String CHECKIN_USER_ID = "users_id ";
 		private static final String CHECKIN_LOCATION_ID = "locations_id ";
 		private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
 		//static Strings for the table t5_connections
-		private static final String CONNECTIONS_TABLE = "t5_connections";
-		private static final String CONNECTIONS_ID = "id";
-		private static final String CONNECTIONS_MY_ID = "my_id";
-		private static final String CONNECTIONS_FRIENDS_ID = "friends_id";
-		private static final String CONNECTIONS_STATUS = "status";
-		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status";
-		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag";
-		private static final String CONNECTIONS_DATED = "dated";
+		private static final String CONNECTIONS_TABLE = "t5_connections ";
+		private static final String CONNECTIONS_ID = "id ";
+		private static final String CONNECTIONS_MY_ID = "my_id ";
+		private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
+		private static final String CONNECTIONS_STATUS = "status ";
+		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status ";
+		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag ";
+		private static final String CONNECTIONS_DATED = "dated ";
 		
 
 	
@@ -120,7 +142,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			return null;
 		}
 		String insertStatement = INSERT_INTO + USER_TABLE +
-				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", picture, logout_session_time, geo_push_interval, min_distance) "
+				"(" + USER_EMAIL + ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", " + USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME + ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE + ") "
 				+ VALUES + "('" + email + "', '" + password + "', '" + firstName + "', '" + lastName + "', '" + picture + "', 60, 30, 100);";
 	
 		int success;
@@ -201,7 +223,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new PasswordWrongException();
 			}
 			
-			//log in the user			
+			//log in the user
+			//TODO: this needs refactoring. Use the STATIC Strings instead of hard coded stuff !!!
 			long timeStamp = System.currentTimeMillis()/1000L;
 			loginKey = email+timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);	
@@ -265,7 +288,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 					
 			userFromDb = statement.executeQuery(getUserFromDb);
-			if(userFromDb.isAfterLast()) {
+			if(!userFromDb.next()) {
 				throw new UserNotFoundException();
 			}
 			
@@ -307,7 +330,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
-			if(keyFromDb.isAfterLast()) {
+			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
 			}
 			
@@ -399,6 +422,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			ResultSet resReviews = statement.executeQuery(SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT + "id " +
 					FROM + LOCATIONS_TABLE + WHERE + LOCATIONS_FSQUARE_VENUE_ID +"= '" + venueId + "') LIMIT 0, 10;");
 			while (resReviews.next()) {
+				//TODO: refactor, use static STrings instead
 				int userId = resReviews.getInt("users_id");
 				int  rating = resReviews.getInt("rating");
 				String title = resReviews.getString("review_title");
@@ -505,8 +529,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			
 			//insert review
 			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( " + 
-					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ") " +
-					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "');";
+					REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", " + REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", " + REVIEWS_REVIEW_DESCRIPTION + ", " + REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN + "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") " +
+					VALUES + "( " + "'" + userId + "', '" + locationId + "', '" + rating + "', '" + reviewTitle + "', '" + reviewDescription + "', '" + imageUri + "', '0', '0', '0" + "');";
 			statement.executeUpdate(insertReview);
 			
 			
@@ -537,6 +561,59 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 	}
 
+	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String userId = keyFromDb.getString("id");
+			
+			//check if reviewId is valid
+			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
+			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
+			
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+	
+			
+			//update the review
+			String updateReview;
+			int newVote;
+			if(vote == 0) {
+				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_DOWN) + 1;
+				updateReview = UPDATE + REVIEWS_TABLE + 
+						SET + REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " " +
+						WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+			} else {
+				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_UP) + 1;
+				updateReview = UPDATE + REVIEWS_TABLE + 
+						SET + REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " +
+						WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+			}
+			statement.executeUpdate(updateReview);
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
+	
 	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException {
 		
 		DBCon dbConnection = new DBCon();
@@ -546,25 +623,67 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
 		ResultSet keyFromDb;
 		try {
-					
+							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
 			if(!keyFromDb.next()) {
 				throw new InvalidKeyException();
 			}
 			
 			String my_id = keyFromDb.getString(USER_ID);
-			
+				
 			//check if reviewer_id exists
 			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + reviewer_id +"';";
 			ResultSet getIdResult = statement.executeQuery(getId);
+			
 			if(!keyFromDb.next()) {
-				throw new UserNotFoundException();
+			throw new UserNotFoundException();
 			}
 			
 			String setNewFollow = INSERT_IGNORE_INTO + CONNECTIONS_TABLE + 
-					"( " + CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") " + VALUES + "( '" +
-					my_id + "', '" + reviewer_id + "');";
-			statement.executeUpdate(setNewFollow);
+					  "( " + CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") " + VALUES + "( '" +
+					  my_id + "', '" + reviewer_id + "');";
+					  statement.executeUpdate(setNewFollow);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
+	
+	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException {
+
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String userId = keyFromDb.getString("id");
+			
+			//check if reviewId is valid
+			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
+			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
+			
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+	
+			
+			//insert the comment
+			String insertComment = INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE + 
+					"( " + REVIEWS_COMMENTS_USER_ID + ", " + REVIEWS_COMMENTS_USER_REVIEWS_ID + ", " + REVIEWS_COMMENTS_COMMENT + ") " +
+					VALUES + "( '" + userId + "', '" + reviewId + "', '" + comment + "');";
+			statement.executeUpdate(insertComment);
 			
 			
 		} catch (SQLException e) {
@@ -573,11 +692,131 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 		
 		dbConnection.closeConn();
-
 		
 		return true;
 	}
 
-	
+	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException {
+		
+		ArrayList<CommentData> result = new ArrayList<CommentData>();
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if reviewId is valid
+		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
+		ResultSet reviewIdFromDb;
+		try {
+							
+			reviewIdFromDb = statement.executeQuery(getReviewIdFromDb);
+			if(!reviewIdFromDb.next()) {
+				throw new ReviewNotFoundException();
+			}
+			
+			String getComments = SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE + WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '" + reviewId + "';";
+			ResultSet commentsFromDb = statement.executeQuery(getComments);
+			
+			while(commentsFromDb.next()) {
+				result.add(new CommentData(commentsFromDb.getString(REVIEWS_COMMENTS_ID), commentsFromDb.getString(REVIEWS_COMMENTS_USER_ID), commentsFromDb.getString(REVIEWS_COMMENTS_USER_REVIEWS_ID), commentsFromDb.getString(REVIEWS_COMMENTS_COMMENT)));
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return result;
+		}
+		
+		dbConnection.closeConn();
+		
+		return result;
+		
+	}
 
+	public boolean updateUser(String loginKey, String password, String firstName,
+			String lastName, String profileImage) throws InvalidKeyException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		
+		//check if key is valid
+		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + loginKey +"';";
+		ResultSet keyFromDb;
+		try {
+							
+			keyFromDb = statement.executeQuery(getKeyFromDb);
+			if(!keyFromDb.next()) {
+				throw new InvalidKeyException();
+			}
+			
+			String updateUser = UPDATE + USER_TABLE + 
+					SET + USER_PASSWORD + "= '" + password + "', " + USER_FIRSTNAME + "= '" + firstName + "', " + USER_LASTNAME + "= '" + lastName + "', " + USER_PICTURE + "= '" + profileImage + "';";
+			int success = statement.executeUpdate(updateUser);
+			if(success != 1) {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+		
+		return true;
+	}
+	
+	public User getUserProfile(String key) throws InvalidKeyException {
+
+        String firstName = "";
+        String lastName = "";
+        String email = "";
+        String picture = "";
+        List<UserData> friends = new ArrayList<UserData>();
+
+        DBCon dbConnection = new DBCon();
+        Statement statement = dbConnection.getStatement();
+
+        //check if key is valid
+        String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_LOGINKEY + "= '" + key +"';";
+        ResultSet userFromDb;
+        try {
+
+            userFromDb = statement.executeQuery(getUser);
+            if(!userFromDb.next()) {
+                throw new InvalidKeyException();
+            }
+
+            //set the user data
+            firstName = userFromDb.getString(USER_FIRSTNAME);
+            lastName = userFromDb.getString(USER_LASTNAME);
+            email = userFromDb.getString(USER_EMAIL);
+            picture = userFromDb.getString(USER_PICTURE);
+
+            //get the friends of the user
+            String getFriends = SELECT + CONNECTIONS_FRIENDS_ID + FROM +
+                    CONNECTIONS_TABLE + WHERE +
+                    CONNECTIONS_MY_ID + "= '" + userFromDb.getString(USER_ID) + "';";
+            ResultSet friendsIds = statement.executeQuery(getFriends);
+
+            while(friendsIds.next()) {
+
+                String id = friendsIds.getString(CONNECTIONS_FRIENDS_ID);
+
+                String getUserDetails = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + id + "';";
+                ResultSet friendFromDb = statement.executeQuery(getUserDetails);
+
+                UserData friend = new UserData(friendFromDb.getString(USER_EMAIL), "" , friendFromDb.getString(USER_FIRSTNAME), friendFromDb.getString(USER_LASTNAME), friendFromDb.getString(USER_PICTURE), "", "", "", "", "", "", "");
+                friends.add(friend);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        dbConnection.closeConn();
+
+        return new User("true", new UserData(email, "", firstName, lastName, picture, "", "", "", "", "", "", ""));
+    }
 }
