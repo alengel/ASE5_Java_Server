@@ -8,9 +8,7 @@ import java.util.List;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
-
 import com.rest.location.model.data.LocationData;
-
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
@@ -772,4 +770,53 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
         return new User("true", "", new UserData(email, "", firstName, lastName, picture, "", "", "", "", "", "", ""));
     }
+
+	public ArrayList<ReviewData> getReviewsForUser(int userId) throws UserNotFoundException {
+		
+		ArrayList<ReviewData> result = new ArrayList<ReviewData>();
+		
+		DBCon dbConnection = new DBCon();
+        Statement statement = dbConnection.getStatement();
+
+        //check if userId is valid
+        String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= " + userId +";";
+        ResultSet userFromDb;
+        try {
+
+            userFromDb = statement.executeQuery(getUser);
+            if(!userFromDb.next()) {
+                throw new UserNotFoundException();
+            }
+            
+            String userFirstName = userFromDb.getString(USER_FIRSTNAME);
+            String userLastName = userFromDb.getString(USER_LASTNAME);
+            String userEMail = userFromDb.getString(USER_EMAIL);
+            String userPicture = userFromDb.getString(USER_PICTURE);
+            
+            //get the reviews of this user
+            String getReviews = SELECT + "*" + FROM + REVIEWS_TABLE + 
+            		WHERE + REVIEWS_USER_ID + "= " + userId + ";";
+            ResultSet reviewsFromDb = statement.executeQuery(getReviews);
+            
+            while(reviewsFromDb.next()) {
+            	
+            	String locationId = reviewsFromDb.getString(REVIEWS_LOCATION_ID);
+            	String title = reviewsFromDb.getString(REVIEWS_REVIEW_TITLE);
+            	String review = reviewsFromDb.getString(REVIEWS_REVIEW_DESCRIPTION);
+            	String locPicture = reviewsFromDb.getString(REVIEWS_REVIEW_PICTURE);
+            	int rating = reviewsFromDb.getInt(REVIEWS_RATING);
+            	
+            	result.add(new ReviewData(userId, userFirstName, userLastName, userEMail, userPicture, rating, title, review, locPicture, locationId));
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        dbConnection.closeConn();
+		
+		return result;
+	}
 }

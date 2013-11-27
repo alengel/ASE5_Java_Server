@@ -5,10 +5,9 @@ import java.util.ArrayList;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
-
 import com.rest.user.model.User;
-
 import com.rest.review.model.Review;
+import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
@@ -129,4 +128,6 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 			String lastName, String profileImage) throws InvalidKeyException;
 	
 	public User getUserProfile(String key) throws InvalidKeyException;
+	
+	public ArrayList<ReviewData> getReviewsForUser(int userId) throws UserNotFoundException;
 }
