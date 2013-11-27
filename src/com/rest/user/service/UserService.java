@@ -151,7 +151,12 @@ import java.io.ByteArrayInputStream;
 			try {
 				dbAccess = new DatabaseAccess();
 				userData = dbAccess.registerNewUser(email, passwd, firstName, lastName, hrefToFile);
+				if (userData != null) {
 				return Response.ok(new User("true", "Registration is complete")).build();
+				}
+				else {
+					return Response.ok(new User("false", "Error occured")).build();
+				}
 			} catch (EmailAlreadyExistsException e) {
 				return Response.ok(new User("false", "User with this email already exists")).build(); 				
 			}
