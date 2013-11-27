@@ -5,8 +5,6 @@ import it.sauronsoftware.base64.Base64;
 import javax.ws.rs.*;
 
 import java.sql.*;
-import java.util.Arrays;
-
 import com.rest.user.model.*;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.*;
@@ -15,7 +13,6 @@ import com.rest.utils.exceptions.EmailAlreadyExistsException;
 import com.rest.utils.exceptions.InputTooLongException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.PasswordWrongException;
-import com.rest.utils.exceptions.ReviewNotFoundException;
 import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
@@ -83,7 +80,7 @@ import java.io.ByteArrayInputStream;
 	        try {
 	        	userData = dbAccess.loginUser(email, passwd);
 	        	String loginKey = userData.getLoginKey();
-	           	User user = new User("true", loginKey, userData);
+	           	User user = new User("true", loginKey);
 	       		return Response.ok(user).build();
 	       	
 	        } catch (UserNotFoundException e) {

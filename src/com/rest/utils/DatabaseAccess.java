@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
-import com.rest.location.model.data.LocationData;
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
@@ -78,13 +77,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String REVIEWS_COMMENTS_USER_ID = "user_id ";
 		private static final String REVIEWS_COMMENTS_USER_REVIEWS_ID = "user_reviews_id ";
 		private static final String REVIEWS_COMMENTS_COMMENT = "comment ";
-		//static Strings for t5_users_votes
-		private static final String USERS_VOTES_TABLE = "t5_users_votes ";
-		private static final String USERS_VOTES_ID = "id ";
-		private static final String USERS_VOTES_USER_ID = "user_id ";
-		private static final String USERS_VOTES_USER_REVIEWS_ID = "user_reviews_id ";
-		private static final String USERS_VOTES_VOTE_FLAG = "vote_flag ";
-		private static final String USERS_VOTES_DATED = "dated ";
 		//static Strings for the table t5_checkins
 		private static final String CHECKIN_TABLE = "t5_checkins ";
 		private static final String CHECKIN_USER_ID = "users_id ";
@@ -92,17 +84,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		private static final String CHECKIN_CHECKIN_TIMESTAMP = "checkin_timestamp ";
 		//static Strings for the table t5_connections
 		private static final String CONNECTIONS_TABLE = "t5_connections ";
-		private static final String CONNECTIONS_ID = "id ";
 		private static final String CONNECTIONS_MY_ID = "my_id ";
 		private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
-		private static final String CONNECTIONS_STATUS = "status ";
-		private static final String CONNECTIONS_PHONEBOOK_STATUS = "phonebook_status ";
-		private static final String CONNECTIONS_HOWDY_FLAG = "howdy_flag ";
-		private static final String CONNECTIONS_DATED = "dated ";
-		
-
-	
-	@Override
+		@Override
 	public UserData registerNewUser(String email, String password, 
 			String firstName, String lastName, String picture) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException {
 		
@@ -326,8 +310,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		ResultSet keyFromDb;
 
 		String message;
-		List<ReviewData> rd = null;
-
 		try {
 							
 			keyFromDb = statement.executeQuery(getKeyFromDb);
@@ -540,7 +522,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 			
-			String userId = keyFromDb.getString("id");
+			keyFromDb.getString("id");
 			
 			//check if reviewId is valid
 			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE + REVIEWS_ID + "= '" + reviewId +"';";
@@ -597,7 +579,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				
 			//check if reviewer_id exists
 			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID + "= '" + reviewer_id +"';";
-			ResultSet getIdResult = statement.executeQuery(getId);
+			statement.executeQuery(getId);
 			
 			if(!keyFromDb.next()) {
 			throw new UserNotFoundException();

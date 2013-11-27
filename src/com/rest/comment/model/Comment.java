@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.rest.comment.model.data.*;
-import com.rest.location.model.data.LocationData;
 
 @XmlRootElement
 public class Comment {

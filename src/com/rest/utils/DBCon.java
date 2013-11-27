@@ -1,7 +1,6 @@
 package com.rest.utils;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,13 +17,7 @@ public class DBCon {
 	private InitialContext ctx;
 	private DataSource ds;
 		
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "javatest";
-	private String driver = "com.mysql.jdbc.Driver";
-	private String userName = "root";
-	private String password = "";
-	
-public DBCon()  {
+	public DBCon()  {
 	
 	
 //Tomcat connection configuration

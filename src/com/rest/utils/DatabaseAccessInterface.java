@@ -7,7 +7,6 @@ import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.user.model.User;
 
-import com.rest.location.model.Location;
 import com.rest.review.model.Review;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.exceptions.ArgumentMissingException;

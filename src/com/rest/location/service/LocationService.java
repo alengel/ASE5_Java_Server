@@ -11,7 +11,6 @@ import com.rest.comment.model.Comment;
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 
-import com.rest.location.model.Location;
 import com.rest.review.model.Review;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
