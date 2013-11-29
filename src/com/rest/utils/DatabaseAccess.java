@@ -739,7 +739,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			
       	ResultSet keyFromDb;
 		try {
-							
 			
 			String updateSettings = UPDATE + USER_TABLE + 
 					SET + USER_PASSWORD_KEY + "= '" + timeStamp +"' " +
