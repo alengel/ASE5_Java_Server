@@ -8,6 +8,9 @@ import java.util.List;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
+
+import com.rest.location.model.data.LocationData;
+
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
@@ -56,6 +59,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String USER_LASTNAME = "last_name ";
 	private final static String USER_LOGINKEY = "login_key ";
 	private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
+	private final static String USER_PASSWORD_KEY = "password_key ";
 	private final static String USER_MIN_DISTANCE = "min_distance ";
 	private final static String USER_PICTURE = "picture ";
 	private final static String USER_LOGOUT_TIME = "logout_session_time ";
@@ -731,7 +735,24 @@ public class DatabaseAccess implements DatabaseAccessInterface {
       properties.setProperty("mail.smtp.host", host);
 
       Session session = Session.getDefaultInstance(properties);
-
+		long timeStamp = System.currentTimeMillis();
+			
+      	ResultSet keyFromDb;
+		try {
+							
+			
+			String updateSettings = UPDATE + USER_TABLE + 
+					SET + USER_PASSWORD_KEY + "= '" + timeStamp +"' " +
+					WHERE + USER_EMAIL + "= '" + email + "';";
+			statement.executeUpdate(updateSettings);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		dbConnection.closeConn();
+      
       try{
          MimeMessage message = new MimeMessage(session);
          message.setFrom(new InternetAddress(from));
@@ -739,11 +760,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
                                   new InternetAddress(to));
 
          message.setSubject("Please reset your Password.");
-         message.setContent("Hi, <bR> Please click below link to reset your password.<br><a href='http://www.switchcodes.in/sandbox/projectpackets/t5/user/reset-password/x/"++"'>Click here to reset.</a><br><br>Thanks");
+         message.setContent("Hi, <bR> Please click below link to reset your password.<br><a href='http://www.switchcodes.in/sandbox/projectpackets/t5/user/reset-password/x/"+timeStamp+"'>Click here to reset.</a><br><br>Thanks");
 
          // Send message
          Transport.send(message);
-         //System.out.println("Sent message successfully....");
+         return true;
       }catch (MessagingException mex) {
          mex.printStackTrace();
       }
