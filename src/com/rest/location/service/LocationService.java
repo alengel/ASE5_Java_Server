@@ -5,7 +5,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import java.sql.*;
-
 import java.util.ArrayList;
 
 import com.rest.comment.model.Comment;
@@ -14,10 +13,12 @@ import com.rest.location.model.Location;
 
 
 import com.rest.review.model.Review;
+import com.rest.review.model.data.ReviewData;
 import com.rest.utils.*;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.InvalidKeyException;
 import com.rest.utils.exceptions.ReviewNotFoundException;
+import com.rest.utils.exceptions.UserNotFoundException;
 
 @Path("/")  	
 public class LocationService {
@@ -146,5 +147,32 @@ public class LocationService {
 		
 		Comment comment = new Comment(success, message, comments);
 		return Response.ok(comment).build();
+	}
+	
+	
+	
+	@GET                                
+	@Path("reviews-for-user/{userId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)	
+    public Response getReviewsForUser(@PathParam ("userId") int userId) {
+		
+		String success = "false";
+		String message = "";
+		
+		dbAccess = new DatabaseAccess();
+		ArrayList<ReviewData> reviews = null;
+		
+		try {
+			reviews = dbAccess.getReviewsForUser(userId);
+			success = "true";
+		} catch (UserNotFoundException e) {
+			message = "User not found";
+		}
+		
+		
+		Review review = new Review(success, message, reviews);
+		
+		return Response.ok(review).build();
 	}
 }
