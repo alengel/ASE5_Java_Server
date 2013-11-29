@@ -721,6 +721,35 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
+	public boolean resetPassword(String email){
+			
+      String to = email;
+      String from = "support@t5team.com";
+      String host = "localhost";
+
+      Properties properties = System.getProperties();
+      properties.setProperty("mail.smtp.host", host);
+
+      Session session = Session.getDefaultInstance(properties);
+
+      try{
+         MimeMessage message = new MimeMessage(session);
+         message.setFrom(new InternetAddress(from));
+         message.addRecipient(Message.RecipientType.TO,
+                                  new InternetAddress(to));
+
+         message.setSubject("Please reset your Password.");
+         message.setContent("Hi, <bR> Please click below link to reset your password.<br><a href='http://www.switchcodes.in/sandbox/projectpackets/t5/user/reset-password/x/"++"'>Click here to reset.</a><br><br>Thanks");
+
+         // Send message
+         Transport.send(message);
+         //System.out.println("Sent message successfully....");
+      }catch (MessagingException mex) {
+         mex.printStackTrace();
+      }
+      
+	}
+	
 	public User getUserProfile(String key) throws InvalidKeyException {
 
 		String firstName = "";
