@@ -554,7 +554,7 @@ public class DatabaseAccessTest {
 		String reviewId = "reviewId";
 		String comment = "comment";
 		
-		Location result = dbAccess.putComment(reviewId);
+		Location result = dbAccess.getCommentsForReview(reviewId);
 		boolean expected = true;
 		assertEquals (expected, result);
 	}
@@ -576,7 +576,7 @@ public class DatabaseAccessTest {
 		String reviewId = "reviewId";
 		String comment = "comment";
 		
-		Location result = dbAccess.putComment(reviewId);
+		Location result = dbAccess.getCommentsForReview(reviewId);
 		boolean expected = false;
 		assertEquals (expected, result);
 	}
@@ -605,7 +605,7 @@ public class DatabaseAccessTest {
 		String lastName = "lastName";
 		String profileImage = "profileImage";
 		
-		Location result = dbAccess.putComment(loginKey, password,firstName,lastName,profileImage);
+		Location result = dbAccess.updateUser(loginKey, password,firstName,lastName,profileImage);
 		boolean expected = true;
 		assertEquals (expected, result);
 	}
@@ -632,7 +632,7 @@ public class DatabaseAccessTest {
 		String lastName = "lastName";
 		String profileImage = "profileImage";
 		
-		Location result = dbAccess.putComment(loginKey, password,firstName,lastName,profileImage);
+		Location result = dbAccess.updateUser(loginKey, password,firstName,lastName,profileImage);
 		boolean expected = false;
 		assertEquals (expected, result);
 	}
@@ -655,7 +655,7 @@ public class DatabaseAccessTest {
 		
 		String loginKey = userLoggedIn.getLoginKey();
 		
-		Location result = dbAccess.putComment(loginKey);
+		Location result = dbAccess.getUserProfile(loginKey);
 		boolean expected = true;
 		assertEquals (expected, result);
 	}
@@ -663,7 +663,6 @@ public class DatabaseAccessTest {
 	/*
 	* Testing StoreNewFollow
 	*/
-	
 	@Test
 	public void testGetUserProfileUnsuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
 		String email = "test@web.de";
@@ -677,7 +676,52 @@ public class DatabaseAccessTest {
 		
 		String loginKey = userLoggedIn.getLoginKey();
 		
-		Location result = dbAccess.putComment(loginKey);
+		Location result = dbAccess.getUserProfile(loginKey);
+		boolean expected = false;
+		assertEquals (expected, result);
+	}
+	
+
+	/*
+	* Testing StoreNewFollow
+	*/
+	@Test
+	public void testResetPasswordSuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		//dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		
+		//UserData userLoggedIn = dbAccess.loginUser(email, password);
+		
+		//String loginKey = userLoggedIn.getLoginKey();
+		String email = "email";
+		
+		Location result = dbAccess.resetPassword(email);
+		boolean expected = true;
+		assertEquals (expected, result);
+	}
+	
+	/*
+	* Testing StoreNewFollow
+	*/
+	@Test
+	public void testResetPasswordUnsuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		//dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		
+		//UserData userLoggedIn = dbAccess.loginUser(email, password);
+		
+		//String loginKey = userLoggedIn.getLoginKey();
+		String email = "email";
+		
+		Location result = dbAccess.resetPassword(email);
 		boolean expected = false;
 		assertEquals (expected, result);
 	}
