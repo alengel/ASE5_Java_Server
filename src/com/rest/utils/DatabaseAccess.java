@@ -426,8 +426,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 														// reviews
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			message = "Error";
+
+			dbConnection.closeConn();
+			return new Review("false", message, rd);
 		}
 
 	}
