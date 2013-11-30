@@ -3,12 +3,16 @@ package com.user.test;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.mysql.jdbc.ResultSetImpl;
 import com.rest.location.model.Location;
+import com.rest.review.model.Review;
+import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.data.UserData;
 import com.rest.utils.DatabaseAccess;
 import com.rest.utils.exceptions.ArgumentMissingException;
@@ -440,4 +444,47 @@ public class DatabaseAccessTest {
 	boolean expected = false;
 	assertEquals (expected, result);
 	}	
+	
+	@Test
+	public void testGetReviewsSuccessful() {
+		
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		try {
+			dbAccess.registerNewUser(email, password, firstName, lastName, null);
+			
+			UserData userLoggedIn = dbAccess.loginUser(email, password);
+			
+			String loginKey = userLoggedIn.getLoginKey();
+			
+			String venueId = "venueID";
+			String timestamp = "timestamp";
+			
+			dbAccess.checkIn(loginKey, venueId, timestamp);
+			
+			int rating = 1;
+			String reviewTitle = "Horrible place";
+			String reviewDescription = "Disgusting food, will never go there again";
+			String imageUri = "http://whatever";
+		
+			dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri);
+			
+			Review result = dbAccess.getReviews(venueId);
+			ReviewData resultReviewData = result.getReviewData().get(0);
+			assertEquals(rating, resultReviewData.getRating());
+			assertEquals(reviewTitle, resultReviewData.getTitle());
+			assertEquals(reviewDescription, resultReviewData.getReview());
+			assertEquals(imageUri, resultReviewData.getPicture());
+			assertEquals(email, resultReviewData.getUserEmail());
+			
+		} catch (WrongEmailFormatException | InputTooLongException
+				| ArgumentMissingException | EmailAlreadyExistsException | InvalidKeyException | UserNotFoundException | PasswordWrongException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 }
