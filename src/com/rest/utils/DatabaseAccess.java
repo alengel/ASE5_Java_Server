@@ -26,7 +26,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	//for getting SQL statements
 	private QueriesGenerator queriesGenerator;
 	
-	// maximum allowed inputLenght according to the database ddl
+	// maximum allowed inputLength according to the database ddl
 	private final static int MAX_INPUT_LENGTH = 200;
 
 	// static Strings for SQL Queries
