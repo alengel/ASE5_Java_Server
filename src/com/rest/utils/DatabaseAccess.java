@@ -441,8 +441,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if key is valid
-		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + key + "';";
+		String getKeyFromDb = queriesGenerator.getUserByKey(key);
 		ResultSet keyFromDb;
 		try {
 
