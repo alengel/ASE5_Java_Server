@@ -26,15 +26,13 @@ public interface DatabaseAccessInterface {
 	public void clearDatabase();
 
 	/**
-	 * 
+	 * log the user in
 	 * @param email
 	 * @param password
-	 * @param loginKey
-	 * @return true if login was successful, false otherwise
+	 * @return the UserData of the logged in user, including his key. Null otherwise
 	 * @throws ArgumentMissingException
 	 * @throws UserNotFoundException
 	 * @throws PasswordWrongException
-	 * @throws SQLException
 	 */
 	public UserData loginUser(String email, String password)
 			throws ArgumentMissingException, UserNotFoundException,

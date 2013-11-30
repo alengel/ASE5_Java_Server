@@ -5,7 +5,7 @@ package com.rest.utils;
  * class which contains all necessary SQL Queries for DatabaseAccess
  *
  */
-final class Queries {
+final class QueriesGenerator {
 	
 	// maximum allowed inputLenght according to the database ddl
 	private final static int MAX_INPUT_LENGTH = 200;
@@ -40,6 +40,7 @@ final class Queries {
 	private final static String USER_MIN_DISTANCE = "min_distance ";
 	private final static String USER_PICTURE = "picture ";
 	private final static String USER_LOGOUT_TIME = "logout_session_time ";
+	private final static String USER_LOGIN_TIME = "login_timestamp ";
 	// static Strings for the table t5_locations
 	private final static String LOCATIONS_TABLE = "t5_locations ";
 	private final static String LOCATIONS_ID = "id ";
@@ -75,15 +76,174 @@ final class Queries {
 	
 	/*
 	 * --------------------------------------------------------------
+	 * Getter-methods for getting the table attributes without space
+	 * --------------------------------------------------------------
+	 */
+	public static String getUserTable() {
+		return USER_TABLE.trim();
+	}
+
+	public static String getUserId() {
+		return USER_ID.trim();
+	}
+
+	public static String getUserEmail() {
+		return USER_EMAIL.trim();
+	}
+
+	public static String getUserPassword() {
+		return USER_PASSWORD.trim();
+	}
+
+	public static String getUserFirstname() {
+		return USER_FIRSTNAME.trim();
+	}
+
+	public static String getUserLastname() {
+		return USER_LASTNAME.trim();
+	}
+
+	public static String getUserLoginkey() {
+		return USER_LOGINKEY.trim();
+	}
+
+	public static String getUserGeoPushInterval() {
+		return USER_GEO_PUSH_INTERVAL.trim();
+	}
+
+	public static String getUserMinDistance() {
+		return USER_MIN_DISTANCE.trim();
+	}
+
+	public static String getUserPicture() {
+		return USER_PICTURE.trim();
+	}
+
+	public static String getUserLogoutTime() {
+		return USER_LOGOUT_TIME.trim();
+	}
+	
+	public static String getUserLoginTime() {
+		return USER_LOGIN_TIME.trim();
+	}
+
+	public static String getLocationsTable() {
+		return LOCATIONS_TABLE.trim();
+	}
+
+	public static String getLocationsId() {
+		return LOCATIONS_ID.trim();
+	}
+
+	public static String getLocationsFsquareVenueId() {
+		return LOCATIONS_FSQUARE_VENUE_ID.trim();
+	}
+
+	public static String getReviewsTable() {
+		return REVIEWS_TABLE.trim();
+	}
+
+	public static String getReviewsId() {
+		return REVIEWS_ID.trim();
+	}
+
+	public static String getReviewsUserId() {
+		return REVIEWS_USER_ID.trim();
+	}
+
+	public static String getReviewsLocationId() {
+		return REVIEWS_LOCATION_ID.trim();
+	}
+
+	public static String getReviewsRating() {
+		return REVIEWS_RATING.trim();
+	}
+
+	public static String getReviewsReviewTitle() {
+		return REVIEWS_REVIEW_TITLE.trim();
+	}
+
+	public static String getReviewsReviewDescription() {
+		return REVIEWS_REVIEW_DESCRIPTION.trim();
+	}
+
+	public static String getReviewsReviewPicture() {
+		return REVIEWS_REVIEW_PICTURE.trim();
+	}
+
+	public static String getReviewsTotalVoteUp() {
+		return REVIEWS_TOTAL_VOTE_UP.trim();
+	}
+
+	public static String getReviewsTotalVoteDown() {
+		return REVIEWS_TOTAL_VOTE_DOWN.trim();
+	}
+
+	public static String getReviewsSpams() {
+		return REVIEWS_SPAMS.trim();
+	}
+
+	public static String getReviewsCommentsTable() {
+		return REVIEWS_COMMENTS_TABLE.trim();
+	}
+
+	public static String getReviewsCommentsId() {
+		return REVIEWS_COMMENTS_ID.trim();
+	}
+
+	public static String getReviewsCommentsUserId() {
+		return REVIEWS_COMMENTS_USER_ID.trim();
+	}
+
+	public static String getReviewsCommentsUserReviewsId() {
+		return REVIEWS_COMMENTS_USER_REVIEWS_ID.trim();
+	}
+
+	public static String getReviewsCommentsComment() {
+		return REVIEWS_COMMENTS_COMMENT.trim();
+	}
+
+	public static String getCheckinTable() {
+		return CHECKIN_TABLE.trim();
+	}
+
+	public static String getCheckinUserId() {
+		return CHECKIN_USER_ID.trim();
+	}
+
+	public static String getCheckinLocationId() {
+		return CHECKIN_LOCATION_ID.trim();
+	}
+
+	public static String getCheckinCheckinTimestamp() {
+		return CHECKIN_CHECKIN_TIMESTAMP.trim();
+	}
+
+	public static String getConnectionsTable() {
+		return CONNECTIONS_TABLE.trim();
+	}
+
+	public static String getConnectionsMyId() {
+		return CONNECTIONS_MY_ID.trim();
+	}
+
+	public static String getConnectionsFriendsId() {
+		return CONNECTIONS_FRIENDS_ID.trim();
+	}
+
+	
+	
+	/*
+	 * --------------------------------------------------------------
 	 * Query Strings
 	 * --------------------------------------------------------------
 	 */
-	static protected String existsEmailInDbQuery(String email) {
+	String existsEmailInDbQuery(String email) {
 		return SELECT + ALL + FROM + USER_TABLE
 				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
 	}
 	
-	static protected String insertNewUser(String email, String password,
+	String insertNewUser(String email, String password,
 			String firstName, String lastName, String picture) {
 		return INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
 				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
@@ -92,6 +252,17 @@ final class Queries {
 				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
 				+ firstName + "', '" + lastName + "', '" + picture
 				+ "', 60, 30, 100);";
+	}
+	
+	String getUserByEmail(String email) {
+		return SELECT + "* " + FROM + USER_TABLE + WHERE
+				+ USER_EMAIL + "= '" + email + "';";
+	}
+	
+	String loginUser(String key, long timeStamp, String email) {
+		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
+				+ key + "'," + USER_LOGIN_TIME + "= " + timeStamp + " "
+				+ WHERE + USER_EMAIL + "= '" + email + "';";
 	}
 	
 	
@@ -112,7 +283,7 @@ final class Queries {
 	 * Update Strings
 	 * --------------------------------------------------------------
 	 */
-	static protected String logoutUser(String key) {
+	String logoutUser(String key) {
 		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
 				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
