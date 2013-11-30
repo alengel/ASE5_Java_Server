@@ -544,8 +544,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 		DBCon dbConnection = new DBCon();
 		Statement s = dbConnection.getStatement();
-		String deleteUser = DELETE + FROM + USER_TABLE;
-		String deleteLocations = DELETE + FROM + LOCATIONS_TABLE;
+		String deleteUser = queriesGenerator.deleteUserTable();
+		String deleteLocations = queriesGenerator.deleteLocationsTable();
 		try {
 			s.executeUpdate(deleteUser);
 			s.executeUpdate(deleteLocations);

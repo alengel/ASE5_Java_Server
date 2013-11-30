@@ -287,4 +287,21 @@ final class QueriesGenerator {
 		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
 				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
+	
+	
+	
+	
+	
+	/*
+	 * --------------------------------------------------------------
+	 * Delete Strings
+	 * --------------------------------------------------------------
+	 */
+	String deleteUserTable() {
+		return DELETE + FROM + USER_TABLE;
+	}
+	
+	String deleteLocationsTable() {
+		return DELETE + FROM + LOCATIONS_TABLE;
+	}
 }
