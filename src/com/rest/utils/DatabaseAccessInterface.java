@@ -131,7 +131,7 @@ public interface DatabaseAccessInterface {
 	 * @throws InvalidKeyException
 	 * @throws ReviewNotFoundException
 	 */
-	public boolean vote(String key, String reviewId, int vote)
+	public boolean vote(String key, int reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException;
 	
 	/**
