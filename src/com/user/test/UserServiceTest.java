@@ -111,8 +111,7 @@ public class UserServiceTest {
 	@Test
 	public void testLogoutUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
-		String firstName = "Karolina";
-		String lastName = "Schliski";
+
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
@@ -124,6 +123,27 @@ public class UserServiceTest {
 		
 		assertEquals(expected, result);
 	}
+	
+	/*
+	 * Testing logout with wrong key
+	 */
+	
+	@Test
+	public void testLogoutUserWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response result = userService.logout(loginKey+"asd");
+		Response expected = Response.ok(new User("false", "Error occured")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 	
 
