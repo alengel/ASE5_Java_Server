@@ -273,6 +273,7 @@ final class QueriesGenerator {
 	
 	
 	
+	
 	/*
 	 * --------------------------------------------------------------
 	 * Insert Strings
