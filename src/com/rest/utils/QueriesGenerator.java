@@ -265,17 +265,15 @@ final class QueriesGenerator {
 				+ WHERE + USER_EMAIL + "= '" + email + "';";
 	}
 	
+	/**
+	 * get a User from the database by searching him through his key
+	 * @param key
+	 * @return the required SQL statement
+	 */
 	public String getUserByKey(String key) {
 		return SELECT + "* " + FROM + USER_TABLE + WHERE
 				+ USER_LOGINKEY + "= '" + key + "';";
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
@@ -409,12 +407,24 @@ final class QueriesGenerator {
 				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
+	/**
+	 * for voting down a review
+	 * @param reviewId
+	 * @param newVote the new vote value
+	 * @return
+	 */
 	public String updateReviewsVoteDown(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
 				+ WHERE + REVIEWS_ID + "= " + reviewId + ";";
 	}
 	
+	/**
+	 * for voting up a review
+	 * @param reviewId
+	 * @param newVote the new vote value 
+	 * @return
+	 */
 	public String updateReviewsVoteUp(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
