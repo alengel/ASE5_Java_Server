@@ -67,7 +67,7 @@ public interface DatabaseAccessInterface {
 	 * @throws ArgumentMissingException
 	 *             d
 	 */
-	public boolean logoutUser(String loginKey) throws ArgumentMissingException;
+	public boolean logoutUser(String key) throws ArgumentMissingException;
 
 	/**
 	 * 
@@ -101,7 +101,7 @@ public interface DatabaseAccessInterface {
 	 * @return true if change successful, false otherwise
 	 * @throws InvalidKeyException
 	 */
-	public boolean updateSettings(String userKey, int minDistance,
+	public boolean updateSettings(String key, int minDistance,
 			int maxLoginInterval, int geoPushInterval)
 			throws InvalidKeyException;
 
@@ -141,7 +141,7 @@ public interface DatabaseAccessInterface {
 	public ArrayList<CommentData> getCommentsForReview(String reviewId)
 			throws ReviewNotFoundException;
 
-	public boolean updateUser(String loginKey, String password,
+	public boolean updateUser(String key, String password,
 			String firstName, String lastName, String profileImage)
 			throws InvalidKeyException;
 

@@ -24,7 +24,6 @@ import com.rest.utils.exceptions.WrongEmailFormatException;
 public class DatabaseAccess implements DatabaseAccessInterface {
 
 	// maximum allowed inputLenght according to the database ddl
-
 	private final static int MAX_INPUT_LENGTH = 200;
 
 	// static Strings for SQL Queries
@@ -41,7 +40,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String ALL = "* ";
 	private final static String EQUALS = " = ";
 	private final static String VALUES = "values ";
-
+	
+	/*
+	 * Static Strings from the DDL
+	 */
 	// static Strings for the table t5_user
 	private final static String USER_TABLE = "t5_users ";
 	private final static String USER_ID = "id ";
@@ -60,9 +62,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String LOCATIONS_FSQUARE_VENUE_ID = "foursquare_venue_id ";
 	// static Stings for the table t5_users_reviews
 	private static final String REVIEWS_TABLE = "t5_users_reviews ";
-
 	private static final String REVIEWS_ID = "id";
-
 	private static final String REVIEWS_USER_ID = "users_id ";
 	private static final String REVIEWS_LOCATION_ID = "locations_id ";
 	private static final String REVIEWS_RATING = "rating ";
@@ -87,6 +87,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private static final String CONNECTIONS_TABLE = "t5_connections ";
 	private static final String CONNECTIONS_MY_ID = "my_id ";
 	private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
+	
+	
 
 	@Override
 	public UserData registerNewUser(String email, String password,
@@ -258,9 +260,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	}
 
 	@Override
-	public boolean logoutUser(String loginKey) throws ArgumentMissingException {
+	public boolean logoutUser(String key) throws ArgumentMissingException {
 
-		if (loginKey == null || loginKey.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			throw new ArgumentMissingException();
 		}
 
@@ -268,7 +270,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		String logoutUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
-				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + loginKey + "';";
+				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 		try {
 			int success = statement.executeUpdate(logoutUser);
 			if (success != 1) {
@@ -745,7 +747,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 	}
 
-	public boolean updateUser(String loginKey, String password,
+	public boolean updateUser(String key, String password,
 			String firstName, String lastName, String profileImage)
 			throws InvalidKeyException {
 
@@ -754,7 +756,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 		// check if key is valid
 		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + loginKey + "';";
+				+ USER_LOGINKEY + "= '" + key + "';";
 		ResultSet keyFromDb;
 		try {
 
