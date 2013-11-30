@@ -554,12 +554,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			String updateReview;
 			int newVote;
 			if (vote == 0) {
-				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_DOWN) + 1;
+				newVote = reviewIdFromDb.getInt(QueriesGenerator.getReviewsTotalVoteDown()) + 1;
 				updateReview = UPDATE + REVIEWS_TABLE + SET
 						+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
 						+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
 			} else {
-				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_UP) + 1;
+				newVote = reviewIdFromDb.getInt(QueriesGenerator.getReviewsTotalVoteUp()) + 1;
 				updateReview = UPDATE + REVIEWS_TABLE + SET
 						+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
 						+ REVIEWS_ID + "= '" + reviewId + "';";
