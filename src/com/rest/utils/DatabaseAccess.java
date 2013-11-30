@@ -797,10 +797,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new UserNotFoundException();
 			}
 
-			String userFirstName = userFromDb.getString(USER_FIRSTNAME);
-			String userLastName = userFromDb.getString(USER_LASTNAME);
-			String userEMail = userFromDb.getString(USER_EMAIL);
-			String userPicture = userFromDb.getString(USER_PICTURE);
+			String userFirstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
+			String userLastName = userFromDb.getString(QueriesGenerator.getUserLastname());
+			String userEMail = userFromDb.getString(QueriesGenerator.getUserEmail());
+			String userPicture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the reviews of this user
 			String getReviews = SELECT + "*" + FROM + REVIEWS_TABLE + WHERE
