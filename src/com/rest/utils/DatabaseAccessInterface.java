@@ -144,7 +144,16 @@ public interface DatabaseAccessInterface {
 	 */
 	public boolean follow(String key, int reviewer_id)
 			throws InvalidKeyException, UserNotFoundException;
-
+	
+	/**
+	 * for storing comments on reviews
+	 * @param key user that writes a comment
+	 * @param reviewId review that gets commented
+	 * @param comment the actual comment 
+	 * @return true if succesful, false otherwise
+	 * @throws ReviewNotFoundException
+	 * @throws InvalidKeyException
+	 */
 	public boolean putComment(String key, int reviewId, String comment)
 			throws ReviewNotFoundException, InvalidKeyException;
 
