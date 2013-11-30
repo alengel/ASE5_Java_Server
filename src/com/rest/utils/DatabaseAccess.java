@@ -126,7 +126,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		ResultSet resultEmailAlreadyExists;
 		try {
 			resultEmailAlreadyExists = statement
-					.executeQuery(QueriesGenerator.existsEmailInDbQuery(email));
+					.executeQuery(queriesGenerator.existsEmailInDbQuery(email));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -136,7 +136,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new EmailAlreadyExistsException();
 			}
 			
-			int success = statement.executeUpdate(QueriesGenerator.insertNewUser(email, password,
+			int success = statement.executeUpdate(queriesGenerator.insertNewUser(email, password,
 					firstName, lastName, picture));
 			
 			if (success != 1) {
@@ -271,7 +271,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		try {
-			int success = statement.executeUpdate(QueriesGenerator.logoutUser(key));
+			int success = statement.executeUpdate(queriesGenerator.logoutUser(key));
 			if (success != 1) {
 				return false;
 			}

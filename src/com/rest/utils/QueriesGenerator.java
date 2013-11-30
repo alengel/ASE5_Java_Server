@@ -78,12 +78,12 @@ final class QueriesGenerator {
 	 * Query Strings
 	 * --------------------------------------------------------------
 	 */
-	static protected String existsEmailInDbQuery(String email) {
+	String existsEmailInDbQuery(String email) {
 		return SELECT + ALL + FROM + USER_TABLE
 				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
 	}
 	
-	static protected String insertNewUser(String email, String password,
+	String insertNewUser(String email, String password,
 			String firstName, String lastName, String picture) {
 		return INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
 				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
@@ -112,7 +112,7 @@ final class QueriesGenerator {
 	 * Update Strings
 	 * --------------------------------------------------------------
 	 */
-	static protected String logoutUser(String key) {
+	String logoutUser(String key) {
 		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
 				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
