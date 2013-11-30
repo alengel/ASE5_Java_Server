@@ -354,6 +354,13 @@ final class QueriesGenerator {
 				+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
 	}
 	
+	public String updateReviewsVoteUp(String reviewId, int newVote) {
+		return UPDATE + REVIEWS_TABLE + SET
+				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
+				+ REVIEWS_ID + "= '" + reviewId + "';";
+	}
+
+	
 	
 	
 	
@@ -397,6 +404,7 @@ final class QueriesGenerator {
 		+ "');";
 	}
 
+	
 	
 
 	
