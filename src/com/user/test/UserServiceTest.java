@@ -85,6 +85,26 @@ public class UserServiceTest {
 	}
 	
 	
+	/*
+	 * Testing logging in with wrong password
+	 */
+	@Test
+	public void testLoginUserWrongPassword() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
+		
+		Response result = userService.login(email, passwd+ "123qwe");
+
+		Response expected = Response.ok(new User("false", "Email and/or password not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 
 }
