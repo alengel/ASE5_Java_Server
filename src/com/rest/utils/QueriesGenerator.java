@@ -5,7 +5,7 @@ package com.rest.utils;
  * class which contains all necessary SQL Queries for DatabaseAccess
  *
  */
-final class Queries {
+final class QueriesGenerator {
 	
 	// maximum allowed inputLenght according to the database ddl
 	private final static int MAX_INPUT_LENGTH = 200;

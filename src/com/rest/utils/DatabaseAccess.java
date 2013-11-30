@@ -22,7 +22,10 @@ import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public class DatabaseAccess implements DatabaseAccessInterface {
-
+	
+	//for getting SQL statements
+	private QueriesGenerator queriesGenerator;
+	
 	// maximum allowed inputLenght according to the database ddl
 	private final static int MAX_INPUT_LENGTH = 200;
 
@@ -88,7 +91,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private static final String CONNECTIONS_MY_ID = "my_id ";
 	private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
 	
-	
+	public DatabaseAccess() {
+		queriesGenerator = new QueriesGenerator();
+	}
 
 	@Override
 	public UserData registerNewUser(String email, String password,
@@ -121,7 +126,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		ResultSet resultEmailAlreadyExists;
 		try {
 			resultEmailAlreadyExists = statement
-					.executeQuery(Queries.existsEmailInDbQuery(email));
+					.executeQuery(QueriesGenerator.existsEmailInDbQuery(email));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -131,7 +136,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new EmailAlreadyExistsException();
 			}
 			
-			int success = statement.executeUpdate(Queries.insertNewUser(email, password,
+			int success = statement.executeUpdate(QueriesGenerator.insertNewUser(email, password,
 					firstName, lastName, picture));
 			
 			if (success != 1) {
@@ -266,7 +271,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		try {
-			int success = statement.executeUpdate(Queries.logoutUser(key));
+			int success = statement.executeUpdate(QueriesGenerator.logoutUser(key));
 			if (success != 1) {
 				return false;
 			}
