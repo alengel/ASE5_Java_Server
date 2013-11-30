@@ -226,6 +226,8 @@ final class QueriesGenerator {
 		return CONNECTIONS_FRIENDS_ID.trim();
 	}
 
+	
+	
 	/*
 	 * --------------------------------------------------------------
 	 * Query Strings
@@ -245,6 +247,11 @@ final class QueriesGenerator {
 				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
 				+ firstName + "', '" + lastName + "', '" + picture
 				+ "', 60, 30, 100);";
+	}
+	
+	String getUserByEmail(String email) {
+		return SELECT + "* " + FROM + USER_TABLE + WHERE
+				+ USER_EMAIL + "= '" + email + "';";
 	}
 	
 	

@@ -204,8 +204,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if user exists and if the password is correct
-		String getUserFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_EMAIL + "= '" + email + "';";
 		ResultSet userFromDb;
 		String firstName;
 		String lastName;
@@ -217,7 +215,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		long timeStamp;
 
 		try {
-			userFromDb = statement.executeQuery(getUserFromDb);
+			userFromDb = statement.executeQuery(queriesGenerator.getUserByEmail(email));
 			
 			if (!userFromDb.next()) {
 				throw new UserNotFoundException();
