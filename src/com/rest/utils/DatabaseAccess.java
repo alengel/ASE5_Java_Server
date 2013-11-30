@@ -803,9 +803,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			String userPicture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the reviews of this user
-			String getReviews = SELECT + "*" + FROM + REVIEWS_TABLE + WHERE
-					+ REVIEWS_USER_ID + "= " + userId + ";";
-			ResultSet reviewsFromDb = statement.executeQuery(getReviews);
+			ResultSet reviewsFromDb = statement.executeQuery(queriesGenerator.getReviewsByUserId(userId));
 
 			while (reviewsFromDb.next()) {
 
