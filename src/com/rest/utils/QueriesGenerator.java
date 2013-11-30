@@ -295,6 +295,11 @@ final class QueriesGenerator {
 				+ USER_TABLE + WHERE + "id = " + userId;
 	}
 	
+	/**
+	 * for getting reviews according to the reviewId
+	 * @param reviewId
+	 * @return 
+	 */
 	public String getReviewsById(int reviewId) {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
