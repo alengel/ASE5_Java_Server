@@ -256,10 +256,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
 
-		String logoutUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
-				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 		try {
-			int success = statement.executeUpdate(logoutUser);
+			int success = statement.executeUpdate(Queries.logoutUser(key));
 			if (success != 1) {
 				return false;
 			}
