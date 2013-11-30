@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
-import com.rest.location.model.data.LocationData;
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
