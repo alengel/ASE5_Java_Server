@@ -525,7 +525,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 	}
 
-	public boolean vote(String key, String reviewId, int vote)
+	public boolean vote(String key, int reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException {
 
 		DBCon dbConnection = new DBCon();
@@ -572,7 +572,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
-	public boolean follow(String key, String reviewer_id)
+	public boolean follow(String key, int reviewer_id)
 			throws InvalidKeyException, UserNotFoundException {
 
 		DBCon dbConnection = new DBCon();
@@ -589,20 +589,17 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String my_id = keyFromDb.getString(USER_ID);
+			String my_id = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// check if reviewer_id exists
-			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID
-					+ "= '" + reviewer_id + "';";
+			String getId = queriesGenerator.getUserById(reviewer_id);
 			statement.executeQuery(getId);
 
 			if (!keyFromDb.next()) {
 				throw new UserNotFoundException();
 			}
 
-			String setNewFollow = INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
-					+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
-					+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
+			String setNewFollow = queriesGenerator.insertNewFollow(my_id, reviewer_id);
 			statement.executeUpdate(setNewFollow);
 		} catch (SQLException e) {
 			e.printStackTrace();

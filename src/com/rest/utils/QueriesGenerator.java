@@ -271,6 +271,7 @@ final class QueriesGenerator {
 	}
 	
 	
+	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
 				+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
@@ -289,9 +290,9 @@ final class QueriesGenerator {
 				+ USER_TABLE + WHERE + "id = " + userId;
 	}
 	
-	public String getReviewsById(String reviewId) {
+	public String getReviewsById(int reviewId) {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
+				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
 
 	
@@ -348,16 +349,16 @@ final class QueriesGenerator {
 				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
-	public String updateReviewsVoteDown(String reviewId, int newVote) {
+	public String updateReviewsVoteDown(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
-				+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+				+ WHERE + REVIEWS_ID + "= " + reviewId + ";";
 	}
 	
-	public String updateReviewsVoteUp(String reviewId, int newVote) {
+	public String updateReviewsVoteUp(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
+				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
 
 	
@@ -402,6 +403,12 @@ final class QueriesGenerator {
 		+ "', '" + rating + "', '" + reviewTitle + "', '"
 		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
 		+ "');";
+	}
+
+	public String insertNewFollow(String my_id, int reviewer_id) {
+		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
+				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
+				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
 	}
 
 	
