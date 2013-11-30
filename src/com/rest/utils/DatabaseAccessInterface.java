@@ -156,10 +156,26 @@ public interface DatabaseAccessInterface {
 	 */
 	public boolean putComment(String key, int reviewId, String comment)
 			throws ReviewNotFoundException, InvalidKeyException;
-
+	
+	/**
+	 * 
+	 * @param reviewId
+	 * @return the Comments for a Review
+	 * @throws ReviewNotFoundException
+	 */
 	public ArrayList<CommentData> getCommentsForReview(int reviewId)
 			throws ReviewNotFoundException;
-
+	
+	/**
+	 * 
+	 * @param key
+	 * @param password
+	 * @param firstName
+	 * @param lastName
+	 * @param profileImage
+	 * @return true if successful, false otherwise
+	 * @throws InvalidKeyException
+	 */
 	public boolean updateUser(String key, String password,
 			String firstName, String lastName, String profileImage)
 			throws InvalidKeyException;
