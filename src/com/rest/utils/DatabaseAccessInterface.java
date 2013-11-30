@@ -167,12 +167,12 @@ public interface DatabaseAccessInterface {
 			throws ReviewNotFoundException;
 	
 	/**
-	 * 
-	 * @param key
-	 * @param password
-	 * @param firstName
-	 * @param lastName
-	 * @param profileImage
+	 * change properties of the User profile
+	 * @param key the user whose profil should be changed
+	 * @param password the new password
+	 * @param firstName the new firstName
+	 * @param lastName the new lastName
+	 * @param profileImage the new profileImage
 	 * @return true if successful, false otherwise
 	 * @throws InvalidKeyException
 	 */
