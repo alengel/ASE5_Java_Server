@@ -208,6 +208,33 @@ public class UserServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing follow user with wrong key
+	 */
+	@Test
+	public void testFollowWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		//for new user whom we will follow
+		String emailNewUser = "newuser@mai.com";
+		String passwdNewUser = "asdfgh";		
+		
+		// register new user to make sure reviwer_id exists
+		dbAccess.registerNewUser(emailNewUser, passwdNewUser, "Jon", "Smith", null );
+		UserData userData1 = dbAccess.loginUser(emailNewUser, passwdNewUser);
+		String reviewerId = userData1.getId();
+		
+		Response result = userService.follow(loginKey+"asd", reviewerId);
+		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 	
 	
