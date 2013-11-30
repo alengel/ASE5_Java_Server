@@ -650,7 +650,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
-	public ArrayList<CommentData> getCommentsForReview(String reviewId)
+	public ArrayList<CommentData> getCommentsForReview(int reviewId)
 			throws ReviewNotFoundException {
 
 		ArrayList<CommentData> result = new ArrayList<CommentData>();
