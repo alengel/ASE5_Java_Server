@@ -525,7 +525,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 	}
 
-	public boolean vote(String key, String reviewId, int vote)
+	public boolean vote(String key, int reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException {
 
 		DBCon dbConnection = new DBCon();

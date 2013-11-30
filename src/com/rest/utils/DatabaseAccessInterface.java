@@ -142,7 +142,7 @@ public interface DatabaseAccessInterface {
 	 * @throws InvalidKeyException
 	 * @throws UserNotFoundException
 	 */
-	public boolean follow(String key, String reviewer_id)
+	public boolean follow(String key, int reviewer_id)
 			throws InvalidKeyException, UserNotFoundException;
 
 	public boolean putComment(String key, String reviewId, String comment)

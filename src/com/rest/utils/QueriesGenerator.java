@@ -349,16 +349,16 @@ final class QueriesGenerator {
 				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
-	public String updateReviewsVoteDown(String reviewId, int newVote) {
+	public String updateReviewsVoteDown(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
-				+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+				+ WHERE + REVIEWS_ID + "= " + reviewId + ";";
 	}
 	
-	public String updateReviewsVoteUp(String reviewId, int newVote) {
+	public String updateReviewsVoteUp(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
+				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
 
 	
