@@ -362,6 +362,14 @@ final class QueriesGenerator {
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
+	
+	public String updateUser(String password, String firstName,
+			String lastName, String profileImage) {
+		return UPDATE + USER_TABLE + SET + USER_PASSWORD
+				+ "= '" + password + "', " + USER_FIRSTNAME + "= '"
+				+ firstName + "', " + USER_LASTNAME + "= '" + lastName
+				+ "', " + USER_PICTURE + "= '" + profileImage + "';";
+	}
 
 	
 	
@@ -426,6 +434,8 @@ final class QueriesGenerator {
 				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
 				+ reviewId + "';";
 	}
+
+	
 
 	
 	
