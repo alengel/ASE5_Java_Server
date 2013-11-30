@@ -187,7 +187,13 @@ public interface DatabaseAccessInterface {
 	 * @throws InvalidKeyException
 	 */
 	public User getUserProfile(String key) throws InvalidKeyException;
-
+	
+	/**
+	 * get all reviews for one specific user
+	 * @param userId
+	 * @return the list of reviews of the user
+	 * @throws UserNotFoundException
+	 */
 	public ArrayList<ReviewData> getReviewsForUser(int userId)
 			throws UserNotFoundException;
 }
