@@ -542,11 +542,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			keyFromDb.getString("id");
-
 			// check if reviewId is valid
-			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-					+ REVIEWS_ID + "= '" + reviewId + "';";
+			String getReviewId = queriesGenerator.getReviewsById(reviewId);
 			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
 
 			if (!reviewIdFromDb.next()) {
@@ -557,15 +554,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			String updateReview;
 			int newVote;
 			if (vote == 0) {
-				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_DOWN) + 1;
-				updateReview = UPDATE + REVIEWS_TABLE + SET
-						+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
-						+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+				newVote = reviewIdFromDb.getInt(QueriesGenerator.getReviewsTotalVoteDown()) + 1;
+				updateReview = queriesGenerator.updateReviewsVoteDown(reviewId, newVote);
 			} else {
-				newVote = reviewIdFromDb.getInt(REVIEWS_TOTAL_VOTE_UP) + 1;
-				updateReview = UPDATE + REVIEWS_TABLE + SET
-						+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
-						+ REVIEWS_ID + "= '" + reviewId + "';";
+				newVote = reviewIdFromDb.getInt(QueriesGenerator.getReviewsTotalVoteUp()) + 1;
+				updateReview = queriesGenerator.updateReviewsVoteUp(reviewId, newVote);
 			}
 			statement.executeUpdate(updateReview);
 
