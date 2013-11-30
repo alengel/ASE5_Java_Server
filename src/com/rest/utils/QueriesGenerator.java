@@ -411,6 +411,14 @@ final class QueriesGenerator {
 				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
 	}
 
+	public String insertNewComment(String userId, int reviewId, String comment) {
+		return INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
+				+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
+				+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
+				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
+				+ ", " + reviewId + ", '" + comment + "');";
+	}
+
 	
 	
 
