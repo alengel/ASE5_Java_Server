@@ -484,18 +484,12 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			String userId = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// insert venueId if neccessary
-			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
-					+ LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('"
-					+ venueId + "');";
-			statement.executeUpdate(venueInsert);
+			statement.executeUpdate(queriesGenerator.insertNewVenue(venueId));
 
 			// get locationId
-			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
-					+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
-					+ "';";
-			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
-			getVenueIdResult.next();
-			String locationId = getVenueIdResult.getString("id");
+			ResultSet getLocationId = statement.executeQuery(queriesGenerator.getLocationIdFromLocationsByVenueId(venueId));
+			getLocationId.next();
+			String locationId = getLocationId.getString(0);
 
 			// insert review
 			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
