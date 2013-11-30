@@ -631,9 +631,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			String userId = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// check if reviewId is valid
-			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-					+ REVIEWS_ID + "= '" + reviewId + "';";
-			ResultSet reviewIdFromDb = statement.executeQuery(getReviewId);
+			ResultSet reviewIdFromDb = statement.executeQuery(queriesGenerator.getReviewsById(reviewId));
 
 			if (!reviewIdFromDb.next()) {
 				throw new ReviewNotFoundException();
