@@ -743,10 +743,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 
 			// set the user data
-			firstName = userFromDb.getString(USER_FIRSTNAME);
-			lastName = userFromDb.getString(USER_LASTNAME);
-			email = userFromDb.getString(USER_EMAIL);
-			picture = userFromDb.getString(USER_PICTURE);
+			firstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
+			lastName = userFromDb.getString(QueriesGenerator.getUserLastname());
+			email = userFromDb.getString(QueriesGenerator.getUserEmail());
+			picture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the friends of the user
 			String getFriends = SELECT + CONNECTIONS_FRIENDS_ID + FROM
