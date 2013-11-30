@@ -302,6 +302,7 @@ final class QueriesGenerator {
 	
 	
 	
+	
 	/*
 	 * --------------------------------------------------------------
 	 * Update Strings
