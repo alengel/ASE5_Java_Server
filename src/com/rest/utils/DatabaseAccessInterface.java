@@ -116,13 +116,11 @@ public interface DatabaseAccessInterface {
 			throws InvalidKeyException;
 
 	/**
-	 * 
-	 * @param venueId
-	 * @param checkId
-	 * @return
-	 * @throws SQLException
+	 * get reviews for one specific venue
+	 * @param venueId the venueId for which reviews should be retrieved
+	 * @return A review object containg the reviews for a venue
 	 */
-	public Review getReviews(String venueId) throws SQLException;
+	public Review getReviews(String venueId);
 
 	public boolean vote(String key, String reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException;

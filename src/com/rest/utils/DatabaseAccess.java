@@ -363,7 +363,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 	}
 
-	public Review getReviews(String venueId) throws SQLException {
+	public Review getReviews(String venueId) {
 
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
