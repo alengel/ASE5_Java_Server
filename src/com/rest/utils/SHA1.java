@@ -34,7 +34,7 @@ public class SHA1 {
 	}
 
 	/**
-	 * converts byte[] to STring
+	 * converts byte[] to String
 	 * 
 	 * @param hash
 	 * @return String representation of a byte[] hash
