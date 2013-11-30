@@ -248,29 +248,6 @@ import java.io.ByteArrayInputStream;
                                
 		
 
-		@GET
-        @Path("/forgotpassword")
-        @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-        @Produces(MediaType.APPLICATION_JSON)
-        public Response forgotPassword(@PathParam ("email") String email) {
-
-            dbAccess = new DatabaseAccess();
-            User u;
-            try {
-                u = dbAccess.resetPassword(email);
-            } catch (InvalidKeyException e) {
-                u = new User("false", "Email not found");
-            }
-            if(u == null) {
-                u = new User("false", "");
-            }
-
-			return Response.ok(new User("true", "Reset link has been sent on your email")).build();
-        }
-                               
-		
-
-
 		
 		//this method is for checking some stuff at the server, not used in real app
 		@GET                                
@@ -284,6 +261,5 @@ import java.io.ByteArrayInputStream;
 
 			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
 		}
-
 	}
 
