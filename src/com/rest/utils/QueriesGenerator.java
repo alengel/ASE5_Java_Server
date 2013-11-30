@@ -311,6 +311,15 @@ final class QueriesGenerator {
 				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
+	public String updateSettings(int minDistance, int logoutSessionTime,
+			int geoPushInterval, String key) {
+		return UPDATE + USER_TABLE + SET
+				+ USER_MIN_DISTANCE + "= '" + minDistance
+				+ "', logout_session_time  = '" + logoutSessionTime + "', "
+				+ USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' "
+				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
+	}
+	
 	
 	
 	
@@ -339,6 +348,8 @@ final class QueriesGenerator {
 	String deleteConnectionsTable() {
 		return DELETE + FROM + CONNECTIONS_TABLE;
 	}
+
+	
 
 	
 

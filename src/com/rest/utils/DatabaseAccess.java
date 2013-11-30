@@ -451,12 +451,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			}
 
-			String updateSettings = UPDATE + USER_TABLE + SET
-					+ USER_MIN_DISTANCE + "= '" + minDistance
-					+ "', logout_session_time  = '" + logoutSessionTime + "', "
-					+ USER_GEO_PUSH_INTERVAL + "= '" + geoPushInterval + "' "
-					+ WHERE + USER_LOGINKEY + "= '" + key + "';";
-			statement.executeUpdate(updateSettings);
+			statement.executeUpdate(queriesGenerator.updateSettings(minDistance, logoutSessionTime, geoPushInterval, key));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
