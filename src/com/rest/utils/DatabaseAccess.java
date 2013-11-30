@@ -638,12 +638,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 
 			// insert the comment
-			String insertComment = INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
-					+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
-					+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
-					+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( '" + userId
-					+ "', '" + reviewId + "', '" + comment + "');";
-			statement.executeUpdate(insertComment);
+			statement.executeUpdate(queriesGenerator.insertNewComment(userId, reviewId, comment));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
