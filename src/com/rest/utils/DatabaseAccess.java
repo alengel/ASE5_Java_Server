@@ -472,8 +472,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if key is valid
-		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + key + "';";
+		String getKeyFromDb = queriesGenerator.getUserByKey(key);
 		ResultSet keyFromDb;
 		try {
 
@@ -482,34 +481,18 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String userId = keyFromDb.getString("id");
+			String userId = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// insert venueId if neccessary
-			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
-					+ LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('"
-					+ venueId + "');";
-			statement.executeUpdate(venueInsert);
+			statement.executeUpdate(queriesGenerator.insertNewVenue(venueId));
 
 			// get locationId
-			String getVenueId = SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
-					+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
-					+ "';";
-			ResultSet getVenueIdResult = statement.executeQuery(getVenueId);
-			getVenueIdResult.next();
-			String locationId = getVenueIdResult.getString("id");
+			ResultSet getLocationId = statement.executeQuery(queriesGenerator.getLocationIdFromLocationsByVenueId(venueId));
+			getLocationId.next();
+			String locationId = getLocationId.getString(0);
 
 			// insert review
-			String insertReview = INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
-					+ REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", "
-					+ REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", "
-					+ REVIEWS_REVIEW_DESCRIPTION + ", "
-					+ REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN
-					+ "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") "
-					+ VALUES + "( " + "'" + userId + "', '" + locationId
-					+ "', '" + rating + "', '" + reviewTitle + "', '"
-					+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
-					+ "');";
-			statement.executeUpdate(insertReview);
+			statement.executeUpdate(queriesGenerator.insertNewReview(userId, locationId, rating, reviewTitle, reviewDescription, imageUri));
 
 		} catch (SQLException e) {
 			e.printStackTrace();

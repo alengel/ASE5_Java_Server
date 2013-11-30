@@ -80,7 +80,7 @@ public interface DatabaseAccessInterface {
 	 * @param userKey
 	 * @param venueId the location where the user wants to check in 
 	 * @param timestamp the checkin time
-	 * @return the Location where the User has checked in including message.
+	 * @return the Location where the User has checked in. Null if not possible
 	 * @throws ArgumentMissingException
 	 * @throws InvalidKeyException
 	 */
@@ -101,7 +101,7 @@ public interface DatabaseAccessInterface {
 			throws InvalidKeyException;
 
 	/**
-	 * 
+	 * store a new Review
 	 * @param key
 	 * @param venueId
 	 * @param rating
