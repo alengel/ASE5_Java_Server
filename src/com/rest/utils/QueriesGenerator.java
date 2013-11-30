@@ -348,6 +348,12 @@ final class QueriesGenerator {
 				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
+	public String updateReviewsVoteDown(String reviewId, int newVote) {
+		return UPDATE + REVIEWS_TABLE + SET
+				+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
+				+ WHERE + REVIEWS_ID + "= '" + reviewId + "';";
+	}
+	
 	
 	
 	
@@ -390,6 +396,8 @@ final class QueriesGenerator {
 		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
 		+ "');";
 	}
+
+	
 
 	
 
