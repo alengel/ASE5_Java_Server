@@ -288,6 +288,11 @@ final class QueriesGenerator {
 		return SELECT + "* " + FROM
 				+ USER_TABLE + WHERE + "id = " + userId;
 	}
+	
+	public String getReviewsById(String reviewId) {
+		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
+				+ REVIEWS_ID + "= '" + reviewId + "';";
+	}
 
 	
 	
@@ -385,6 +390,8 @@ final class QueriesGenerator {
 		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
 		+ "');";
 	}
+
+	
 
 	
 
