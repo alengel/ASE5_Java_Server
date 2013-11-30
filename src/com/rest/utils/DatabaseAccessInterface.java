@@ -145,7 +145,7 @@ public interface DatabaseAccessInterface {
 	public boolean follow(String key, int reviewer_id)
 			throws InvalidKeyException, UserNotFoundException;
 
-	public boolean putComment(String key, String reviewId, String comment)
+	public boolean putComment(String key, int reviewId, String comment)
 			throws ReviewNotFoundException, InvalidKeyException;
 
 	public ArrayList<CommentData> getCommentsForReview(String reviewId)

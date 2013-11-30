@@ -611,7 +611,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
-	public boolean putComment(String key, String reviewId, String comment)
+	public boolean putComment(String key, int reviewId, String comment)
 			throws ReviewNotFoundException, InvalidKeyException {
 
 		DBCon dbConnection = new DBCon();
