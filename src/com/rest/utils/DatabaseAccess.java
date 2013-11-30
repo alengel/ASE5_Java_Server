@@ -733,8 +733,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if key is valid
-		String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + key + "';";
+		String getUser = queriesGenerator.getUserByKey(key);
 		ResultSet userFromDb;
 		try {
 
@@ -744,30 +743,27 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 
 			// set the user data
-			firstName = userFromDb.getString(USER_FIRSTNAME);
-			lastName = userFromDb.getString(USER_LASTNAME);
-			email = userFromDb.getString(USER_EMAIL);
-			picture = userFromDb.getString(USER_PICTURE);
+			firstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
+			lastName = userFromDb.getString(QueriesGenerator.getUserLastname());
+			email = userFromDb.getString(QueriesGenerator.getUserEmail());
+			picture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the friends of the user
-			String getFriends = SELECT + CONNECTIONS_FRIENDS_ID + FROM
-					+ CONNECTIONS_TABLE + WHERE + CONNECTIONS_MY_ID + "= '"
-					+ userFromDb.getString(USER_ID) + "';";
-			ResultSet friendsIds = statement.executeQuery(getFriends);
+			String userId = userFromDb.getString(QueriesGenerator.getUserId());
+			ResultSet friendsIds = statement.executeQuery(queriesGenerator.getFriendsForUser(userId));
 
 			while (friendsIds.next()) {
 
-				String id = friendsIds.getString(CONNECTIONS_FRIENDS_ID);
+				int id = friendsIds.getInt(QueriesGenerator.getConnectionsFriendsId());
 
-				String getUserDetails = SELECT + "* " + FROM + USER_TABLE
-						+ WHERE + USER_ID + "= '" + id + "';";
+				String getUserDetails = queriesGenerator.getUserById(id);
 				ResultSet friendFromDb = statement.executeQuery(getUserDetails);
 
 				UserData friend = new UserData(
-						friendFromDb.getString(USER_EMAIL), "",
-						friendFromDb.getString(USER_FIRSTNAME),
-						friendFromDb.getString(USER_LASTNAME),
-						friendFromDb.getString(USER_PICTURE), "", "", "", "",
+						friendFromDb.getString(QueriesGenerator.getUserEmail()), "",
+						friendFromDb.getString(QueriesGenerator.getUserFirstname()),
+						friendFromDb.getString(QueriesGenerator.getUserLastname()),
+						friendFromDb.getString(QueriesGenerator.getUserPicture()), "", "", "", "",
 						"", "", "");
 				friends.add(friend);
 			}

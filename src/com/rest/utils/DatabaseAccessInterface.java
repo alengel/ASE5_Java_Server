@@ -180,6 +180,12 @@ public interface DatabaseAccessInterface {
 			String firstName, String lastName, String profileImage)
 			throws InvalidKeyException;
 
+	/**
+	 * get the user profile without critical data
+	 * @param key
+	 * @return the User object containing all details
+	 * @throws InvalidKeyException
+	 */
 	public User getUserProfile(String key) throws InvalidKeyException;
 
 	public ArrayList<ReviewData> getReviewsForUser(int userId)
