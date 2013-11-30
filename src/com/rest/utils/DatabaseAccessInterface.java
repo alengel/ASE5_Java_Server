@@ -101,7 +101,7 @@ public interface DatabaseAccessInterface {
 			throws InvalidKeyException;
 
 	/**
-	 * 
+	 * store a new Review
 	 * @param key
 	 * @param venueId
 	 * @param rating
