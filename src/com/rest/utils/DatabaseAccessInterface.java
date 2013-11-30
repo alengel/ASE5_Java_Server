@@ -121,7 +121,16 @@ public interface DatabaseAccessInterface {
 	 * @return A review object containg the reviews for a venue
 	 */
 	public Review getReviews(String venueId);
-
+	
+	/**
+	 * method fur up- or downvoting a review. 
+	 * @param key the loginKey of the User
+	 * @param reviewId the Review to be voted up or dowm
+	 * @param vote 1 for upvoting, 0 for downvoting
+	 * @return true if voting was successful, false otherwise
+	 * @throws InvalidKeyException
+	 * @throws ReviewNotFoundException
+	 */
 	public boolean vote(String key, String reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException;
 
