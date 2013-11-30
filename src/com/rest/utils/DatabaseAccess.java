@@ -367,16 +367,15 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
-		ResultSet resReviewsCheck;
-		List<ReviewData> rd = null;
+		
+		List<ReviewData> reviewData = null;
 		String message;
+		
 		try {
-			resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM
-					+ REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT
-					+ "id " + FROM + LOCATIONS_TABLE + WHERE
-					+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "');");
+			//get reviews from Database
+			ResultSet resReviewsCheck = statement.executeQuery(queriesGenerator.getReviewsForVenue(venueId));
 			if (resReviewsCheck.next()) { // if at least one review exists
-				rd = new ArrayList<ReviewData>();
+				reviewData = new ArrayList<ReviewData>();
 
 				ResultSet resReviews = statement.executeQuery(SELECT + "* "
 						+ FROM + REVIEWS_TABLE + WHERE + "locations_id = ("
@@ -404,7 +403,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 						profilePicture = "";
 					}
 					dbConnection1.closeConn();
-					rd.add(new ReviewData(userId, userFirstName, userLastName,
+					reviewData.add(new ReviewData(userId, userFirstName, userLastName,
 							userEmail, profilePicture, rating, title, review,
 							picture)); // adds reviews into reviews list
 
@@ -413,7 +412,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 				message = "List of reviews for this place";
 
-				return new Review("true", message, rd); // returns list of
+				return new Review("true", message, reviewData); // returns list of
 														// reviews
 
 			} else {
@@ -422,14 +421,14 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				message = "Nobody left a review yet";
 
 				dbConnection.closeConn();
-				return new Review("true", message, rd); // returns empty list of
+				return new Review("true", message, reviewData); // returns empty list of
 														// reviews
 			}
 		} catch (SQLException e) {
 			message = "Error";
 
 			dbConnection.closeConn();
-			return new Review("false", message, rd);
+			return new Review("false", message, reviewData);
 		}
 
 	}
