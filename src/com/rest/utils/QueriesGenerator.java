@@ -40,6 +40,7 @@ final class QueriesGenerator {
 	private final static String USER_MIN_DISTANCE = "min_distance ";
 	private final static String USER_PICTURE = "picture ";
 	private final static String USER_LOGOUT_TIME = "logout_session_time ";
+	private final static String USER_LOGIN_TIME = "login_timestamp ";
 	// static Strings for the table t5_locations
 	private final static String LOCATIONS_TABLE = "t5_locations ";
 	private final static String LOCATIONS_ID = "id ";
@@ -120,6 +121,10 @@ final class QueriesGenerator {
 
 	public static String getUserLogoutTime() {
 		return USER_LOGOUT_TIME.trim();
+	}
+	
+	public static String getUserLoginTime() {
+		return USER_LOGIN_TIME.trim();
 	}
 
 	public static String getLocationsTable() {
@@ -252,6 +257,12 @@ final class QueriesGenerator {
 	String getUserByEmail(String email) {
 		return SELECT + "* " + FROM + USER_TABLE + WHERE
 				+ USER_EMAIL + "= '" + email + "';";
+	}
+	
+	String loginUser(String key, long timeStamp, String email) {
+		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
+				+ key + "'," + USER_LOGIN_TIME + "= " + timeStamp + " "
+				+ WHERE + USER_EMAIL + "= '" + email + "';";
 	}
 	
 	

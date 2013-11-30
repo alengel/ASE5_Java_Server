@@ -229,16 +229,15 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			timeStamp = System.currentTimeMillis(); //create the login Key
 			loginKey = email + timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);
+			
 			firstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
 			lastName = userFromDb.getString(QueriesGenerator.getUserLastname());
 			picture = userFromDb.getString(QueriesGenerator.getUserPicture());
 			logoutSessionTime = userFromDb.getInt(QueriesGenerator.getUserLogoutTime());
 			geoPushInterval = userFromDb.getInt(QueriesGenerator.getUserGeoPushInterval());
 			minDistance = userFromDb.getInt(QueriesGenerator.getUserMinDistance());
-			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
-					+ loginKey + "', login_timestamp = '" + timeStamp + "' "
-					+ WHERE + USER_EMAIL + "= '" + email + "';";
-			int success = statement.executeUpdate(loginUser);
+			
+			int success = statement.executeUpdate(queriesGenerator.loginUser(loginKey, timeStamp, email));
 			if (success != 1) {
 				return null;
 			}
