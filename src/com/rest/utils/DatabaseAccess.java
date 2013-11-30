@@ -389,13 +389,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 					
 					DBCon dbConnection1 = new DBCon();
 					Statement statement1 = dbConnection1.getStatement();
+					
 					ResultSet resUserById = null;
 					resUserById = statement1.executeQuery(queriesGenerator.getUserById(userId));
+					
 					resUserById.next();
-					String userFirstName = resUserById.getString("first_name");
-					String userLastName = resUserById.getString("last_name");
-					String userEmail = resUserById.getString("email");
-					String profilePicture = resUserById.getString("picture");
+					String userFirstName = resUserById.getString(QueriesGenerator.getUserId());
+					String userLastName = resUserById.getString(QueriesGenerator.getUserLastname());
+					String userEmail = resUserById.getString(QueriesGenerator.getUserEmail());
+					String profilePicture = resUserById.getString(QueriesGenerator.getUserPicture());
+					
 					if (profilePicture == null) {
 						profilePicture = "";
 					}
