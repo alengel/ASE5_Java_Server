@@ -303,6 +303,12 @@ final class QueriesGenerator {
 				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
 				+ reviewId + "';";
 	}
+	
+	public String getFriendsForUser(String userId) {
+		return SELECT + CONNECTIONS_FRIENDS_ID + FROM
+				+ CONNECTIONS_TABLE + WHERE + CONNECTIONS_MY_ID + "= '"
+				+ userId + "';";
+	}
 
 	
 	
@@ -435,6 +441,8 @@ final class QueriesGenerator {
 				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
 				+ ", " + reviewId + ", '" + comment + "');";
 	}
+
+	
 
 	
 

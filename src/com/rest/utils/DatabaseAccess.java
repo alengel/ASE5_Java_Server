@@ -749,10 +749,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			picture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the friends of the user
-			String getFriends = SELECT + CONNECTIONS_FRIENDS_ID + FROM
-					+ CONNECTIONS_TABLE + WHERE + CONNECTIONS_MY_ID + "= '"
-					+ userFromDb.getString(USER_ID) + "';";
-			ResultSet friendsIds = statement.executeQuery(getFriends);
+			String userId = userFromDb.getString(QueriesGenerator.getUserId());
+			ResultSet friendsIds = statement.executeQuery(queriesGenerator.getFriendsForUser(userId));
 
 			while (friendsIds.next()) {
 
