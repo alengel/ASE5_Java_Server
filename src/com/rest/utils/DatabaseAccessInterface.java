@@ -76,15 +76,14 @@ public interface DatabaseAccessInterface {
 			throws UserNotFoundException;
 
 	/**
-	 * 
+	 * check a User in to a specific Location
 	 * @param userKey
-	 * @param venueId
-	 * @param timestamp
-	 * @return true if change successful, false otherwise
+	 * @param venueId the location where the user wants to check in 
+	 * @param timestamp the checkin time
+	 * @return the Location where the User has checked in including message.
 	 * @throws ArgumentMissingException
 	 * @throws InvalidKeyException
 	 */
-
 	public Location checkIn(String userKey, String venueId, String timestamp)
 			throws ArgumentMissingException, InvalidKeyException;
 

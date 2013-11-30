@@ -327,8 +327,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		}
 
 		// check if key is valid
-		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + key + "';";
+		String getKeyFromDb = queriesGenerator.getUserByKey(key);
 		ResultSet keyFromDb;
 
 		String message;
@@ -340,24 +339,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			}
 
 			// maybe insert the venue
-			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
-					+ LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('"
-					+ venueId + "');";
-			statement.executeUpdate(venueInsert);
+			statement.executeUpdate(queriesGenerator.insertNewVenue(venueId));
 
 			// insert the checkIn
-
-			String insertCheckin = INSERT_IGNORE_INTO + CHECKIN_TABLE + "("
-					+ CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", "
-					+ CHECKIN_CHECKIN_TIMESTAMP + ") " + "(" + SELECT
-					+ DISTINCT + "t5_locations." + LOCATIONS_ID + ", t5_users."
-					+ USER_ID + ", " + "'" + timestamp + "' " + FROM
-					+ LOCATIONS_TABLE + ", " + USER_TABLE + WHERE
-					+ USER_LOGINKEY + "= '" + key + "' " + AND
-					+ LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"
-					+ ");";
-
-			int resCheckIn = statement.executeUpdate(insertCheckin);
+			int resCheckIn = statement.executeUpdate(queriesGenerator.insertCheckin(timestamp, key, venueId));
+			dbConnection.closeConn();
 			if (resCheckIn == 1) { // if checked in
 
 				return new Location("true", "Checked in successfully");
@@ -365,13 +351,14 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			} else {
 				// failed to check in
 				message = "Failed to check in";
-				dbConnection.closeConn();
 				return new Location("false", message);
 			}
+			
+			
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			message = "Failed to check in";
+			return new Location("false", message);
 		}
 
 	}
