@@ -133,7 +133,15 @@ public interface DatabaseAccessInterface {
 	 */
 	public boolean vote(String key, String reviewId, int vote)
 			throws InvalidKeyException, ReviewNotFoundException;
-
+	
+	/**
+	 * if a user wants to follow another user
+	 * @param key the key of the user who would like to follow another one
+	 * @param reviewer_id id of the reviewer which the user likes to follow
+	 * @return true if successful, false otherwise
+	 * @throws InvalidKeyException
+	 * @throws UserNotFoundException
+	 */
 	public boolean follow(String key, String reviewer_id)
 			throws InvalidKeyException, UserNotFoundException;
 
