@@ -296,6 +296,12 @@ final class QueriesGenerator {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
+	
+	public String getCommentsByReviewId(int reviewId) {
+		return SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
+				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
+				+ reviewId + "';";
+	}
 
 	
 	
@@ -429,11 +435,7 @@ final class QueriesGenerator {
 				+ ", " + reviewId + ", '" + comment + "');";
 	}
 
-	public String getCommentsByReviewId(int reviewId) {
-		return SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
-				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
-				+ reviewId + "';";
-	}
+	
 
 	
 
