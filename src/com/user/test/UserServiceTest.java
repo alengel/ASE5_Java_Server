@@ -235,6 +235,26 @@ public class UserServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing follow user wrong reviewer id
+	 */
+	@Test
+	public void testFollowWrongReviewerId() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+	
+		
+		Response result = userService.follow(loginKey, "007");
+		Response expected = Response.ok(new User("false", "User not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 	
 	
