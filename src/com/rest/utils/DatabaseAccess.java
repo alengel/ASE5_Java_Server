@@ -118,12 +118,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if another user with email already exists in the database
-		String queryEmailAlreadyExists = SELECT + ALL + FROM + USER_TABLE
-				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
 		ResultSet resultEmailAlreadyExists;
 		try {
 			resultEmailAlreadyExists = statement
-					.executeQuery(queryEmailAlreadyExists);
+					.executeQuery(Queries.existsEmailInDbQuery(email));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

@@ -71,4 +71,34 @@ final class Queries {
 	private static final String CONNECTIONS_TABLE = "t5_connections ";
 	private static final String CONNECTIONS_MY_ID = "my_id ";
 	private static final String CONNECTIONS_FRIENDS_ID = "friends_id ";
+	
+	
+	/*
+	 * --------------------------------------------------------------
+	 * Query Strings
+	 * --------------------------------------------------------------
+	 */
+	static protected String existsEmailInDbQuery(String email) {
+		return SELECT + ALL + FROM + USER_TABLE
+				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
+	}
+	
+	
+	
+	
+	/*
+	 * --------------------------------------------------------------
+	 * Insert Strings
+	 * --------------------------------------------------------------
+	 */
+	
+	
+	
+	
+	
+	/*
+	 * --------------------------------------------------------------
+	 * Update Strings
+	 * --------------------------------------------------------------
+	 */
 }
