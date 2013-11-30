@@ -390,8 +390,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 					DBCon dbConnection1 = new DBCon();
 					Statement statement1 = dbConnection1.getStatement();
 					ResultSet resUserById = null;
-					resUserById = statement1.executeQuery(SELECT + "* " + FROM
-							+ USER_TABLE + WHERE + "id = " + userId);
+					resUserById = statement1.executeQuery(queriesGenerator.getUserById(userId));
 					resUserById.next();
 					String userFirstName = resUserById.getString("first_name");
 					String userLastName = resUserById.getString("last_name");

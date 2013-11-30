@@ -283,6 +283,11 @@ final class QueriesGenerator {
 				+ LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE
 				+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "') LIMIT 0, 10;";
 	}
+	
+	public String getUserById(int userId) {
+		return SELECT + "* " + FROM
+				+ USER_TABLE + WHERE + "id = " + userId;
+	}
 
 	
 	
@@ -380,6 +385,8 @@ final class QueriesGenerator {
 		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
 		+ "');";
 	}
+
+	
 
 	
 	
