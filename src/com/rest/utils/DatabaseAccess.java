@@ -706,11 +706,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String updateUser = UPDATE + USER_TABLE + SET + USER_PASSWORD
-					+ "= '" + password + "', " + USER_FIRSTNAME + "= '"
-					+ firstName + "', " + USER_LASTNAME + "= '" + lastName
-					+ "', " + USER_PICTURE + "= '" + profileImage + "';";
-			int success = statement.executeUpdate(updateUser);
+			int success = statement.executeUpdate(queriesGenerator.updateUser(password, firstName, lastName, profileImage));
 			if (success != 1) {
 				return false;
 			}

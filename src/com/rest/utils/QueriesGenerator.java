@@ -273,6 +273,7 @@ final class QueriesGenerator {
 	
 	
 	
+	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
 				+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
@@ -294,6 +295,12 @@ final class QueriesGenerator {
 	public String getReviewsById(int reviewId) {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
+	}
+	
+	public String getCommentsByReviewId(int reviewId) {
+		return SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
+				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
+				+ reviewId + "';";
 	}
 
 	
@@ -361,6 +368,14 @@ final class QueriesGenerator {
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
+	
+	public String updateUser(String password, String firstName,
+			String lastName, String profileImage) {
+		return UPDATE + USER_TABLE + SET + USER_PASSWORD
+				+ "= '" + password + "', " + USER_FIRSTNAME + "= '"
+				+ firstName + "', " + USER_LASTNAME + "= '" + lastName
+				+ "', " + USER_PICTURE + "= '" + profileImage + "';";
+	}
 
 	
 	
@@ -420,11 +435,9 @@ final class QueriesGenerator {
 				+ ", " + reviewId + ", '" + comment + "');";
 	}
 
-	public String getCommentsByReviewId(int reviewId) {
-		return SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
-				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
-				+ reviewId + "';";
-	}
+	
+
+	
 
 	
 	
