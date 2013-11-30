@@ -162,6 +162,24 @@ public class UserServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing update settings wrong loginkey
+	 */
+	@Test
+	public void testUpdateSettingsWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response result = userService.updateSettings(loginKey+"asd", 100, 100, 100);
+		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 	
 	
