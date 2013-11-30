@@ -60,12 +60,10 @@ public interface DatabaseAccessInterface {
 			ArgumentMissingException, EmailAlreadyExistsException;
 
 	/**
-	 * should remove the loginKey form the DB
-	 * 
-	 * @param loginKey
-	 * @return true, if logout was successful, false otherwise
+	 * will logout the user
+	 * @param key the loginKey of the user
+	 * @return true if logout successful, false otherwise
 	 * @throws ArgumentMissingException
-	 *             d
 	 */
 	public boolean logoutUser(String key) throws ArgumentMissingException;
 

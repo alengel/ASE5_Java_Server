@@ -112,4 +112,8 @@ final class Queries {
 	 * Update Strings
 	 * --------------------------------------------------------------
 	 */
+	static protected String logoutUser(String key) {
+		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
+				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
+	}
 }
