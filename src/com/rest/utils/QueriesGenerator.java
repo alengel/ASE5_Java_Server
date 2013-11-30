@@ -347,6 +347,34 @@ final class QueriesGenerator {
 		+ ");";
 	}
 	
+	public String insertNewReview(String userId, String locationId, int rating,
+			String reviewTitle, String reviewDescription, String imageUri) {
+		return INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
+		+ REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", "
+		+ REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", "
+		+ REVIEWS_REVIEW_DESCRIPTION + ", "
+		+ REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN
+		+ "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") "
+		+ VALUES + "( " + "'" + userId + "', '" + locationId
+		+ "', '" + rating + "', '" + reviewTitle + "', '"
+		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
+		+ "');";
+	}
+
+	public String insertNewFollow(String my_id, int reviewer_id) {
+		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
+				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
+				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
+	}
+
+	public String insertNewComment(String userId, int reviewId, String comment) {
+		return INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
+				+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
+				+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
+				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
+				+ ", " + reviewId + ", '" + comment + "');";
+	}
+	
 	
 	
 	
@@ -426,33 +454,7 @@ final class QueriesGenerator {
 		return DELETE + FROM + CONNECTIONS_TABLE;
 	}
 
-	public String insertNewReview(String userId, String locationId, int rating,
-			String reviewTitle, String reviewDescription, String imageUri) {
-		return INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
-		+ REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", "
-		+ REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", "
-		+ REVIEWS_REVIEW_DESCRIPTION + ", "
-		+ REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN
-		+ "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") "
-		+ VALUES + "( " + "'" + userId + "', '" + locationId
-		+ "', '" + rating + "', '" + reviewTitle + "', '"
-		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
-		+ "');";
-	}
-
-	public String insertNewFollow(String my_id, int reviewer_id) {
-		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
-				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
-				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
-	}
-
-	public String insertNewComment(String userId, int reviewId, String comment) {
-		return INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
-				+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
-				+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
-				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
-				+ ", " + reviewId + ", '" + comment + "');";
-	}
+	
 
 	
 
