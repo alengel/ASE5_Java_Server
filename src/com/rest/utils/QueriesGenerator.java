@@ -270,6 +270,7 @@ final class QueriesGenerator {
 				+ USER_LOGINKEY + "= '" + key + "';";
 	}
 	
+	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
 				+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
