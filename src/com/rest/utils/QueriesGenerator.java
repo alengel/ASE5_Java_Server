@@ -290,9 +290,9 @@ final class QueriesGenerator {
 				+ USER_TABLE + WHERE + "id = " + userId;
 	}
 	
-	public String getReviewsById(String reviewId) {
+	public String getReviewsById(int reviewId) {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
+				+ REVIEWS_ID + "= " + reviewId + ";";
 	}
 
 	
