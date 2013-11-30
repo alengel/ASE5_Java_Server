@@ -265,6 +265,11 @@ final class QueriesGenerator {
 				+ WHERE + USER_EMAIL + "= '" + email + "';";
 	}
 	
+	public String getUserByKey(String key) {
+		return SELECT + "* " + FROM + USER_TABLE + WHERE
+				+ USER_LOGINKEY + "= '" + key + "';";
+	}
+	
 	
 	
 	
@@ -274,6 +279,23 @@ final class QueriesGenerator {
 	 * --------------------------------------------------------------
 	 */
 	
+	public String insertNewVenue(String venueId) {
+		return INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
+		+ LOCATIONS_FSQUARE_VENUE_ID + ") " + VALUES + "('"
+		+ venueId + "');";
+	}
+	
+	public String insertCheckin(String timestamp, String key, String venueId) {
+		return INSERT_IGNORE_INTO + CHECKIN_TABLE + "("
+		+ CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID + ", "
+		+ CHECKIN_CHECKIN_TIMESTAMP + ") " + "(" + SELECT
+		+ DISTINCT + "t5_locations." + LOCATIONS_ID + ", t5_users."
+		+ USER_ID + ", " + "'" + timestamp + "' " + FROM
+		+ LOCATIONS_TABLE + ", " + USER_TABLE + WHERE
+		+ USER_LOGINKEY + "= '" + key + "' " + AND
+		+ LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"
+		+ ");";
+	}
 	
 	
 	
@@ -316,4 +338,10 @@ final class QueriesGenerator {
 	String deleteConnectionsTable() {
 		return DELETE + FROM + CONNECTIONS_TABLE;
 	}
+
+	
+
+	
+
+	
 }
