@@ -157,7 +157,7 @@ public interface DatabaseAccessInterface {
 	public boolean putComment(String key, int reviewId, String comment)
 			throws ReviewNotFoundException, InvalidKeyException;
 
-	public ArrayList<CommentData> getCommentsForReview(String reviewId)
+	public ArrayList<CommentData> getCommentsForReview(int reviewId)
 			throws ReviewNotFoundException;
 
 	public boolean updateUser(String key, String password,

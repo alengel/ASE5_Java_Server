@@ -650,7 +650,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
-	public ArrayList<CommentData> getCommentsForReview(String reviewId)
+	public ArrayList<CommentData> getCommentsForReview(int reviewId)
 			throws ReviewNotFoundException {
 
 		ArrayList<CommentData> result = new ArrayList<CommentData>();
@@ -659,27 +659,22 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if reviewId is valid
-		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
 		ResultSet reviewIdFromDb;
 		try {
 
-			reviewIdFromDb = statement.executeQuery(getReviewIdFromDb);
+			reviewIdFromDb = statement.executeQuery(queriesGenerator.getReviewsById(reviewId));
 			if (!reviewIdFromDb.next()) {
 				throw new ReviewNotFoundException();
 			}
 
-			String getComments = SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
-					+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
-					+ reviewId + "';";
-			ResultSet commentsFromDb = statement.executeQuery(getComments);
+			ResultSet commentsFromDb = statement.executeQuery(queriesGenerator.getCommentsByReviewId(reviewId));
 
 			while (commentsFromDb.next()) {
 				result.add(new CommentData(commentsFromDb
-						.getString(REVIEWS_COMMENTS_ID), commentsFromDb
-						.getString(REVIEWS_COMMENTS_USER_ID), commentsFromDb
-						.getString(REVIEWS_COMMENTS_USER_REVIEWS_ID),
-						commentsFromDb.getString(REVIEWS_COMMENTS_COMMENT)));
+						.getString(QueriesGenerator.getReviewsCommentsId()), commentsFromDb
+						.getString(QueriesGenerator.getReviewsCommentsUserId()), commentsFromDb
+						.getString(QueriesGenerator.getReviewsCommentsUserReviewsId()),
+						commentsFromDb.getString(QueriesGenerator.getReviewsCommentsComment())));
 			}
 
 		} catch (SQLException e) {
