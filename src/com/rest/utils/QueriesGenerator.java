@@ -357,6 +357,11 @@ final class QueriesGenerator {
 	 * Update Strings
 	 * --------------------------------------------------------------
 	 */
+	/**
+	 * logs the user out. That means: Setting the loginKey to NULL
+	 * @param key
+	 * @return
+	 */
 	String logoutUser(String key) {
 		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
 				+ "NULL " + WHERE + USER_LOGINKEY + "= '" + key + "';";
