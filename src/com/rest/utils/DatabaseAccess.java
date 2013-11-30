@@ -671,10 +671,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			while (commentsFromDb.next()) {
 				result.add(new CommentData(commentsFromDb
-						.getString(REVIEWS_COMMENTS_ID), commentsFromDb
-						.getString(REVIEWS_COMMENTS_USER_ID), commentsFromDb
-						.getString(REVIEWS_COMMENTS_USER_REVIEWS_ID),
-						commentsFromDb.getString(REVIEWS_COMMENTS_COMMENT)));
+						.getString(QueriesGenerator.getReviewsCommentsId()), commentsFromDb
+						.getString(QueriesGenerator.getReviewsCommentsUserId()), commentsFromDb
+						.getString(QueriesGenerator.getReviewsCommentsUserReviewsId()),
+						commentsFromDb.getString(QueriesGenerator.getReviewsCommentsComment())));
 			}
 
 		} catch (SQLException e) {
