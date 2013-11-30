@@ -5,8 +5,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
 
-
+/**
+ * 
+ * this class encrypts Strings using the SHA1 algorithm
+ *
+ */
 public class SHA1 {
+	
+	/**
+	 * encypts a String using the SHA1 algorithm
+	 * @param password 
+	 * @return the encrypted password as a String
+	 */
 	private static String encryptPassword(String password)
 	{
 	    String sha1 = "";
@@ -27,7 +37,12 @@ public class SHA1 {
 	    }
 	    return sha1;
 	}
-
+	
+	/**
+	 * converts byte[] to STring
+	 * @param hash
+	 * @return String representation of a byte[] hash
+	 */
 	private static String byteToHex(final byte[] hash)
 	{
 	    Formatter formatter = new Formatter();
@@ -40,6 +55,11 @@ public class SHA1 {
 	    return result;
 	}
 	
+	/**
+	 * encypts a String using the SHA1 algorithm
+	 * @param string 
+	 * @return the encrypted password as a String
+	 */
 	public static String stringToSHA(String string) {
 		return encryptPassword(string);
 	}
