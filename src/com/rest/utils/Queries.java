@@ -83,6 +83,17 @@ final class Queries {
 				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
 	}
 	
+	static protected String insertNewUser(String email, String password,
+			String firstName, String lastName, String picture) {
+		return INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
+				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
+				+ USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME
+				+ ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE
+				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
+				+ firstName + "', '" + lastName + "', '" + picture
+				+ "', 60, 30, 100);";
+	}
+	
 	
 	
 	

@@ -134,17 +134,11 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			e.printStackTrace();
 			return null;
 		}
-		String insertStatement = INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
-				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
-				+ USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME
-				+ ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE
-				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
-				+ firstName + "', '" + lastName + "', '" + picture
-				+ "', 60, 30, 100);";
 
 		int success;
 		try {
-			success = statement.executeUpdate(insertStatement);
+			success = statement.executeUpdate(Queries.insertNewUser(email, password,
+					firstName, lastName, picture));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
