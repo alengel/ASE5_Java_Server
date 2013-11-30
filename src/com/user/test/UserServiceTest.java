@@ -96,11 +96,31 @@ public class UserServiceTest {
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
-		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		Response result = userService.login(email, passwd+ "123qwe");
 
 		Response expected = Response.ok(new User("false", "Email and/or password not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	/*
+	 * Testing user logout normal
+	 */
+	
+	@Test
+	public void testLogoutUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response result = userService.logout(loginKey);
+		Response expected = Response.ok(new User("true", "Logged out successfully")).build();
 		
 		assertEquals(expected, result);
 	}
