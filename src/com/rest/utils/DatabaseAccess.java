@@ -187,7 +187,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	@Override
 	public UserData loginUser(String email, String password)
 			throws ArgumentMissingException, UserNotFoundException,
-			PasswordWrongException, SQLException {
+			PasswordWrongException {
 
 		if (email == null || password == null || email.isEmpty()
 				|| password.isEmpty()) {
@@ -209,36 +209,45 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		int logoutSessionTime;
 		int geoPushInterval;
 		int minDistance;
+		long timeStamp;
 
-		userFromDb = statement.executeQuery(getUserFromDb);
-		if (!userFromDb.next()) {
-			throw new UserNotFoundException();
-		}
-		String passwordInDb = userFromDb.getString("passwd");
-		if (!passwordInDb.equals(password)) {
-			throw new PasswordWrongException();
-		}
+		try {
+			userFromDb = statement.executeQuery(getUserFromDb);
+			
+			if (!userFromDb.next()) {
+				throw new UserNotFoundException();
+			}
+			
+			String passwordInDb = userFromDb.getString("passwd");
+			if (!passwordInDb.equals(password)) {
+				throw new PasswordWrongException();
+			}
 
-		// log in the user
-		// TODO: this needs refactoring. Use the STATIC Strings instead of hard
-		// coded stuff !!!
+			// log in the user
+			// TODO: this needs refactoring. Use the STATIC Strings instead of hard
+			// coded stuff !!!
 
-		long timeStamp = System.currentTimeMillis();
-		loginKey = email + timeStamp;
-		loginKey = SHA1.stringToSHA(loginKey);
-		firstName = userFromDb.getString("first_name");
-		lastName = userFromDb.getString("last_name");
-		picture = userFromDb.getString("picture");
-		logoutSessionTime = userFromDb.getInt("logout_session_time");
-		geoPushInterval = userFromDb.getInt("geo_push_interval");
-		minDistance = userFromDb.getInt("min_distance");
-		String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
-				+ loginKey + "', login_timestamp = '" + timeStamp + "' "
-				+ WHERE + USER_EMAIL + "= '" + email + "';";
-		int success = statement.executeUpdate(loginUser);
-		if (success != 1) {
+			timeStamp = System.currentTimeMillis();
+			loginKey = email + timeStamp;
+			loginKey = SHA1.stringToSHA(loginKey);
+			firstName = userFromDb.getString("first_name");
+			lastName = userFromDb.getString("last_name");
+			picture = userFromDb.getString("picture");
+			logoutSessionTime = userFromDb.getInt("logout_session_time");
+			geoPushInterval = userFromDb.getInt("geo_push_interval");
+			minDistance = userFromDb.getInt("min_distance");
+			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
+					+ loginKey + "', login_timestamp = '" + timeStamp + "' "
+					+ WHERE + USER_EMAIL + "= '" + email + "';";
+			int success = statement.executeUpdate(loginUser);
+			if (success != 1) {
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
+		
 
 		dbConnection.closeConn();
 		return new UserData(email, password, firstName, lastName, picture,
