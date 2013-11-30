@@ -39,6 +39,10 @@ import java.io.ByteArrayInputStream;
 
 	@Path("/")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
 	public class UserService {
+		
+		public UserService() {
+			
+		}
 
 		
 		private DatabaseAccess dbAccess;
