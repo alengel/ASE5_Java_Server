@@ -304,4 +304,16 @@ final class QueriesGenerator {
 	String deleteLocationsTable() {
 		return DELETE + FROM + LOCATIONS_TABLE;
 	}
+	
+	String deleteReviewsTable() {
+		return DELETE + FROM + REVIEWS_TABLE;
+	}
+	
+	String deleteCheckinsTable() {
+		return DELETE + FROM + CHECKIN_TABLE;
+	}
+	
+	String deleteConnectionsTable() {
+		return DELETE + FROM + CONNECTIONS_TABLE;
+	}
 }
