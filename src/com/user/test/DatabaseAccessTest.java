@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -496,5 +497,57 @@ public class DatabaseAccessTest {
 		assertEquals("Error", result.getMessage());
 		
 		
+	}
+	
+	@Test
+	public void getReviewsForUserSuccessful() {
+		
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		try {
+			dbAccess.registerNewUser(email, password, firstName, lastName, null);
+			
+			UserData userLoggedIn = dbAccess.loginUser(email, password);
+			
+			String loginKey = userLoggedIn.getLoginKey();
+			
+			String venueId = "venueID";
+			String timestamp = "timestamp";
+			
+			dbAccess.checkIn(loginKey, venueId, timestamp);
+			
+			int rating = 1;
+			String reviewTitle = "Horrible place";
+			String reviewDescription = "Disgusting food, will never go there again";
+			String imageUri = "http://whatever";
+		
+			dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri);
+			
+			List<ReviewData> result = dbAccess.getReviewsForUser(Integer.valueOf(userLoggedIn.getId()));
+			ReviewData resultReviewData = result.get(0);
+			assertEquals(rating, resultReviewData.getRating());
+			assertEquals(reviewTitle, resultReviewData.getTitle());
+			assertEquals(reviewDescription, resultReviewData.getReview());
+			assertEquals(imageUri, resultReviewData.getPicture());
+			assertEquals(email, resultReviewData.getUserEmail());
+			
+		} catch (WrongEmailFormatException | InputTooLongException
+				| ArgumentMissingException | EmailAlreadyExistsException | InvalidKeyException | UserNotFoundException | PasswordWrongException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetReviewsForUserUnSuccessful() {
+		
+		List<ReviewData> result = null;
+		try {
+			result = dbAccess.getReviewsForUser(99);
+		} catch (UserNotFoundException e) {
+		}
+		assertNull(result);
 	}
 }
