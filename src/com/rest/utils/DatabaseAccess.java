@@ -363,48 +363,47 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 	}
 
-	public Review getReviews(String venueId) throws SQLException {
+	public Review getReviews(String venueId) {
 
 		DBCon dbConnection = new DBCon();
 		Statement statement = dbConnection.getStatement();
-		ResultSet resReviewsCheck;
-		List<ReviewData> rd = null;
+		
+		List<ReviewData> reviewData = null;
 		String message;
+		
 		try {
-			resReviewsCheck = statement.executeQuery(SELECT + "* " + FROM
-					+ REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT
-					+ "id " + FROM + LOCATIONS_TABLE + WHERE
-					+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "');");
-			if (resReviewsCheck.next()) { // if at least one review exists
-				rd = new ArrayList<ReviewData>();
-
-				ResultSet resReviews = statement.executeQuery(SELECT + "* "
-						+ FROM + REVIEWS_TABLE + WHERE + "locations_id = ("
-						+ SELECT + "id " + FROM + LOCATIONS_TABLE + WHERE
-						+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
-						+ "') LIMIT 0, 10;");
+			//get reviews from Database
+			ResultSet resReviews = statement.executeQuery(queriesGenerator.getReviewsForVenue(venueId));
+			if (resReviews.next()) { // if at least one review exists
+				
+				reviewData = new ArrayList<ReviewData>();
+				
+				resReviews.beforeFirst();
 				while (resReviews.next()) {
-					// TODO: refactor, use static STrings instead
-					int userId = resReviews.getInt("users_id");
-					int rating = resReviews.getInt("rating");
-					String title = resReviews.getString("review_title");
-					String review = resReviews.getString("review_description");
-					String picture = resReviews.getString("review_picture");
+
+					int userId = resReviews.getInt(QueriesGenerator.getReviewsUserId());
+					int rating = resReviews.getInt(QueriesGenerator.getReviewsRating());
+					String title = resReviews.getString(QueriesGenerator.getReviewsReviewTitle());
+					String review = resReviews.getString(QueriesGenerator.getReviewsReviewDescription());
+					String picture = resReviews.getString(QueriesGenerator.getReviewsReviewPicture());
+					
 					DBCon dbConnection1 = new DBCon();
 					Statement statement1 = dbConnection1.getStatement();
+					
 					ResultSet resUserById = null;
-					resUserById = statement1.executeQuery(SELECT + "* " + FROM
-							+ USER_TABLE + WHERE + "id = " + userId);
+					resUserById = statement1.executeQuery(queriesGenerator.getUserById(userId));
+					
 					resUserById.next();
-					String userFirstName = resUserById.getString("first_name");
-					String userLastName = resUserById.getString("last_name");
-					String userEmail = resUserById.getString("email");
-					String profilePicture = resUserById.getString("picture");
+					String userFirstName = resUserById.getString(QueriesGenerator.getUserId());
+					String userLastName = resUserById.getString(QueriesGenerator.getUserLastname());
+					String userEmail = resUserById.getString(QueriesGenerator.getUserEmail());
+					String profilePicture = resUserById.getString(QueriesGenerator.getUserPicture());
+					
 					if (profilePicture == null) {
 						profilePicture = "";
 					}
 					dbConnection1.closeConn();
-					rd.add(new ReviewData(userId, userFirstName, userLastName,
+					reviewData.add(new ReviewData(userId, userFirstName, userLastName,
 							userEmail, profilePicture, rating, title, review,
 							picture)); // adds reviews into reviews list
 
@@ -413,7 +412,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 				message = "List of reviews for this place";
 
-				return new Review("true", message, rd); // returns list of
+				return new Review("true", message, reviewData); // returns list of
 														// reviews
 
 			} else {
@@ -422,12 +421,14 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				message = "Nobody left a review yet";
 
 				dbConnection.closeConn();
-				return new Review("true", message, rd); // returns empty list of
+				return new Review("true", message, reviewData); // returns empty list of
 														// reviews
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			message = "Error";
+
+			dbConnection.closeConn();
+			return new Review("false", message, reviewData);
 		}
 
 	}
