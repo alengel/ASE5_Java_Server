@@ -628,7 +628,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String userId = keyFromDb.getString("id");
+			String userId = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// check if reviewId is valid
 			String getReviewId = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
