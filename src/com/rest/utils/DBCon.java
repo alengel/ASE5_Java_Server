@@ -1,6 +1,7 @@
 package com.rest.utils;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -29,7 +30,7 @@ public DBCon()  {
 	
 
 //Tomcat connection configuration
-	
+	/*
 		try {
 			ctx = new InitialContext();
 			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/javatest");
@@ -42,13 +43,13 @@ public DBCon()  {
 		} catch (SQLException e) {			
 			e.printStackTrace();
 		} 
-		
+		*/
  //--Tomcat
 		
 		
 		
 ///// connection for jUnit
-		/*
+		
 		try {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(url+dbName, userName, password);
@@ -56,7 +57,7 @@ public DBCon()  {
 			st = conn.createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} */
+		} 
 		
 ///--jUnit connection				
 	
