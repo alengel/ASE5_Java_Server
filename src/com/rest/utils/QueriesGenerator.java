@@ -405,6 +405,12 @@ final class QueriesGenerator {
 		+ "');";
 	}
 
+	public String insertNewFollow(String my_id, int reviewer_id) {
+		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
+				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
+				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
+	}
+
 	
 	
 

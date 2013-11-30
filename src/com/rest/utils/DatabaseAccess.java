@@ -599,9 +599,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new UserNotFoundException();
 			}
 
-			String setNewFollow = INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
-					+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
-					+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
+			String setNewFollow = queriesGenerator.insertNewFollow(my_id, reviewer_id);
 			statement.executeUpdate(setNewFollow);
 		} catch (SQLException e) {
 			e.printStackTrace();
