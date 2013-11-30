@@ -472,8 +472,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if key is valid
-		String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
-				+ USER_LOGINKEY + "= '" + key + "';";
+		String getKeyFromDb = queriesGenerator.getUserByKey(key);
 		ResultSet keyFromDb;
 		try {
 
@@ -482,7 +481,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String userId = keyFromDb.getString("id");
+			String userId = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// insert venueId if neccessary
 			String venueInsert = INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
