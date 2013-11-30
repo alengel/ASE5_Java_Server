@@ -373,22 +373,20 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		
 		try {
 			//get reviews from Database
-			ResultSet resReviewsCheck = statement.executeQuery(queriesGenerator.getReviewsForVenue(venueId));
-			if (resReviewsCheck.next()) { // if at least one review exists
+			ResultSet resReviews = statement.executeQuery(queriesGenerator.getReviewsForVenue(venueId));
+			if (resReviews.next()) { // if at least one review exists
+				
 				reviewData = new ArrayList<ReviewData>();
-
-				ResultSet resReviews = statement.executeQuery(SELECT + "* "
-						+ FROM + REVIEWS_TABLE + WHERE + "locations_id = ("
-						+ SELECT + "id " + FROM + LOCATIONS_TABLE + WHERE
-						+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
-						+ "') LIMIT 0, 10;");
+				
+				resReviews.beforeFirst();
 				while (resReviews.next()) {
-					// TODO: refactor, use static STrings instead
-					int userId = resReviews.getInt("users_id");
-					int rating = resReviews.getInt("rating");
-					String title = resReviews.getString("review_title");
-					String review = resReviews.getString("review_description");
-					String picture = resReviews.getString("review_picture");
+
+					int userId = resReviews.getInt(QueriesGenerator.getReviewsUserId());
+					int rating = resReviews.getInt(QueriesGenerator.getReviewsRating());
+					String title = resReviews.getString(QueriesGenerator.getReviewsReviewTitle());
+					String review = resReviews.getString(QueriesGenerator.getReviewsReviewDescription());
+					String picture = resReviews.getString(QueriesGenerator.getReviewsReviewPicture());
+					
 					DBCon dbConnection1 = new DBCon();
 					Statement statement1 = dbConnection1.getStatement();
 					ResultSet resUserById = null;

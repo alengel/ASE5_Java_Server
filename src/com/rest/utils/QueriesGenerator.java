@@ -279,9 +279,9 @@ final class QueriesGenerator {
 	
 	public String getReviewsForVenue(String venueId) {
 		return SELECT + "* " + FROM
-				+ REVIEWS_TABLE + WHERE + "locations_id = (" + SELECT
-				+ "id " + FROM + LOCATIONS_TABLE + WHERE
-				+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "');";
+				+ REVIEWS_TABLE + WHERE + REVIEWS_LOCATION_ID + "= (" + SELECT
+				+ LOCATIONS_ID + FROM + LOCATIONS_TABLE + WHERE
+				+ LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId + "') LIMIT 0, 10;";
 	}
 
 	
