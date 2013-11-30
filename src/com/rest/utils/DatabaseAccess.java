@@ -204,7 +204,6 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if user exists and if the password is correct
-		ResultSet userFromDb;
 		String firstName;
 		String lastName;
 		String loginKey;
@@ -215,30 +214,27 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		long timeStamp;
 
 		try {
-			userFromDb = statement.executeQuery(queriesGenerator.getUserByEmail(email));
+			ResultSet userFromDb = statement.executeQuery(queriesGenerator.getUserByEmail(email));
 			
 			if (!userFromDb.next()) {
 				throw new UserNotFoundException();
 			}
 			
-			String passwordInDb = userFromDb.getString("passwd");
+			String passwordInDb = userFromDb.getString(QueriesGenerator.getUserPassword());
 			if (!passwordInDb.equals(password)) {
 				throw new PasswordWrongException();
 			}
 
 			// log in the user
-			// TODO: this needs refactoring. Use the STATIC Strings instead of hard
-			// coded stuff !!!
-
-			timeStamp = System.currentTimeMillis();
+			timeStamp = System.currentTimeMillis(); //create the login Key
 			loginKey = email + timeStamp;
 			loginKey = SHA1.stringToSHA(loginKey);
-			firstName = userFromDb.getString("first_name");
-			lastName = userFromDb.getString("last_name");
-			picture = userFromDb.getString("picture");
-			logoutSessionTime = userFromDb.getInt("logout_session_time");
-			geoPushInterval = userFromDb.getInt("geo_push_interval");
-			minDistance = userFromDb.getInt("min_distance");
+			firstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
+			lastName = userFromDb.getString(QueriesGenerator.getUserLastname());
+			picture = userFromDb.getString(QueriesGenerator.getUserPicture());
+			logoutSessionTime = userFromDb.getInt(QueriesGenerator.getUserLogoutTime());
+			geoPushInterval = userFromDb.getInt(QueriesGenerator.getUserGeoPushInterval());
+			minDistance = userFromDb.getInt(QueriesGenerator.getUserMinDistance());
 			String loginUser = UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= '"
 					+ loginKey + "', login_timestamp = '" + timeStamp + "' "
 					+ WHERE + USER_EMAIL + "= '" + email + "';";
