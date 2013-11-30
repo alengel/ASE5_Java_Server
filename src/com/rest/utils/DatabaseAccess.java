@@ -589,7 +589,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new InvalidKeyException();
 			}
 
-			String my_id = keyFromDb.getString(USER_ID);
+			String my_id = keyFromDb.getString(QueriesGenerator.getUserId());
 
 			// check if reviewer_id exists
 			String getId = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID
