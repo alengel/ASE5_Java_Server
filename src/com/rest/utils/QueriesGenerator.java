@@ -75,6 +75,159 @@ final class QueriesGenerator {
 	
 	/*
 	 * --------------------------------------------------------------
+	 * Getter-methods for getting the table attributes without space
+	 * --------------------------------------------------------------
+	 */
+	public static String getUserTable() {
+		return USER_TABLE.trim();
+	}
+
+	public static String getUserId() {
+		return USER_ID.trim();
+	}
+
+	public static String getUserEmail() {
+		return USER_EMAIL.trim();
+	}
+
+	public static String getUserPassword() {
+		return USER_PASSWORD.trim();
+	}
+
+	public static String getUserFirstname() {
+		return USER_FIRSTNAME.trim();
+	}
+
+	public static String getUserLastname() {
+		return USER_LASTNAME.trim();
+	}
+
+	public static String getUserLoginkey() {
+		return USER_LOGINKEY.trim();
+	}
+
+	public static String getUserGeoPushInterval() {
+		return USER_GEO_PUSH_INTERVAL.trim();
+	}
+
+	public static String getUserMinDistance() {
+		return USER_MIN_DISTANCE.trim();
+	}
+
+	public static String getUserPicture() {
+		return USER_PICTURE.trim();
+	}
+
+	public static String getUserLogoutTime() {
+		return USER_LOGOUT_TIME.trim();
+	}
+
+	public static String getLocationsTable() {
+		return LOCATIONS_TABLE.trim();
+	}
+
+	public static String getLocationsId() {
+		return LOCATIONS_ID.trim();
+	}
+
+	public static String getLocationsFsquareVenueId() {
+		return LOCATIONS_FSQUARE_VENUE_ID.trim();
+	}
+
+	public static String getReviewsTable() {
+		return REVIEWS_TABLE.trim();
+	}
+
+	public static String getReviewsId() {
+		return REVIEWS_ID.trim();
+	}
+
+	public static String getReviewsUserId() {
+		return REVIEWS_USER_ID.trim();
+	}
+
+	public static String getReviewsLocationId() {
+		return REVIEWS_LOCATION_ID.trim();
+	}
+
+	public static String getReviewsRating() {
+		return REVIEWS_RATING.trim();
+	}
+
+	public static String getReviewsReviewTitle() {
+		return REVIEWS_REVIEW_TITLE.trim();
+	}
+
+	public static String getReviewsReviewDescription() {
+		return REVIEWS_REVIEW_DESCRIPTION.trim();
+	}
+
+	public static String getReviewsReviewPicture() {
+		return REVIEWS_REVIEW_PICTURE.trim();
+	}
+
+	public static String getReviewsTotalVoteUp() {
+		return REVIEWS_TOTAL_VOTE_UP.trim();
+	}
+
+	public static String getReviewsTotalVoteDown() {
+		return REVIEWS_TOTAL_VOTE_DOWN.trim();
+	}
+
+	public static String getReviewsSpams() {
+		return REVIEWS_SPAMS.trim();
+	}
+
+	public static String getReviewsCommentsTable() {
+		return REVIEWS_COMMENTS_TABLE.trim();
+	}
+
+	public static String getReviewsCommentsId() {
+		return REVIEWS_COMMENTS_ID.trim();
+	}
+
+	public static String getReviewsCommentsUserId() {
+		return REVIEWS_COMMENTS_USER_ID.trim();
+	}
+
+	public static String getReviewsCommentsUserReviewsId() {
+		return REVIEWS_COMMENTS_USER_REVIEWS_ID.trim();
+	}
+
+	public static String getReviewsCommentsComment() {
+		return REVIEWS_COMMENTS_COMMENT.trim();
+	}
+
+	public static String getCheckinTable() {
+		return CHECKIN_TABLE.trim();
+	}
+
+	public static String getCheckinUserId() {
+		return CHECKIN_USER_ID.trim();
+	}
+
+	public static String getCheckinLocationId() {
+		return CHECKIN_LOCATION_ID.trim();
+	}
+
+	public static String getCheckinCheckinTimestamp() {
+		return CHECKIN_CHECKIN_TIMESTAMP.trim();
+	}
+
+	public static String getConnectionsTable() {
+		return CONNECTIONS_TABLE.trim();
+	}
+
+	public static String getConnectionsMyId() {
+		return CONNECTIONS_MY_ID.trim();
+	}
+
+	public static String getConnectionsFriendsId() {
+		return CONNECTIONS_FRIENDS_ID.trim();
+	}
+
+	/*
+	 * --------------------------------------------------------------
 	 * Query Strings
 	 * --------------------------------------------------------------
 	 */
