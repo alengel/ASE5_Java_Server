@@ -788,8 +788,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if userId is valid
-		String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID
-				+ "= " + userId + ";";
+		String getUser = queriesGenerator.getUserById(userId);
 		ResultSet userFromDb;
 		try {
 
