@@ -546,9 +546,15 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement s = dbConnection.getStatement();
 		String deleteUser = queriesGenerator.deleteUserTable();
 		String deleteLocations = queriesGenerator.deleteLocationsTable();
+		String deleteReviews = queriesGenerator.deleteReviewsTable();
+		String deleteCheckIns = queriesGenerator.deleteCheckinsTable();
+		String deleteConnections = queriesGenerator.deleteConnectionsTable();
 		try {
 			s.executeUpdate(deleteUser);
 			s.executeUpdate(deleteLocations);
+			s.executeUpdate(deleteReviews);
+			s.executeUpdate(deleteCheckIns);
+			s.executeUpdate(deleteConnections);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
