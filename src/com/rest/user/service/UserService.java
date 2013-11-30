@@ -210,7 +210,7 @@ import java.io.ByteArrayInputStream;
 		@Path("/follow")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@FormParam ("key") String key, @FormParam("reviewer_id") String reviewer_id) {
+	    public Response follow(@FormParam ("key") String key, @FormParam("reviewer_id") String reviewer_id) {
 			
 			dbAccess = new DatabaseAccess();
 			boolean success = false;
