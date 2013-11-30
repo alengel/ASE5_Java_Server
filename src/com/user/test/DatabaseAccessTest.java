@@ -487,4 +487,14 @@ public class DatabaseAccessTest {
 		
 		
 	}
+	
+	
+	@Test
+	public void testGetReviewsUnSuccessful() {
+			
+		Review result = dbAccess.getReviews("123");
+		assertEquals("Error", result.getMessage());
+		
+		
+	}
 }
