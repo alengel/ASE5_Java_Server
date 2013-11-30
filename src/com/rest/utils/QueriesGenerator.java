@@ -275,6 +275,7 @@ final class QueriesGenerator {
 	
 	
 	
+	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
 				+ WHERE + LOCATIONS_FSQUARE_VENUE_ID + "= '" + venueId
@@ -308,6 +309,11 @@ final class QueriesGenerator {
 		return SELECT + CONNECTIONS_FRIENDS_ID + FROM
 				+ CONNECTIONS_TABLE + WHERE + CONNECTIONS_MY_ID + "= '"
 				+ userId + "';";
+	}
+	
+	public String getReviewsByUserId(int userId) {
+		return SELECT + "*" + FROM + REVIEWS_TABLE + WHERE
+				+ REVIEWS_USER_ID + "= " + userId + ";";
 	}
 
 	
@@ -441,6 +447,8 @@ final class QueriesGenerator {
 				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
 				+ ", " + reviewId + ", '" + comment + "');";
 	}
+
+	
 
 	
 

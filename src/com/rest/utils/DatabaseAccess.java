@@ -788,8 +788,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if userId is valid
-		String getUser = SELECT + "* " + FROM + USER_TABLE + WHERE + USER_ID
-				+ "= " + userId + ";";
+		String getUser = queriesGenerator.getUserById(userId);
 		ResultSet userFromDb;
 		try {
 
@@ -798,26 +797,24 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 				throw new UserNotFoundException();
 			}
 
-			String userFirstName = userFromDb.getString(USER_FIRSTNAME);
-			String userLastName = userFromDb.getString(USER_LASTNAME);
-			String userEMail = userFromDb.getString(USER_EMAIL);
-			String userPicture = userFromDb.getString(USER_PICTURE);
+			String userFirstName = userFromDb.getString(QueriesGenerator.getUserFirstname());
+			String userLastName = userFromDb.getString(QueriesGenerator.getUserLastname());
+			String userEMail = userFromDb.getString(QueriesGenerator.getUserEmail());
+			String userPicture = userFromDb.getString(QueriesGenerator.getUserPicture());
 
 			// get the reviews of this user
-			String getReviews = SELECT + "*" + FROM + REVIEWS_TABLE + WHERE
-					+ REVIEWS_USER_ID + "= " + userId + ";";
-			ResultSet reviewsFromDb = statement.executeQuery(getReviews);
+			ResultSet reviewsFromDb = statement.executeQuery(queriesGenerator.getReviewsByUserId(userId));
 
 			while (reviewsFromDb.next()) {
 
 				String locationId = reviewsFromDb
-						.getString(REVIEWS_LOCATION_ID);
-				String title = reviewsFromDb.getString(REVIEWS_REVIEW_TITLE);
+						.getString(QueriesGenerator.getReviewsLocationId());
+				String title = reviewsFromDb.getString(QueriesGenerator.getReviewsReviewTitle());
 				String review = reviewsFromDb
-						.getString(REVIEWS_REVIEW_DESCRIPTION);
+						.getString(QueriesGenerator.getReviewsReviewDescription());
 				String locPicture = reviewsFromDb
-						.getString(REVIEWS_REVIEW_PICTURE);
-				int rating = reviewsFromDb.getInt(REVIEWS_RATING);
+						.getString(QueriesGenerator.getReviewsReviewPicture());
+				int rating = reviewsFromDb.getInt(QueriesGenerator.getReviewsRating());
 
 				result.add(new ReviewData(userId, userFirstName, userLastName,
 						userEMail, userPicture, rating, title, review,
