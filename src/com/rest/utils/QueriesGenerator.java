@@ -420,6 +420,12 @@ final class QueriesGenerator {
 				+ ", " + reviewId + ", '" + comment + "');";
 	}
 
+	public String getCommentsByReviewId(int reviewId) {
+		return SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
+				+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
+				+ reviewId + "';";
+	}
+
 	
 	
 

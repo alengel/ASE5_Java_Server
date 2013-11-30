@@ -659,20 +659,15 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		Statement statement = dbConnection.getStatement();
 
 		// check if reviewId is valid
-		String getReviewIdFromDb = SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
-				+ REVIEWS_ID + "= '" + reviewId + "';";
 		ResultSet reviewIdFromDb;
 		try {
 
-			reviewIdFromDb = statement.executeQuery(getReviewIdFromDb);
+			reviewIdFromDb = statement.executeQuery(queriesGenerator.getReviewsById(reviewId));
 			if (!reviewIdFromDb.next()) {
 				throw new ReviewNotFoundException();
 			}
 
-			String getComments = SELECT + "*" + FROM + REVIEWS_COMMENTS_TABLE
-					+ WHERE + REVIEWS_COMMENTS_USER_REVIEWS_ID + "= '"
-					+ reviewId + "';";
-			ResultSet commentsFromDb = statement.executeQuery(getComments);
+			ResultSet commentsFromDb = statement.executeQuery(queriesGenerator.getCommentsByReviewId(reviewId));
 
 			while (commentsFromDb.next()) {
 				result.add(new CommentData(commentsFromDb
