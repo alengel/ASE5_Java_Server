@@ -754,17 +754,17 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			while (friendsIds.next()) {
 
-				String id = friendsIds.getString(CONNECTIONS_FRIENDS_ID);
+				String id = friendsIds.getString(QueriesGenerator.getConnectionsFriendsId());
 
 				String getUserDetails = SELECT + "* " + FROM + USER_TABLE
 						+ WHERE + USER_ID + "= '" + id + "';";
 				ResultSet friendFromDb = statement.executeQuery(getUserDetails);
 
 				UserData friend = new UserData(
-						friendFromDb.getString(USER_EMAIL), "",
-						friendFromDb.getString(USER_FIRSTNAME),
-						friendFromDb.getString(USER_LASTNAME),
-						friendFromDb.getString(USER_PICTURE), "", "", "", "",
+						friendFromDb.getString(QueriesGenerator.getUserEmail()), "",
+						friendFromDb.getString(QueriesGenerator.getUserFirstname()),
+						friendFromDb.getString(QueriesGenerator.getUserLastname()),
+						friendFromDb.getString(QueriesGenerator.getUserPicture()), "", "", "", "",
 						"", "", "");
 				friends.add(friend);
 			}
