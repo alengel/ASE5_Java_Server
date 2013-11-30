@@ -94,7 +94,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	public UserData registerNewUser(String email, String password,
 			String firstName, String lastName, String picture)
 			throws WrongEmailFormatException, InputTooLongException,
-			ArgumentMissingException, EmailAlreadyExistsException, SQLException {
+			ArgumentMissingException, EmailAlreadyExistsException {
 
 		if (email == null || password == null || email.isEmpty()
 				|| password.isEmpty()) {
@@ -130,21 +130,16 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			if (resultEmailAlreadyExists.next()) {
 				throw new EmailAlreadyExistsException();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		int success;
-		try {
-			success = statement.executeUpdate(Queries.insertNewUser(email, password,
+			
+			int success = statement.executeUpdate(Queries.insertNewUser(email, password,
 					firstName, lastName, picture));
+			
+			if (success != 1) {
+				return null;
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
-		}
-
-		if (success != 1) {
 			return null;
 		}
 

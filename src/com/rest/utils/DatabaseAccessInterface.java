@@ -47,17 +47,17 @@ public interface DatabaseAccessInterface {
 	 * @param password
 	 * @param firstName
 	 * @param lastName
-	 * @return the new UserData that has been saved. Null if it was not possible
-	 *         (e. g. email is already registered to another user)
+	 * @param picture
+	 * @return the new UserData if successful, null otherwise
 	 * @throws WrongEmailFormatException
 	 * @throws InputTooLongException
 	 * @throws ArgumentMissingException
-	 * @throws SQLException
+	 * @throws EmailAlreadyExistsException
 	 */
 	public UserData registerNewUser(String email, String password,
 			String firstName, String lastName, String picture)
 			throws WrongEmailFormatException, InputTooLongException,
-			ArgumentMissingException, EmailAlreadyExistsException, SQLException;
+			ArgumentMissingException, EmailAlreadyExistsException;
 
 	/**
 	 * should remove the loginKey form the DB
