@@ -27,6 +27,7 @@ public class UserServiceTest {
 	UserService userService;
 	DatabaseAccess dbAccess;
 	
+	
 	@Before
 	public void setUp() throws Exception {
 		userService = new UserService();
@@ -38,6 +39,10 @@ public class UserServiceTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/*
+	 * Testing user login normal
+	 */
 	
 	@Test
 	public void testLoginUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
@@ -58,6 +63,28 @@ public class UserServiceTest {
 		
 		assertEquals(expected, result);
 	}
+	
+	/*
+	 * Testing logging in with wrong emil
+	 */
+	@Test
+	public void testLoginUserWrongEmail() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
+		
+		Response result = userService.login(email+"123qwe", passwd);
+
+		Response expected = Response.ok(new User("false", "Email and/or password not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	
 	
 
 }
