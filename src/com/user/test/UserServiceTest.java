@@ -144,6 +144,25 @@ public class UserServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing update settings normal
+	 */
+	@Test
+	public void testUpdateSettings() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response result = userService.updateSettings(loginKey, 100, 100, 100);
+		Response expected = Response.ok(new User("true", "Settings are updated successfully")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	
 	
 	
 
