@@ -274,7 +274,24 @@ public class UserServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing get user profile wrong login key
+	 */
+	@Test
+	public void testProfileWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
 	
+		Response result = userService.getUserProfile(loginKey+"asd");
+				
+		Response expected = Response.ok(new User("false", "Key not found")).build();
+		
+		assertEquals(expected, result);
+	}
 	
 	
 	
