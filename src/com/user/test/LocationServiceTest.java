@@ -287,5 +287,30 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing adding comments using wrong login key
+	 */
+	@Test
+	public void testCommentsWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		
+		Response result = locationService.putComment(loginKey+"asd", 1, "comment...");
+		Response expected = Response.ok(new Location("false", "Key not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
 
 }
