@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.CORBA.UserException;
 
 import com.mysql.jdbc.ResultSetImpl;
 import com.rest.location.model.Location;
@@ -234,11 +235,7 @@ public class DatabaseAccessTest {
 		
 		UserData userLoggedIn = dbAccess.loginUser(email, password);
 		
-		String loginKey = userLoggedIn.getLoginKey();
-		
-		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData (email, password, firstName, lastName, loginKey, null, null, null, null, null, null, null);
-		assertEquals(expected,result);
+		assertEquals(email, userLoggedIn.getEmail());
 	}
 	
 	@Test(expected = UserNotFoundException.class)
