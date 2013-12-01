@@ -361,6 +361,34 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing getting reviews for an existing user
+	 */
+	@Test
+	public void testGetReviewsByUser() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		
+		int id = Integer.parseInt(userData.getId());
+		Response result = locationService.getReviewsForUser(id);
+		ArrayList<ReviewData> rd = (ArrayList<ReviewData>)result.getEntity();
+		
+		Response expected = Response.ok(new Review("true", "", rd)).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 
 }
