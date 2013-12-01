@@ -352,15 +352,14 @@ public class DatabaseAccessTest {
 		assertEquals(expected, result);
 	}
 	
-	@Test
+	@Test(expected = UserNotFoundException.class)
 	public void testChangePasswordUnsuccessful() throws UserNotFoundException {
 		
 		String userMail = "user@webb.com";
 		String newPassword = "newpasswd";
 	
-		boolean result = dbAccess.changePassword(userMail, newPassword);
-		boolean expected = false;
-		assertEquals(expected, result);
+		dbAccess.changePassword(userMail, newPassword);
+		
 	}
 	
 	/*
