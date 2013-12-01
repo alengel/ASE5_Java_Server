@@ -54,25 +54,37 @@ public class DatabaseAccessTest {
 		
 		UserData result = dbAccess.registerNewUser(email, password, firstName, lastName, null);
 		UserData expected = new UserData(email, password, firstName, lastName, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
+		assertEquals(email, result.getEmail());
+		assertEquals(expected.getPasswd(), result.getPasswd());
+		assertEquals(expected.getFirstName(), result.getFirstName());
+		assertEquals(expected.getLastName(), result.getLastName());
 		
 		dbAccess.clearDatabase();
 		
 		result  = dbAccess.registerNewUser(email, password, null, lastName, null);
 		expected = new UserData(email, password, null, lastName, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
+		assertEquals(expected.getEmail(), result.getEmail());
+		assertEquals(expected.getPasswd(), result.getPasswd());
+		assertNull(result.getFirstName());
+		assertEquals(expected.getLastName(), result.getLastName());
 		
 		dbAccess.clearDatabase();
 		
 		result  = dbAccess.registerNewUser(email, password, firstName, null, null);
 		expected = new UserData(email, password, firstName, null, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
+		assertEquals(expected.getEmail(), result.getEmail());
+		assertEquals(expected.getPasswd(), result.getPasswd());
+		assertEquals(expected.getFirstName(), result.getFirstName());
+		assertNull(result.getLastName());
 		
 		dbAccess.clearDatabase();
 		
 		result  = dbAccess.registerNewUser(email, password, null, null, null);
 		expected = new UserData(email, password, null, null, null, null, null, null, null, null, null, null);
-		assertEquals(expected, result);
+		assertEquals(expected.getEmail(), result.getEmail());
+		assertEquals(expected.getPasswd(), result.getPasswd());
+		assertNull(result.getFirstName());
+		assertNull(result.getLastName());
 	}
 	
 	@Test(expected = ArgumentMissingException.class)

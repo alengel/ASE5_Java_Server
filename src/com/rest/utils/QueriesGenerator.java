@@ -36,7 +36,7 @@ final class QueriesGenerator {
 	private final static String USER_FIRSTNAME = "first_name ";
 	private final static String USER_LASTNAME = "last_name ";
 	private final static String USER_LOGINKEY = "login_key ";
-	private final static String USER_GEO_PUSH_INTERVAL = "geo_push_interval ";
+	private final static String USER_GEO_PUSH_INTERVAL = "gps_push_time ";
 	private final static String USER_MIN_DISTANCE = "min_distance ";
 	private final static String USER_PICTURE = "picture ";
 	private final static String USER_LOGOUT_TIME = "logout_session_time ";
@@ -243,17 +243,6 @@ final class QueriesGenerator {
 				+ WHERE + USER_EMAIL + EQUALS + "'" + email + "'";
 	}
 	
-	String insertNewUser(String email, String password,
-			String firstName, String lastName, String picture) {
-		return INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
-				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
-				+ USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME
-				+ ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE
-				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
-				+ firstName + "', '" + lastName + "', '" + picture
-				+ "', 60, 30, 100);";
-	}
-	
 	String getUserByEmail(String email) {
 		return SELECT + "* " + FROM + USER_TABLE + WHERE
 				+ USER_EMAIL + "= '" + email + "';";
@@ -331,6 +320,16 @@ final class QueriesGenerator {
 	 * Insert Strings
 	 * --------------------------------------------------------------
 	 */
+	String insertNewUser(String email, String password,
+			String firstName, String lastName, String picture) {
+		return INSERT_INTO + USER_TABLE + "(" + USER_EMAIL
+				+ ", " + USER_PASSWORD + ", " + USER_FIRSTNAME + ", "
+				+ USER_LASTNAME + ", " + USER_PICTURE + ", " + USER_LOGOUT_TIME
+				+ ", " + USER_GEO_PUSH_INTERVAL + ", " + USER_MIN_DISTANCE
+				+ ") " + VALUES + "('" + email + "', '" + password + "', '"
+				+ firstName + "', '" + lastName + "', '" + picture
+				+ "', 60, 30, 100);";
+	}
 	
 	public String insertNewVenue(String venueId) {
 		return INSERT_IGNORE_INTO + LOCATIONS_TABLE + "("
