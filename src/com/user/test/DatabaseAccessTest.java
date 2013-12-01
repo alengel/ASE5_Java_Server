@@ -378,11 +378,10 @@ public class DatabaseAccessTest {
 		String timestamp = "timestamp";
 		
 		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
-		boolean expected = true;
-		assertEquals (expected, result);
+		assertEquals ("true", result.getSuccess());
 	}
 	
-	@Test
+	@Test(expected = InvalidKeyException.class)
 	public void testCheckInUnsuccessful() throws ArgumentMissingException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException{
 		String email = "test@web.de";
 		String firstName = "Karolina";
@@ -398,7 +397,7 @@ public class DatabaseAccessTest {
 		String venueId = "venueID";
 		String timestamp = "timestamp";
 		
-		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
+		Location result = dbAccess.checkIn("-1", venueId, timestamp);
 		assertEquals ("true", result.getSuccess());
 	}
 
