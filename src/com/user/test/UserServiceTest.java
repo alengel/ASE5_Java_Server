@@ -138,7 +138,7 @@ public class UserServiceTest {
 		String loginKey = userData.getLoginKey();
 		
 		Response result = userService.logout(loginKey+"asd");
-		Response expected = Response.ok(new User("false", "Error occured")).build();
+		Response expected = Response.ok(new User("false", "LoginKey is Wrong")).build();
 		
 		assertEquals(expected, result);
 	}
@@ -286,7 +286,7 @@ public class UserServiceTest {
 	
 		Response result = userService.getUserProfile(loginKey+"asd");
 				
-		Response expected = Response.ok(new User("false", "Key not found")).build();
+		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
 	}
