@@ -97,7 +97,7 @@ public class LocationService {
 			}
 		} catch (InvalidKeyException e) {
 			success = "false";
-			message = "Invalid key";
+			message = "LoginKey is wrong";
 			e.printStackTrace();
 		} catch (ReviewNotFoundException e) {
 			success = "false";
@@ -126,7 +126,7 @@ public class LocationService {
 			}
 		} catch(InvalidKeyException e) {
 			success = "false";
-			message = "Key not found";
+			message = "LoginKey is wrong";
 		} catch (ReviewNotFoundException e) {
 			success = "false";
 			message = "Review not found";
