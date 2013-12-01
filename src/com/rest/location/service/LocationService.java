@@ -32,10 +32,15 @@ public class LocationService {
 		
 		dbAccess = new DatabaseAccess();
 		long timeStamp = System.currentTimeMillis()/1000L;
-		Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);			
+		try {
+			Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);
+			return Response.ok(location).build();
+		} catch (InvalidKeyException e) {
+			return Response.ok(new Location("false", "LoginKey is wrong")).build();
+		}
 		
 		
-		return Response.ok(location).build();
+		
 	}
 	
 	@POST                                
