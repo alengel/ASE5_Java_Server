@@ -200,7 +200,7 @@ public class UserServiceTest {
 		// register new user to make sure reviwer_id exists
 		dbAccess.registerNewUser(emailNewUser, passwdNewUser, "Jon", "Smith", null );
 		UserData userData1 = dbAccess.loginUser(emailNewUser, passwdNewUser);
-		String reviewerId = userData1.getId();
+		int reviewerId = Integer.parseInt(userData1.getId());
 		
 		Response result = userService.follow(loginKey, reviewerId);
 		Response expected = Response.ok(new User("true", "")).build();
@@ -227,7 +227,7 @@ public class UserServiceTest {
 		// register new user to make sure reviwer_id exists
 		dbAccess.registerNewUser(emailNewUser, passwdNewUser, "Jon", "Smith", null );
 		UserData userData1 = dbAccess.loginUser(emailNewUser, passwdNewUser);
-		String reviewerId = userData1.getId();
+		int reviewerId = Integer.parseInt(userData1.getId());
 		
 		Response result = userService.follow(loginKey+"asd", reviewerId);
 		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
@@ -247,7 +247,7 @@ public class UserServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 	
-		Response result = userService.follow(loginKey, "007");
+		Response result = userService.follow(loginKey, 007);
 		Response expected = Response.ok(new User("false", "User not found")).build();
 		
 		assertEquals(expected, result);

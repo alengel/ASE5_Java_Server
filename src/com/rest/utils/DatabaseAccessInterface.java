@@ -19,70 +19,74 @@ import com.rest.utils.exceptions.UserNotFoundException;
 import com.rest.utils.exceptions.WrongEmailFormatException;
 
 public interface DatabaseAccessInterface {
-	
+
 	/**
 	 * delete everything in the database
 	 */
 	public void clearDatabase();
-	
-	
+
 	/**
-	 * 
-	 * @param email 
+	 * log the user in
+	 * @param email
 	 * @param password
-	 * @param loginKey 
-	 * @return true if login was successful, false otherwise
-	 * @throws ArgumentMissingException 
-	 * @throws UserNotFoundException 
-	 * @throws PasswordWrongException 
-	 * @throws SQLException 
+	 * @return the UserData of the logged in user, including his key. Null otherwise
+	 * @throws ArgumentMissingException
+	 * @throws UserNotFoundException
+	 * @throws PasswordWrongException
 	 */
-	public UserData loginUser(String email, String password) throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException;
-		
+	public UserData loginUser(String email, String password)
+			throws ArgumentMissingException, UserNotFoundException,
+			PasswordWrongException, SQLException;
+
 	/**
 	 * register a new User in the database if he does not exist yet
+	 * 
 	 * @param email
 	 * @param password
 	 * @param firstName
 	 * @param lastName
-	 * @return the new UserData that has been saved. Null if it was not possible (e. g. email is already registered to another user)
-	 * @throws WrongEmailFormatException 
-	 * @throws InputTooLongException 
-	 * @throws ArgumentMissingException 
-	 * @throws SQLException 
+	 * @param picture
+	 * @return the new UserData if successful, null otherwise
+	 * @throws WrongEmailFormatException
+	 * @throws InputTooLongException
+	 * @throws ArgumentMissingException
+	 * @throws EmailAlreadyExistsException
 	 */
-	public UserData registerNewUser(String email, String password, String firstName, String lastName, String picture) throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException;
-	
+	public UserData registerNewUser(String email, String password,
+			String firstName, String lastName, String picture)
+			throws WrongEmailFormatException, InputTooLongException,
+			ArgumentMissingException, EmailAlreadyExistsException;
+
 	/**
-	 * should remove the loginKey form the DB
-	 * @param loginKey
-	 * @return true, if logout was successful, false otherwise
-	 * @throws ArgumentMissingException d
+	 * will logout the user
+	 * @param key the loginKey of the user
+	 * @return true if logout successful, false otherwise
+	 * @throws ArgumentMissingException
 	 */
-	public boolean logoutUser(String loginKey) throws ArgumentMissingException;
-	
+	public boolean logoutUser(String key) throws ArgumentMissingException;
+
 	/**
 	 * 
 	 * @param user
 	 * @param newPassword
 	 * @return true if change was successful, false otherwise
-	 * @throws UserNotFoundException 
+	 * @throws UserNotFoundException
 	 */
-public boolean changePassword(String userMail, String newPassword) throws UserNotFoundException;
-	
+	public boolean changePassword(String userMail, String newPassword)
+			throws UserNotFoundException;
+
 	/**
-	 * 
+	 * check a User in to a specific Location
 	 * @param userKey
-	 * @param venueId
-	 * @param timestamp
-	 * @return true if change successful, false otherwise
-	 * @throws ArgumentMissingException 
-	 * @throws InvalidKeyException 
+	 * @param venueId the location where the user wants to check in 
+	 * @param timestamp the checkin time
+	 * @return the Location where the User has checked in. Null if not possible
+	 * @throws ArgumentMissingException
+	 * @throws InvalidKeyException
 	 */
+	public Location checkIn(String userKey, String venueId, String timestamp)
+			throws ArgumentMissingException, InvalidKeyException;
 
-	public Location checkIn(String userKey, String venueId, String timestamp) throws ArgumentMissingException, InvalidKeyException;
-
-	
 	/**
 	 * 
 	 * @param userKey
@@ -90,12 +94,14 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @param maxLoginInterval
 	 * @param geoPushInterval
 	 * @return true if change successful, false otherwise
-	 * @throws InvalidKeyException 
+	 * @throws InvalidKeyException
 	 */
-	public boolean updateSettings(String userKey, int minDistance, int maxLoginInterval, int geoPushInterval) throws InvalidKeyException;
-	
+	public boolean updateSettings(String key, int minDistance,
+			int maxLoginInterval, int geoPushInterval)
+			throws InvalidKeyException;
+
 	/**
-	 * 
+	 * store a new Review
 	 * @param key
 	 * @param venueId
 	 * @param rating
@@ -103,31 +109,91 @@ public boolean changePassword(String userMail, String newPassword) throws UserNo
 	 * @param reviewDescription
 	 * @param imageUri
 	 * @return true if change successful, false otherwise
-	 * @throws InvalidKeyException 
+	 * @throws InvalidKeyException
 	 */
-	public boolean storeNewReview(String key, String venueId, int rating, String reviewTitle, String reviewDescription, String imageUri) throws InvalidKeyException;
+	public boolean storeNewReview(String key, String venueId, int rating,
+			String reviewTitle, String reviewDescription, String imageUri)
+			throws InvalidKeyException;
+
+	/**
+	 * get reviews for one specific venue
+	 * @param venueId the venueId for which reviews should be retrieved
+	 * @return A review object containg the reviews for a venue
+	 */
+	public Review getReviews(String venueId);
+	
+	/**
+	 * method fur up- or downvoting a review. 
+	 * @param key the loginKey of the User
+	 * @param reviewId the Review to be voted up or dowm
+	 * @param vote 1 for upvoting, 0 for downvoting
+	 * @return true if voting was successful, false otherwise
+	 * @throws InvalidKeyException
+	 * @throws ReviewNotFoundException
+	 */
+	public boolean vote(String key, int reviewId, int vote)
+			throws InvalidKeyException, ReviewNotFoundException;
+	
+	/**
+	 * if a user wants to follow another user
+	 * @param key the key of the user who would like to follow another one
+	 * @param reviewer_id id of the reviewer which the user likes to follow
+	 * @return true if successful, false otherwise
+	 * @throws InvalidKeyException
+	 * @throws UserNotFoundException
+	 */
+	public boolean follow(String key, int reviewer_id)
+			throws InvalidKeyException, UserNotFoundException;
+	
+	/**
+	 * for storing comments on reviews
+	 * @param key user that writes a comment
+	 * @param reviewId review that gets commented
+	 * @param comment the actual comment 
+	 * @return true if succesful, false otherwise
+	 * @throws ReviewNotFoundException
+	 * @throws InvalidKeyException
+	 */
+	public boolean putComment(String key, int reviewId, String comment)
+			throws ReviewNotFoundException, InvalidKeyException;
 	
 	/**
 	 * 
-	 * @param venueId
-	 * @param checkId
-	 * @return
-	 * @throws SQLException
+	 * @param reviewId
+	 * @return the Comments for a Review
+	 * @throws ReviewNotFoundException
 	 */
-	public Review getReviews(String venueId) throws SQLException;
+	public ArrayList<CommentData> getCommentsForReview(int reviewId)
+			throws ReviewNotFoundException;
+	
+	/**
+	 * change properties of the User profile
+	 * @param key the user whose profil should be changed
+	 * @param password the new password
+	 * @param firstName the new firstName
+	 * @param lastName the new lastName
+	 * @param profileImage the new profileImage
+	 * @return true if successful, false otherwise
+	 * @throws InvalidKeyException
+	 */
+	public boolean updateUser(String key, String password,
+			String firstName, String lastName, String profileImage)
+			throws InvalidKeyException;
 
-	
-	public boolean vote(String key, String reviewId, int vote) throws InvalidKeyException, ReviewNotFoundException;
-	public boolean follow(String key, String reviewer_id) throws InvalidKeyException, UserNotFoundException;
-	
-	public boolean putComment(String key, String reviewId, String comment) throws ReviewNotFoundException, InvalidKeyException;
-	
-	public ArrayList<CommentData> getCommentsForReview(String reviewId) throws ReviewNotFoundException;
-	
-	public boolean updateUser(String loginKey, String password, String firstName,
-			String lastName, String profileImage) throws InvalidKeyException;
-	
+	/**
+	 * get the user profile without critical data
+	 * @param key
+	 * @return the User object containing all details
+	 * @throws InvalidKeyException
+	 */
 	public User getUserProfile(String key) throws InvalidKeyException;
 	
-	public ArrayList<ReviewData> getReviewsForUser(int userId) throws UserNotFoundException;
+	/**
+	 * get all reviews for one specific user
+	 * @param userId
+	 * @return the list of reviews of the user
+	 * @throws UserNotFoundException
+	 */
+	public ArrayList<ReviewData> getReviewsForUser(int userId)
+			throws UserNotFoundException;
 }

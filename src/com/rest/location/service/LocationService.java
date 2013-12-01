@@ -73,7 +73,7 @@ public class LocationService {
 	@Path("/vote")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") String reviewId,  @FormParam("vote") int vote) {
+    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("vote") int vote) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -102,7 +102,7 @@ public class LocationService {
 	@Path("/put-comment")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") String reviewId,  @FormParam("comment") String comment) {
+    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("comment") String comment) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -131,7 +131,7 @@ public class LocationService {
 	@Path("reviews/{reviewId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response getCommentsForReview(@PathParam ("reviewId") String reviewId) {
+    public Response getCommentsForReview(@PathParam ("reviewId") int reviewId) {
 		
 		String success = "false";
 		String message = "";
