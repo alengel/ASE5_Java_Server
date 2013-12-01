@@ -71,9 +71,6 @@ import java.io.ByteArrayInputStream;
 		 * @throws UserNotFoundException 
 		 * @throws ArgumentMissingException 
 		 */
-		
-		
-
 		@POST                                
 		@Path("/login")                      
 	    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -108,31 +105,26 @@ import java.io.ByteArrayInputStream;
 		 * Following method handles registration process
 		 * 
 		 * 
-		 * @param email
-		 * @param passwd
-		 * @param firstName
-		 * @param lastName
-		 * @return
+		 * @param email user's email
+		 * @param passwd user's password
+		 * @param firstName user's first name
+		 * @param lastName user's last name
+		 * @return Http response object
 		 * @throws SQLException
 		 * @throws ArgumentMissingException 
 		 * @throws InputTooLongException 
 		 * @throws WrongEmailFormatException 
 		 * @throws IOException 
-		 */
-		
+		 */		
 		@POST                                
 		@Path("/register")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	//	@Consumes(MediaType.MULTIPART_FORM_DATA)
 		@Produces(MediaType.APPLICATION_JSON)	
 	    public Response register(@Context HttpServletRequest servletRequest, @FormParam ("email") String email, @FormParam("passwd") String passwd, @FormParam ("first_name") String firstName, @FormParam("last_name") String lastName, @FormParam("profile_image") String  encodedImage
 	    		) throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException {	
-			
-			
-			
+						
 			UserData userData;
-			
-			
+					
 			String hrefToFile = "";
 				
 			if (encodedImage != null) {
@@ -140,8 +132,7 @@ import java.io.ByteArrayInputStream;
 			
 			long timeStamp = System.currentTimeMillis();
 			String imageName = SHA1.stringToSHA(email+timeStamp);
-			
-			
+					
 			InputStream encInpStr = new ByteArrayInputStream(encodedImage.getBytes());			
 			OutputStream decOutStr = new FileOutputStream(rootFolder+"/img/"+imageName+".jpg");
 			
@@ -164,12 +155,14 @@ import java.io.ByteArrayInputStream;
 			} catch (EmailAlreadyExistsException e) {
 				return Response.ok(new User("false", "User with this email already exists")).build(); 				
 			}
-			
-			
-	    }
+		}
 		
 
-		
+		/**
+		 * Following method lets a user log out
+		 * @param loginKey user's login key
+		 * @return Http response object
+		 */
 		@POST                                
 		@Path("/logout")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -187,6 +180,14 @@ import java.io.ByteArrayInputStream;
 			}
 		}
 		
+		/**
+		 * This method updates user's settings
+		 * @param loginKey login key of the user
+		 * @param minDistance
+		 * @param logoutSessionTime auto log out time; if the user is inactive for an amount of time specified in this parameter, he will be logged out automatically 
+		 * @param geoPushInterval
+		 * @return Http response object
+		 */
 		@POST                                
 		@Path("/settings")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -205,19 +206,24 @@ import java.io.ByteArrayInputStream;
 		}
 			
 	   
-		
+		/**
+		 * This method allows a user to follow another user
+		 * @param key user's login key
+		 * @param reviewerId id of the followed user 
+		 * @return Http response object
+		 */
 		@POST                                
 		@Path("/follow")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)	
 
-	    public Response follow(@FormParam ("key") String key, @FormParam("reviewer_id") int reviewer_id) {
+	    public Response follow(@FormParam ("key") String key, @FormParam("reviewer_id") int reviewerId) {
 
 			
 			dbAccess = new DatabaseAccess();
 			boolean success = false;
 			try {
-				success = dbAccess.follow(key, reviewer_id);
+				success = dbAccess.follow(key, reviewerId);
 			} catch (InvalidKeyException e) {
 				return Response.ok(new User("false", "LoginKey is wrong")).build();
 			} catch (UserNotFoundException e) {
@@ -231,7 +237,11 @@ import java.io.ByteArrayInputStream;
 			}
 		}
 		
-
+		/**
+		 * Following method returns user's profile information
+		 * @param key user's login key
+		 * @return Http response object
+		 */
 		@GET
         @Path("profile/{key}")
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -243,7 +253,7 @@ import java.io.ByteArrayInputStream;
             try {
                 u = dbAccess.getUserProfile(key);
             } catch (InvalidKeyException e) {
-                u = new User("false", "Key not found");
+                u = new User("false", "LoginKey is wrong");
             }
             if(u == null) {
                 u = new User("false", "");
@@ -254,18 +264,5 @@ import java.io.ByteArrayInputStream;
                                
 		
 
-		
-		//this method is for checking some stuff at the server, not used in real app
-		@GET                                
-		@Path("/info")
-	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	//	@Produces(MediaType.APPLICATION_JSON)
-		public Response getInfo(@Context HttpServletRequest servletRequest) {
-			
-			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
-			System.out.println(rootFolder);			
-
-			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
-		}
 	}
 
