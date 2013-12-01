@@ -39,6 +39,10 @@ import java.io.ByteArrayInputStream;
 
 	@Path("/")  						//defines that HTTP responses to "...hostname/user" are handled in the following class
 	public class UserService {
+		
+		public UserService() {
+			
+		}
 
 		
 		private DatabaseAccess dbAccess;
@@ -206,7 +210,9 @@ import java.io.ByteArrayInputStream;
 		@Path("/follow")
 		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 		@Produces(MediaType.APPLICATION_JSON)	
-	    public Response register(@FormParam ("key") String key, @FormParam("reviewer_id") int reviewer_id) {
+
+	    public Response follow(@FormParam ("key") String key, @FormParam("reviewer_id") int reviewer_id) {
+
 			
 			dbAccess = new DatabaseAccess();
 			boolean success = false;
