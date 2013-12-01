@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import com.rest.location.model.Location;
 import com.rest.location.service.LocationService;
+import com.rest.review.model.Review;
+import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
 import com.rest.user.model.data.UserData;
 import com.rest.user.service.UserService;
@@ -61,7 +63,7 @@ public class LocationServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.checkIn(loginKey, "any_venueId");
+		Response result = locationService.checkIn(loginKey, "new_venueId");
 		Response expected = Response.ok(new Location("true", "Checked in successfully")).build();
 		
 		assertEquals(expected, result);
@@ -97,7 +99,11 @@ public class LocationServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.sendReview(loginKey, "random_venueId", 5, "Good place", "Review description...", null);
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		Response result = locationService.sendReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		Response expected = Response.ok(new Location("true", "Review sent successfully")).build();
 		
 		assertEquals(expected, result);
@@ -116,11 +122,45 @@ public class LocationServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.sendReview(loginKey+"asd", "random_venueId", 5, "Good place", "Review description...", null);
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		Response result = locationService.sendReview(loginKey+"asd", venueId, 5, reviewTitle, reviewDescription, null);
 		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
 	}
+	
+	
+	/*
+	 * Testing getting reviews by venue id
+	 */
+	@Test
+	public void testGetReviewsByVenue() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		
+		
+		Response result = locationService.getReviews(venueId);
+		List<ReviewData> rd = (List<ReviewData>)result.getEntity();
+		Response expected = Response.ok(new Review("true", "List of reviews for this place", rd)).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	
 
 	
 
