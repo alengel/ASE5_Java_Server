@@ -24,6 +24,15 @@ import com.rest.utils.exceptions.UserNotFoundException;
 public class LocationService {
 	private DatabaseAccess dbAccess;
 	
+	/**
+	 * This methods allows a user to check in the closest venue
+	 * @param loginKey login key of the user (generated when he logs in)
+	 * @param venueId foursquare venue id
+	 * @return Http response object
+	 * @throws SQLException
+	 * @throws ArgumentMissingException
+	 * @throws InvalidKeyException
+	 */
 	@POST                                
 	@Path("/check-in")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -43,6 +52,19 @@ public class LocationService {
 		
 	}
 	
+	/**
+	 * This method allows a user to leave a review about a place he visited
+	 * @param loginKey login key of the user
+	 * @param venueId foursquare venue id
+	 * @param rating user rating of the place (1 to 5)
+	 * @param reviewTitle
+	 * @param reviewDescription
+	 * @param imageUri venue picture
+	 * @return Http response object
+	 * @throws SQLException
+	 * @throws ArgumentMissingException
+	 * @throws InvalidKeyException
+	 */
 	@POST                                
 	@Path("/reviews")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -67,6 +89,14 @@ public class LocationService {
 		
 	}
 	
+	/**
+	 * This method returns all reviews for a chosen venue
+	 * @param venueId foursquare venue id
+	 * @return Http response object
+	 * @throws SQLException
+	 * @throws ArgumentMissingException
+	 * @throws InvalidKeyException
+	 */
 	@GET                                
 	@Path("venue/{venue_id}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -78,7 +108,13 @@ public class LocationService {
 	}
 
 
-	
+	/**
+	 * This method allows a user to vote for a review of another user
+	 * @param key login key of the user
+	 * @param reviewId id of the voted review
+	 * @param vote vote(rating) of the review from 1 to 5
+	 * @return Http response object
+	 */
 	@POST                                
 	@Path("/vote")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -107,7 +143,13 @@ public class LocationService {
 		
 	}
 	
-	
+	/**
+	 * This method sends comments on reviews of other users
+	 * @param key login key of the user
+	 * @param reviewId id of commented review
+	 * @param comment
+	 * @return Http response object
+	 */
 	@POST                                
 	@Path("/put-comment")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -136,7 +178,11 @@ public class LocationService {
 	}
 	
 	
-	
+	/**
+	 * This method returns comments for a given review
+	 * @param reviewId
+	 * @return Http response object
+	 */
 	@GET                                
 	@Path("reviews/{reviewId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -160,7 +206,11 @@ public class LocationService {
 	}
 	
 	
-	
+	/**
+	 * This method returns all reviews a particular user left 
+	 * @param userId id of the user whose reviews will be returned
+	 * @return Http response object
+	 */
 	@GET                                
 	@Path("reviews-for-user/{userId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
