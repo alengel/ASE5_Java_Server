@@ -317,7 +317,7 @@ public class DatabaseAccessTest {
 		assertEquals(expected, settings);
 	}
 		
-	@Test
+	@Test(expected = InvalidKeyException.class)
 	public void testUpdateSettingsUnsuccessful() throws InvalidKeyException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException {
 		String email = "test@web.de";
 		String firstName = "Karolina";
@@ -334,9 +334,7 @@ public class DatabaseAccessTest {
 		int maxLoginInterval = 70;
 		int geoPushInterval = 25;
 				
-		boolean result = dbAccess.updateSettings(loginKey, minDistance, maxLoginInterval, geoPushInterval);
-		boolean expected = false;
-		assertEquals(expected, result);
+		dbAccess.updateSettings("-1", minDistance, maxLoginInterval, geoPushInterval);
 	}
 	
 	/*
