@@ -506,7 +506,7 @@ public class DatabaseAccessTest {
 	public void testGetReviewsUnSuccessful() {
 			
 		Review result = dbAccess.getReviews("123");
-		assertEquals("Error", result.getMessage());
+		assertEquals("Nobody left a review yet", result.getMessage());
 		
 		
 	}
