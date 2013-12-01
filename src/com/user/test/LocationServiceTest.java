@@ -3,6 +3,7 @@ package com.user.test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -13,6 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.rest.comment.model.Comment;
+import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
 import com.rest.location.service.LocationService;
 import com.rest.review.model.Review;
@@ -308,6 +311,32 @@ public class LocationServiceTest {
 		
 		Response result = locationService.putComment(loginKey+"asd", 1, "comment...");
 		Response expected = Response.ok(new Location("false", "Key not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	/*
+	 * Testing getting comments for existing review
+	 */
+	@Test
+	public void testGetComments() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		
+		Response result = locationService.getCommentsForReview(1);
+		ArrayList<CommentData> cd = (ArrayList<CommentData>)result.getEntity();
+		Response expected = Response.ok(new Comment("true", "", cd)).build();
 		
 		assertEquals(expected, result);
 	}
