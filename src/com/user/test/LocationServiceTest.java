@@ -199,6 +199,30 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing voting for non-existing review
+	 */
+	@Test
+	public void testVoteWWrongReview() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		String venueId = "test_venue";
+		String reviewTitle = "Good place";
+		String reviewDescription = "Review description...";
+		
+		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		
+		Response result = locationService.vote(loginKey, 007, 5);
+		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		
+		assertEquals(expected, result);
+	}
 
 	
 
