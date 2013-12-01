@@ -268,7 +268,24 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing adding comments for non-existing review
+	 */
+	@Test
+	public void testCommentsWrongReview() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
 
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+	
+		Response result = locationService.putComment(loginKey, 007, "comment...");
+		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		
+		assertEquals(expected, result);
+	}
 	
 
 }
