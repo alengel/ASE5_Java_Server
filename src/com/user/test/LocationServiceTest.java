@@ -238,7 +238,7 @@ public class LocationServiceTest {
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
 		Response result = locationService.vote(loginKey+"asd", 1, 5);
-		Response expected = Response.ok(new Location("false", "Invalid key")).build();
+		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
 	}
@@ -307,7 +307,7 @@ public class LocationServiceTest {
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
 		Response result = locationService.putComment(loginKey+"asd", 1, "comment...");
-		Response expected = Response.ok(new Location("false", "Key not found")).build();
+		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
 	}
