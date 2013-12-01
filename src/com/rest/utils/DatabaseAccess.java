@@ -313,6 +313,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			message = "Failed to check in";
 			return new Location("false", message);
 		}
@@ -446,7 +447,7 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 			// get locationId
 			ResultSet getLocationId = statement.executeQuery(queriesGenerator.getLocationIdFromLocationsByVenueId(venueId));
 			getLocationId.next();
-			String locationId = getLocationId.getString(0);
+			String locationId = getLocationId.getString(1);
 
 			// insert review
 			statement.executeUpdate(queriesGenerator.insertNewReview(userId, locationId, rating, reviewTitle, reviewDescription, imageUri));
