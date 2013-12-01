@@ -536,7 +536,7 @@ public class DatabaseAccessTest {
 		
 			dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri);
 			
-			List<ReviewData> result = dbAccess.getReviewsForUser(Integer.valueOf(userLoggedIn.getId()));
+			List<ReviewData> result = dbAccess.getReviewsForUser(0);
 			ReviewData resultReviewData = result.get(0);
 			assertEquals(rating, resultReviewData.getRating());
 			assertEquals(reviewTitle, resultReviewData.getTitle());
