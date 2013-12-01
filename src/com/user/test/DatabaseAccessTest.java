@@ -550,14 +550,12 @@ public class DatabaseAccessTest {
 		}
 	}
 	
-	@Test
-	public void testGetReviewsForUserUnSuccessful() {
+	@Test(expected = UserNotFoundException.class)
+	public void testGetReviewsForUserUnSuccessful() throws UserNotFoundException {
 		
 		List<ReviewData> result = null;
-		try {
-			result = dbAccess.getReviewsForUser(99);
-		} catch (UserNotFoundException e) {
-		}
-		assertNull(result);
+
+		result = dbAccess.getReviewsForUser(99);
+		
 	}
 }
