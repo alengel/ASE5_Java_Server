@@ -32,10 +32,15 @@ public class LocationService {
 		
 		dbAccess = new DatabaseAccess();
 		long timeStamp = System.currentTimeMillis()/1000L;
-		Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);			
+		try {
+			Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);
+			return Response.ok(location).build();
+		} catch (InvalidKeyException e) {
+			return Response.ok(new Location("false", "LoginKey is wrong")).build();
+		}
 		
 		
-		return Response.ok(location).build();
+		
 	}
 	
 	@POST                                
@@ -46,7 +51,9 @@ public class LocationService {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
-		if (dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri)) {
+		try {
+			if (dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri)) {
+		
 			success = "true";
 			message = "Review sent successfully";
 		} else {
@@ -54,6 +61,9 @@ public class LocationService {
 			message = "Failed to send the review";
 		}
 		return Response.ok(new Location(success, message)).build();
+		} catch (InvalidKeyException e) {
+			return Response.ok(new Location("false", "LoginKey is wrong")).build();
+		}
 		
 	}
 	
@@ -73,7 +83,7 @@ public class LocationService {
 	@Path("/vote")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("vote") int vote) {
+    public Response vote(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("vote") int vote) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
@@ -102,7 +112,7 @@ public class LocationService {
 	@Path("/put-comment")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)	
-    public Response sendReview(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("comment") String comment) {
+    public Response putComment(@FormParam ("key") String key, @FormParam("review_id") int reviewId,  @FormParam("comment") String comment) {
 		dbAccess = new DatabaseAccess();
 		String success;
 		String message;
