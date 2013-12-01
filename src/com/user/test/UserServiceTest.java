@@ -124,26 +124,6 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing logging out using wrong login key
-	 */
-	
-	@Test
-	public void testLogoutUserWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
-		
-
-		String email = "test@web.de";
-		String passwd = "Hi98786";
-		
-		UserData userData = dbAccess.loginUser(email, passwd);
-		String loginKey = userData.getLoginKey();
-		
-		Response result = userService.logout(loginKey+"asd");
-		Response expected = Response.ok(new User("false", "LoginKey is Wrong")).build();
-		
-		assertEquals(expected, result);
-	}
-	
-	/*
 	 * Testing update settings mathod with correct loginkey
 	 */
 	@Test
