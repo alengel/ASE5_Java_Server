@@ -241,8 +241,8 @@ public class DatabaseAccessTest {
 		assertEquals(expected,result);
 	}
 	
-	@Test
-	public void loginUserUnsuccessful() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
+	@Test(expected = UserNotFoundException.class)
+	public void loginUserUnsuccessful() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, UserNotFoundException, PasswordWrongException {
 		String email = "test@web.de";
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -254,9 +254,7 @@ public class DatabaseAccessTest {
 		
 		userLoggedIn.getLoginKey();
 		
-		UserData result = dbAccess.loginUser(email, password);
-		UserData expected = new UserData (null, null, null, null, null, null, null, null, null, null, null, null);
-		assertEquals(expected,result);
+		UserData result = dbAccess.loginUser("ttt@web.de", password);
 	}
 	
 	/*
