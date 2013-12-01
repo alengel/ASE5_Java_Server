@@ -399,8 +399,7 @@ public class DatabaseAccessTest {
 		String timestamp = "timestamp";
 		
 		Location result = dbAccess.checkIn(loginKey, venueId, timestamp);
-		boolean expected = false;
-		assertEquals (expected, result);
+		assertEquals ("true", result.getSuccess());
 	}
 
 	/*
