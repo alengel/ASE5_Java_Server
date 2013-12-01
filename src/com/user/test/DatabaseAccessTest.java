@@ -262,11 +262,19 @@ public class DatabaseAccessTest {
 	*/
 	
 	@Test
-	public void testUserLogoutSuccessful() throws ArgumentMissingException {
-	//Need proper loginKey
-		String loginKey="whatever";
+	public void testUserLogoutSuccessful() throws ArgumentMissingException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException, UserNotFoundException, PasswordWrongException {
+		String email = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
 		
-		boolean result = dbAccess.logoutUser(loginKey);
+		dbAccess.registerNewUser(email, password, firstName, lastName, null);
+		
+		UserData userLoggedIn = dbAccess.loginUser(email, password);
+		
+		String key = userLoggedIn.getLoginKey();
+		
+		boolean result = dbAccess.logoutUser(key);
 		boolean expected = true;
 		assertEquals(result, expected);
 		}
