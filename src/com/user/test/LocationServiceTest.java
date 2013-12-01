@@ -211,6 +211,25 @@ public class LocationServiceTest {
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
+
+		Response result = locationService.vote(loginKey, 007, 5);
+		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	/*
+	 * Testing voting with wrong login key
+	 */
+	@Test
+	public void testVoteWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
 		
 		String venueId = "test_venue";
 		String reviewTitle = "Good place";
@@ -218,8 +237,8 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.vote(loginKey, 007, 5);
-		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		Response result = locationService.vote(loginKey+"asd", 1, 5);
+		Response expected = Response.ok(new Location("false", "Invalid key")).build();
 		
 		assertEquals(expected, result);
 	}
