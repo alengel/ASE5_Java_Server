@@ -342,9 +342,15 @@ public class DatabaseAccessTest {
 	*/
 	
 	@Test
-	public void testChangePasswordSuccessful() throws UserNotFoundException {
+	public void testChangePasswordSuccessful() throws UserNotFoundException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException {
 	
-		String userMail = "user@web.com";
+		String userMail = "test@web.de";
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String password = "Hi98786";
+		
+		dbAccess.registerNewUser(userMail, password, firstName, lastName, null);
+		
 		String newPassword = "newpaswd";
 	
 		boolean result = dbAccess.changePassword(userMail, newPassword);
