@@ -253,7 +253,7 @@ import java.io.ByteArrayInputStream;
             try {
                 u = dbAccess.getUserProfile(key);
             } catch (InvalidKeyException e) {
-                u = new User("false", "Key not found");
+                u = new User("false", "LoginKey is wrong");
             }
             if(u == null) {
                 u = new User("false", "");
@@ -264,18 +264,5 @@ import java.io.ByteArrayInputStream;
                                
 		
 
-		
-		//this method is for checking some stuff at the server, not used in real app
-		@GET                                
-		@Path("/info")
-	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	//	@Produces(MediaType.APPLICATION_JSON)
-		public Response getInfo(@Context HttpServletRequest servletRequest) {
-			
-			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
-			System.out.println(rootFolder);			
-
-			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
-		}
 	}
 
