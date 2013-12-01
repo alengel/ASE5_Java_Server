@@ -438,7 +438,7 @@ public class DatabaseAccessTest {
 	assertEquals (expected, result);
 	}	
 	
-	@Test
+	@Test(expected = InvalidKeyException.class)
 	public void testStoreNewReviewUnsuccessful() throws InvalidKeyException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, SQLException, UserNotFoundException, PasswordWrongException {
 		String email = "test@web.de";
 		String firstName = "Karolina";
@@ -457,9 +457,8 @@ public class DatabaseAccessTest {
 		String reviewDescription = "Disgusting food, will never go there again";
 		String imageUri = "http://whatever";
 	
-	boolean result = dbAccess.storeNewReview(loginKey, venueId, rating, reviewTitle, reviewDescription, imageUri);
-	boolean expected = false;
-	assertEquals (expected, result);
+	dbAccess.storeNewReview("-1", venueId, rating, reviewTitle, reviewDescription, imageUri);
+	
 	}	
 	
 	@Test
