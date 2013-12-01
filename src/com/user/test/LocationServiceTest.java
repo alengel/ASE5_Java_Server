@@ -20,9 +20,7 @@ import com.rest.location.model.Location;
 import com.rest.location.service.LocationService;
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
-import com.rest.user.model.User;
 import com.rest.user.model.data.UserData;
-import com.rest.user.service.UserService;
 import com.rest.utils.DatabaseAccess;
 import com.rest.utils.exceptions.ArgumentMissingException;
 import com.rest.utils.exceptions.EmailAlreadyExistsException;
@@ -55,7 +53,7 @@ public class LocationServiceTest {
 	 * Testing checking in with a correct login key
 	 */
 	@Test
-	public void testCheckInNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testCheckInNormal() throws WrongEmailFormatException, InputTooLongException, ArgumentMissingException, EmailAlreadyExistsException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
@@ -76,7 +74,7 @@ public class LocationServiceTest {
 	 * Testing checking in using a wrong login key
 	 */
 	@Test
-	public void testCheckInWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testCheckInWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException {
 		
 		String email = "test@web.de";
 		String passwd = "Hi98786";
@@ -94,7 +92,7 @@ public class LocationServiceTest {
 	 * Testing adding reviews with correct key
 	 */
 	@Test
-	public void testAddReviewNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testAddReviewNormal() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException  {
 		
 		String email = "test@web.de";
 		String passwd = "Hi98786";
@@ -117,7 +115,7 @@ public class LocationServiceTest {
 	 * Testing adding review with wrong login key
 	 */
 	@Test
-	public void testAddReviewWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testAddReviewWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException  {
 		
 		String email = "test@web.de";
 		String passwd = "Hi98786";
@@ -140,7 +138,7 @@ public class LocationServiceTest {
 	 * Testing getting reviews by venue id
 	 */
 	@Test
-	public void testGetReviewsByVenue() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testGetReviewsByVenue() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException {
 		
 
 		String email = "test@web.de";
@@ -155,7 +153,6 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		
 		Response result = locationService.getReviews(venueId);
 		List<ReviewData> rd = (List<ReviewData>)result.getEntity();
 		Response expected = Response.ok(new Review("true", "List of reviews for this place", rd)).build();
@@ -167,7 +164,7 @@ public class LocationServiceTest {
 	 * Testing getting reviews by venue id, in case no reviews left
 	 */
 	@Test
-	public void testGetReviewsByVenueNoReviews() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testGetReviewsByVenueNoReviews() throws SQLException, ArgumentMissingException, InvalidKeyException{
 		
 		String venueId = "new_venueId";
 
@@ -181,7 +178,7 @@ public class LocationServiceTest {
 	 * Testing voting for existing review
 	 */
 	@Test
-	public void testVote() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testVote() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
 
 		String email = "test@web.de";
@@ -206,7 +203,7 @@ public class LocationServiceTest {
 	 * Testing voting for non-existing review
 	 */
 	@Test
-	public void testVoteWWrongReview() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testVoteWWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
 		
 
 		String email = "test@web.de";
@@ -225,7 +222,7 @@ public class LocationServiceTest {
 	 * Testing voting with wrong login key
 	 */
 	@Test
-	public void testVoteWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testVoteWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
 
 		String email = "test@web.de";
@@ -250,7 +247,7 @@ public class LocationServiceTest {
 	 * Testing adding comments
 	 */
 	@Test
-	public void testComments() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
 
 		String email = "test@web.de";
@@ -275,7 +272,7 @@ public class LocationServiceTest {
 	 * Testing adding comments for non-existing review
 	 */
 	@Test
-	public void testCommentsWrongReview() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testCommentsWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
 		
 
 		String email = "test@web.de";
@@ -294,7 +291,7 @@ public class LocationServiceTest {
 	 * Testing adding comments using wrong login key
 	 */
 	@Test
-	public void testCommentsWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testCommentsWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
 
 		String email = "test@web.de";
@@ -319,7 +316,7 @@ public class LocationServiceTest {
 	 * Testing getting comments for existing review
 	 */
 	@Test
-	public void testGetComments() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testGetComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
 
 		String email = "test@web.de";
@@ -345,15 +342,7 @@ public class LocationServiceTest {
 	 * Testing getting comments for non-existing review
 	 */
 	@Test
-	public void testGetCommentsWrongReview() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
-		
-
-		String email = "test@web.de";
-		String passwd = "Hi98786";
-		
-		UserData userData = dbAccess.loginUser(email, passwd);
-		String loginKey = userData.getLoginKey();
-		
+	public void testGetCommentsWrongReview() {
 		
 		Response result = locationService.getCommentsForReview(007);
 		Response expected = Response.ok(new Comment("false", "Review not found", null)).build();
@@ -365,9 +354,8 @@ public class LocationServiceTest {
 	 * Testing getting reviews for an existing user
 	 */
 	@Test
-	public void testGetReviewsByUser() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testGetReviewsByUser() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
 		
-
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
@@ -393,7 +381,7 @@ public class LocationServiceTest {
 	 * Testing getting reviews for non-existing user
 	 */
 	@Test
-	public void testGetReviewsByUserWrongId() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	public void testGetReviewsByUserWrongId() {
 	
 		Response result = locationService.getReviewsForUser(007);
 		Response expected = Response.ok(new Review("false", "User not found", null)).build();
