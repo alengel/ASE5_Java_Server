@@ -389,6 +389,18 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing getting reviews for non-existing user
+	 */
+	@Test
+	public void testGetReviewsByUserWrongId() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+	
+		Response result = locationService.getReviewsForUser(007);
+		Response expected = Response.ok(new Review("false", "User not found", null)).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 
 }
