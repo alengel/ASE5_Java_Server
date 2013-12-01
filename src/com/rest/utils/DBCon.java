@@ -32,9 +32,7 @@ public DBCon()  {
 //Tomcat connection configuration
 
 	/*
-=======
-		/*
->>>>>>> 2585cbc99eecc084f8f7c586bbeb7f3a1a8e052f
+
 		try {
 			ctx = new InitialContext();
 			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/javatest");
