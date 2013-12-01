@@ -265,17 +265,15 @@ final class QueriesGenerator {
 				+ WHERE + USER_EMAIL + "= '" + email + "';";
 	}
 	
+	/**
+	 * get a User from the database by searching him through his key
+	 * @param key
+	 * @return the required SQL statement
+	 */
 	public String getUserByKey(String key) {
 		return SELECT + "* " + FROM + USER_TABLE + WHERE
 				+ USER_LOGINKEY + "= '" + key + "';";
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	public String getLocationIdFromLocationsByVenueId(String venueId) {
 		return SELECT + LOCATIONS_ID + FROM + LOCATIONS_TABLE
@@ -295,6 +293,11 @@ final class QueriesGenerator {
 				+ USER_TABLE + WHERE + "id = " + userId;
 	}
 	
+	/**
+	 * for getting reviews according to the reviewId
+	 * @param reviewId
+	 * @return 
+	 */
 	public String getReviewsById(int reviewId) {
 		return SELECT + "* " + FROM + REVIEWS_TABLE + WHERE
 				+ REVIEWS_ID + "= " + reviewId + ";";
@@ -347,6 +350,34 @@ final class QueriesGenerator {
 		+ ");";
 	}
 	
+	public String insertNewReview(String userId, String locationId, int rating,
+			String reviewTitle, String reviewDescription, String imageUri) {
+		return INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
+		+ REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", "
+		+ REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", "
+		+ REVIEWS_REVIEW_DESCRIPTION + ", "
+		+ REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN
+		+ "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") "
+		+ VALUES + "( " + "'" + userId + "', '" + locationId
+		+ "', '" + rating + "', '" + reviewTitle + "', '"
+		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
+		+ "');";
+	}
+
+	public String insertNewFollow(String my_id, int reviewer_id) {
+		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
+				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
+				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
+	}
+
+	public String insertNewComment(String userId, int reviewId, String comment) {
+		return INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
+				+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
+				+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
+				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
+				+ ", " + reviewId + ", '" + comment + "');";
+	}
+	
 	
 	
 	
@@ -356,6 +387,11 @@ final class QueriesGenerator {
 	 * --------------------------------------------------------------
 	 * Update Strings
 	 * --------------------------------------------------------------
+	 */
+	/**
+	 * logs the user out. That means: Setting the loginKey to NULL
+	 * @param key
+	 * @return
 	 */
 	String logoutUser(String key) {
 		return UPDATE + USER_TABLE + SET + USER_LOGINKEY + "= "
@@ -371,12 +407,24 @@ final class QueriesGenerator {
 				+ WHERE + USER_LOGINKEY + "= '" + key + "';";
 	}
 	
+	/**
+	 * for voting down a review
+	 * @param reviewId
+	 * @param newVote the new vote value
+	 * @return
+	 */
 	public String updateReviewsVoteDown(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_DOWN + "= " + newVote + " "
 				+ WHERE + REVIEWS_ID + "= " + reviewId + ";";
 	}
 	
+	/**
+	 * for voting up a review
+	 * @param reviewId
+	 * @param newVote the new vote value 
+	 * @return
+	 */
 	public String updateReviewsVoteUp(int reviewId, int newVote) {
 		return UPDATE + REVIEWS_TABLE + SET
 				+ REVIEWS_TOTAL_VOTE_UP + "= " + newVote + " " + WHERE
@@ -421,33 +469,7 @@ final class QueriesGenerator {
 		return DELETE + FROM + CONNECTIONS_TABLE;
 	}
 
-	public String insertNewReview(String userId, String locationId, int rating,
-			String reviewTitle, String reviewDescription, String imageUri) {
-		return INSERT_IGNORE_INTO + REVIEWS_TABLE + "( "
-		+ REVIEWS_USER_ID + ", " + REVIEWS_LOCATION_ID + ", "
-		+ REVIEWS_RATING + ", " + REVIEWS_REVIEW_TITLE + ", "
-		+ REVIEWS_REVIEW_DESCRIPTION + ", "
-		+ REVIEWS_REVIEW_PICTURE + ", " + REVIEWS_TOTAL_VOTE_DOWN
-		+ "," + REVIEWS_TOTAL_VOTE_UP + ", " + REVIEWS_SPAMS + ") "
-		+ VALUES + "( " + "'" + userId + "', '" + locationId
-		+ "', '" + rating + "', '" + reviewTitle + "', '"
-		+ reviewDescription + "', '" + imageUri + "', '0', '0', '0"
-		+ "');";
-	}
-
-	public String insertNewFollow(String my_id, int reviewer_id) {
-		return INSERT_IGNORE_INTO + CONNECTIONS_TABLE + "( "
-				+ CONNECTIONS_MY_ID + ", " + CONNECTIONS_FRIENDS_ID + ") "
-				+ VALUES + "( '" + my_id + "', '" + reviewer_id + "');";
-	}
-
-	public String insertNewComment(String userId, int reviewId, String comment) {
-		return INSERT_IGNORE_INTO + REVIEWS_COMMENTS_TABLE
-				+ "( " + REVIEWS_COMMENTS_USER_ID + ", "
-				+ REVIEWS_COMMENTS_USER_REVIEWS_ID + ", "
-				+ REVIEWS_COMMENTS_COMMENT + ") " + VALUES + "( " + userId
-				+ ", " + reviewId + ", '" + comment + "');";
-	}
+	
 
 	
 
