@@ -73,12 +73,9 @@ public class LocationServiceTest {
 	@Test
 	public void testCheckInWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
 		
-		String firstName = "Karolina";
-		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
-		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -94,17 +91,33 @@ public class LocationServiceTest {
 	@Test
 	public void testAddReviewNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
 		
-		String firstName = "Karolina";
-		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
-		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
 		Response result = locationService.sendReview(loginKey, "random_venueId", 5, "Good place", "Review description...", null);
 		Response expected = Response.ok(new Location("true", "Review sent successfully")).build();
+		
+		assertEquals(expected, result);
+	}
+	
+	
+	/*
+	 * Testing adding review with wrong login key
+	 */
+	@Test
+	public void testAddReviewWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response result = locationService.sendReview(loginKey+"asd", "random_venueId", 5, "Good place", "Review description...", null);
+		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
 	}
