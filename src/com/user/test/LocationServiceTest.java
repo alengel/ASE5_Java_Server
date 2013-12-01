@@ -81,7 +81,7 @@ public class LocationServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.checkIn(loginKey+"asd", "random_venueId");
+		Response result = locationService.checkIn(loginKey+"asd", "new_venueId");
 		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
 		
 		assertEquals(expected, result);
@@ -160,6 +160,19 @@ public class LocationServiceTest {
 		assertEquals(expected, result);
 	}
 	
+	/*
+	 * Testing getting reviews by venue id, in case no reviews left
+	 */
+	@Test
+	public void testGetReviewsByVenueNoReviews() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, InvalidKeyException, EmailAlreadyExistsException {
+		
+		String venueId = "new_venueId";
+
+		Response result = locationService.getReviews(venueId);
+		Response expected = Response.ok(new Review("true", "Nobody left a review yet", null)).build();
+		
+		assertEquals(expected, result);
+	}
 	
 
 	
