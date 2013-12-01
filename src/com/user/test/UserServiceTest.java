@@ -42,7 +42,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing user login normal
+	 * Testing the login method with correct name and password
 	 */
 	
 	@Test
@@ -66,7 +66,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing logging in with wrong emil
+	 * Testing logging in with wrong email
 	 */
 	@Test
 	public void testLoginUserWrongEmail() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
@@ -92,8 +92,6 @@ public class UserServiceTest {
 	@Test
 	public void testLoginUserWrongPassword() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
-		String firstName = "Karolina";
-		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
@@ -106,7 +104,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing user logout normal
+	 * Testing  logging out using correct login key
 	 */
 	
 	@Test
@@ -126,7 +124,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing logout with wrong key
+	 * Testing logging out using wrong login key
 	 */
 	
 	@Test
@@ -146,7 +144,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing update settings normal
+	 * Testing update settings mathod with correct loginkey
 	 */
 	@Test
 	public void testUpdateSettings() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
@@ -164,7 +162,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing update settings wrong loginkey
+	 * Testing update settings method with wrong loginkey
 	 */
 	@Test
 	public void testUpdateSettingsWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
@@ -182,7 +180,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing follow user
+	 * Testing follow user method with correct data
 	 */
 	@Test
 	public void testFollow() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
@@ -209,7 +207,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing follow user with wrong key
+	 * Testing follow a user using a wrong key
 	 */
 	@Test
 	public void testFollowWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
@@ -236,7 +234,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing follow user wrong reviewer id
+	 * Testing follow a user method using a wrong reviewer id
 	 */
 	@Test
 	public void testFollowWrongReviewerId() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
@@ -254,7 +252,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing get user profile normal
+	 * Testing get user profile method using a correct login key
 	 */
 	@Test
 	public void testProfile() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
@@ -275,7 +273,7 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * Testing get user profile wrong login key
+	 * Testing get user profile method using a wrong login key
 	 */
 	@Test
 	public void testProfileWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
