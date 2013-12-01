@@ -246,14 +246,34 @@ public class UserServiceTest {
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
-		
 	
-		
 		Response result = userService.follow(loginKey, "007");
 		Response expected = Response.ok(new User("false", "User not found")).build();
 		
 		assertEquals(expected, result);
 	}
+	
+	/*
+	 * Testing get user profile normal
+	 */
+	@Test
+	public void testProfile() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
+		
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+	
+		Response result = userService.getUserProfile(loginKey);
+		
+		User user = (User)result.getEntity();
+		
+		Response expected = Response.ok(user).build();
+		
+		assertEquals(expected, result);
+	}
+	
 	
 	
 	
