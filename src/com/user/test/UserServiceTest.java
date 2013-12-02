@@ -33,7 +33,7 @@ public class UserServiceTest {
 	public void setUp() throws Exception {
 		userService = new UserService();
 		dbAccess = new DatabaseAccess();
-		
+		dbAccess.clearDatabase();
 		
 	}
 
@@ -46,21 +46,21 @@ public class UserServiceTest {
 	 */
 	
 	@Test
-	public void testLoginUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+	public void testLoginUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
 		String firstName = "Karolina";
 		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
-		userService.register(null, email, passwd, firstName, lastName, null);
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		
-		Response result = userService.login(email, passwd);
-		User user = (User)result.getEntity();
-		String loginKey = user.getLoginKey();
-		List<UserData> ud = user.getUserData();
+		Response respResult = userService.login(email, passwd);
+		User result = (User)respResult.getEntity();
+		String loginKey = result.getLoginKey();
+		List<UserData> ud = result.getUserData();
 		UserData userData = ud.get(0);
-		Response expected = Response.ok(new User("true", loginKey, userData)).build();
+		User expected = new User("true", loginKey, userData);
 		
 		assertEquals(expected, result);
 	}
@@ -78,9 +78,10 @@ public class UserServiceTest {
 		
 		userService.register(null, email, passwd, firstName, lastName, null);
 		
-		Response result = userService.login(email+"123qwe", passwd);
+		Response resultResp = userService.login(email+"123qwe", passwd);
+		User result = (User)resultResp.getEntity();
 
-		Response expected = Response.ok(new User("false", "Email and/or password not found")).build();
+		User expected = new User("false", "Email and/or password not found");
 		
 		assertEquals(expected, result);
 	}
@@ -92,13 +93,17 @@ public class UserServiceTest {
 	@Test
 	public void testLoginUserWrongPassword() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
-		Response result = userService.login(email, passwd+ "123qwe");
-
-		Response expected = Response.ok(new User("false", "Email and/or password not found")).build();
+		Response resultResp = userService.login(email, passwd+ "123qwe");
+		User result = (User)resultResp.getEntity();
+		
+		User expected = new User("false", "Email and/or password not found");
 		
 		assertEquals(expected, result);
 	}
@@ -111,14 +116,46 @@ public class UserServiceTest {
 	public void testLogoutUserNormal() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = userService.logout(loginKey);
-		Response expected = Response.ok(new User("true", "Logged out successfully")).build();
+		Response resultResp = userService.logout(loginKey);
+		User result = (User)resultResp.getEntity();
+		
+		User expected = new User("true", "Logged out successfully");
+		
+		assertEquals(expected, result);
+	}
+	
+	/*
+	 * Testing logging out using wrong login key
+	 */
+	
+	@Test
+	public void testLogoutUserWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
+		
+
+		String firstName = "Karolina";
+		String lastName = "Schliski";
+		String email = "test@web.de";
+		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
+		
+		UserData userData = dbAccess.loginUser(email, passwd);
+		String loginKey = userData.getLoginKey();
+		
+		Response resultResp = userService.logout(loginKey+"asd");
+		User result = (User)resultResp.getEntity();
+		
+		User expected = new User("false", "Error occured");
 		
 		assertEquals(expected, result);
 	}
@@ -129,14 +166,19 @@ public class UserServiceTest {
 	@Test
 	public void testUpdateSettings() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = userService.updateSettings(loginKey, 100, 100, 100);
-		Response expected = Response.ok(new User("true", "Settings are updated successfully")).build();
+		Response resultResp = userService.updateSettings(loginKey, 100, 100, 100);
+		User result = (User)resultResp.getEntity();
+		User expected = new User("true", "Settings are updated successfully");
 		
 		assertEquals(expected, result);
 	}
@@ -147,14 +189,19 @@ public class UserServiceTest {
 	@Test
 	public void testUpdateSettingsWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = userService.updateSettings(loginKey+"asd", 100, 100, 100);
-		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
+		Response resultResp = userService.updateSettings(loginKey+"asd", 100, 100, 100);
+		User result = (User)resultResp.getEntity();
+		User expected = new User("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -165,8 +212,12 @@ public class UserServiceTest {
 	@Test
 	public void testFollow() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
@@ -180,8 +231,9 @@ public class UserServiceTest {
 		UserData userData1 = dbAccess.loginUser(emailNewUser, passwdNewUser);
 		int reviewerId = Integer.parseInt(userData1.getId());
 		
-		Response result = userService.follow(loginKey, reviewerId);
-		Response expected = Response.ok(new User("true", "")).build();
+		Response resultResp = userService.follow(loginKey, reviewerId);
+		User result = (User)resultResp.getEntity();
+		User expected = new User("true", "");
 		
 		assertEquals(expected, result);
 	}
@@ -192,8 +244,12 @@ public class UserServiceTest {
 	@Test
 	public void testFollowWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
@@ -207,8 +263,9 @@ public class UserServiceTest {
 		UserData userData1 = dbAccess.loginUser(emailNewUser, passwdNewUser);
 		int reviewerId = Integer.parseInt(userData1.getId());
 		
-		Response result = userService.follow(loginKey+"asd", reviewerId);
-		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
+		Response resultResp = userService.follow(loginKey+"asd", reviewerId);
+		User result = (User)resultResp.getEntity();
+		User expected = new User("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -219,14 +276,19 @@ public class UserServiceTest {
 	@Test
 	public void testFollowWrongReviewerId() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 	
-		Response result = userService.follow(loginKey, 007);
-		Response expected = Response.ok(new User("false", "User not found")).build();
+		Response resultResp = userService.follow(loginKey, 007);
+		User result = (User)resultResp.getEntity();
+		User expected = new User("false", "User not found");
 		
 		assertEquals(expected, result);
 	}
@@ -237,17 +299,23 @@ public class UserServiceTest {
 	@Test
 	public void testProfile() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 	
-		Response result = userService.getUserProfile(loginKey);
+		Response resultResp = userService.getUserProfile(loginKey);
 		
-		User user = (User)result.getEntity();
-		
-		Response expected = Response.ok(user).build();
+		User result = (User)resultResp.getEntity();
+		List<UserData> ud = result.getUserData();
+		UserData userData1 = ud.get(0);
+		String loginKey1 = userData1.getLoginKey();
+		User expected = new User("true", loginKey1, userData1);
 		
 		assertEquals(expected, result);
 	}
@@ -258,15 +326,20 @@ public class UserServiceTest {
 	@Test
 	public void testProfileWrongKey() throws SQLException, WrongEmailFormatException, InputTooLongException, ArgumentMissingException, IOException, UserNotFoundException, PasswordWrongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		userService.register(null, email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 	
-		Response result = userService.getUserProfile(loginKey+"asd");
+		Response resultResp = userService.getUserProfile(loginKey+"asd");
+		User result = (User)resultResp.getEntity();
 				
-		Response expected = Response.ok(new User("false", "LoginKey is wrong")).build();
+		User expected = new User("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
