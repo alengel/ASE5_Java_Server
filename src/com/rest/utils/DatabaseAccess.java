@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -724,15 +725,17 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			message.setSubject("Please reset your Password.");
 			message.setContent("Hi, <bR> Please click below link to reset your password.<br><a href='http://www.switchcodes.in/sandbox/projectpackets/t5/user/reset-password/x/"
-					+ timeStamp + "'>Click here to reset.</a><br><br>Thanks");
-
+					+ timeStamp + "'>Click here to reset.</a><br><br>Thanks",
+                    "text/html" );
+			
 			// Send message
 			Transport.send(message);
-			return true;
+			
 		} catch (MessagingException mex) {
 			mex.printStackTrace();
 		}
-
+		
+		return true;
 	}
 	
 	public User getUserProfile(String key) throws InvalidKeyException {
