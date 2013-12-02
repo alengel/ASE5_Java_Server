@@ -41,6 +41,7 @@ public class LocationServiceTest {
 	public void setUp() throws Exception {
 		locationService = new LocationService();
 		dbAccess = new DatabaseAccess();
+		dbAccess.clearDatabase();
 		
 		
 	}
@@ -64,8 +65,9 @@ public class LocationServiceTest {
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.checkIn(loginKey, "new_venueId");
-		Response expected = Response.ok(new Location("true", "Checked in successfully")).build();
+		Response resultResp = locationService.checkIn(loginKey, "new_venueId");
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("true", "Checked in successfully");
 		
 		assertEquals(expected, result);
 	}
@@ -74,16 +76,20 @@ public class LocationServiceTest {
 	 * Testing checking in using a wrong login key
 	 */
 	@Test
-	public void testCheckInWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException {
+	public void testCheckInWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
-		Response result = locationService.checkIn(loginKey+"asd", "new_venueId");
-		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
+		Response resultResp = locationService.checkIn(loginKey+"asd", "new_venueId");
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -92,11 +98,14 @@ public class LocationServiceTest {
 	 * Testing adding reviews with correct key
 	 */
 	@Test
-	public void testAddReviewNormal() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException  {
+	public void testAddReviewNormal() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException  {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -104,8 +113,9 @@ public class LocationServiceTest {
 		String reviewTitle = "Good place";
 		String reviewDescription = "Review description...";
 		
-		Response result = locationService.sendReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
-		Response expected = Response.ok(new Location("true", "Review sent successfully")).build();
+		Response resultResp = locationService.sendReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("true", "Review sent successfully");
 		
 		assertEquals(expected, result);
 	}
@@ -115,11 +125,14 @@ public class LocationServiceTest {
 	 * Testing adding review with wrong login key
 	 */
 	@Test
-	public void testAddReviewWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException  {
+	public void testAddReviewWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, InvalidKeyException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException  {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -127,8 +140,9 @@ public class LocationServiceTest {
 		String reviewTitle = "Good place";
 		String reviewDescription = "Review description...";
 		
-		Response result = locationService.sendReview(loginKey+"asd", venueId, 5, reviewTitle, reviewDescription, null);
-		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
+		Response resultResp = locationService.sendReview(loginKey+"asd", venueId, 5, reviewTitle, reviewDescription, null);
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -138,12 +152,15 @@ public class LocationServiceTest {
 	 * Testing getting reviews by venue id
 	 */
 	@Test
-	public void testGetReviewsByVenue() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException {
+	public void testGetReviewsByVenue() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -153,9 +170,13 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.getReviews(venueId);
-		List<ReviewData> rd = (List<ReviewData>)result.getEntity();
-		Response expected = Response.ok(new Review("true", "List of reviews for this place", rd)).build();
+		Response resultResp = locationService.getReviews(venueId);
+		
+
+		
+		Review result = (Review)resultResp.getEntity();
+		ArrayList<ReviewData> cd = (ArrayList<ReviewData>)result.getReviewData();
+		Review expected = new Review("true", "List of reviews for this place", cd);
 		
 		assertEquals(expected, result);
 	}
@@ -168,8 +189,10 @@ public class LocationServiceTest {
 		
 		String venueId = "new_venueId";
 
-		Response result = locationService.getReviews(venueId);
-		Response expected = Response.ok(new Review("true", "Nobody left a review yet", null)).build();
+		Response resultResp = locationService.getReviews(venueId);
+		
+		Review result = (Review)resultResp.getEntity();
+		Review expected = new Review("true", "Nobody left a review yet", null);
 		
 		assertEquals(expected, result);
 	}
@@ -178,12 +201,15 @@ public class LocationServiceTest {
 	 * Testing voting for existing review
 	 */
 	@Test
-	public void testVote() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testVote() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -193,8 +219,9 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.vote(loginKey, 1, 5);
-		Response expected = Response.ok(new Location("true", "Voted successfully")).build();
+		Response resultResp = locationService.vote(loginKey, 1, 5);
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("true", "Voted successfully");
 		
 		assertEquals(expected, result);
 	}
@@ -203,17 +230,21 @@ public class LocationServiceTest {
 	 * Testing voting for non-existing review
 	 */
 	@Test
-	public void testVoteWWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	public void testVoteWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
-
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 
-		Response result = locationService.vote(loginKey, 007, 5);
-		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		Response resultResp = locationService.vote(loginKey, 007, 5);
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "Review not found");
 		
 		assertEquals(expected, result);
 	}
@@ -222,12 +253,15 @@ public class LocationServiceTest {
 	 * Testing voting with wrong login key
 	 */
 	@Test
-	public void testVoteWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testVoteWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -237,8 +271,9 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.vote(loginKey+"asd", 1, 5);
-		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
+		Response resultResp = locationService.vote(loginKey+"asd", 1, 5);
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -247,11 +282,15 @@ public class LocationServiceTest {
 	 * Testing adding comments
 	 */
 	@Test
-	public void testComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
@@ -262,8 +301,9 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.putComment(loginKey, 1, "comment...");
-		Response expected = Response.ok(new Location("true", "Comment successful")).build();
+		Response resultResp = locationService.putComment(loginKey, 1, "comment...");
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("true", "Comment successful");
 		
 		assertEquals(expected, result);
 	}
@@ -272,17 +312,21 @@ public class LocationServiceTest {
 	 * Testing adding comments for non-existing review
 	 */
 	@Test
-	public void testCommentsWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException {
+	public void testCommentsWrongReview() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 	
-		Response result = locationService.putComment(loginKey, 007, "comment...");
-		Response expected = Response.ok(new Location("false", "Review not found")).build();
+		Response resultResp = locationService.putComment(loginKey, 007, "comment...");
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "Review not found");
 		
 		assertEquals(expected, result);
 	}
@@ -291,11 +335,15 @@ public class LocationServiceTest {
 	 * Testing adding comments using wrong login key
 	 */
 	@Test
-	public void testCommentsWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testCommentsWrongKey() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
@@ -306,8 +354,9 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.putComment(loginKey+"asd", 1, "comment...");
-		Response expected = Response.ok(new Location("false", "LoginKey is wrong")).build();
+		Response resultResp = locationService.putComment(loginKey+"asd", 1, "comment...");
+		Location result = (Location)resultResp.getEntity();
+		Location expected = new Location("false", "LoginKey is wrong");
 		
 		assertEquals(expected, result);
 	}
@@ -316,11 +365,15 @@ public class LocationServiceTest {
 	 * Testing getting comments for existing review
 	 */
 	@Test
-	public void testGetComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testGetComments() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
 
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
+		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
@@ -331,9 +384,10 @@ public class LocationServiceTest {
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
-		Response result = locationService.getCommentsForReview(1);
-		ArrayList<CommentData> cd = (ArrayList<CommentData>)result.getEntity();
-		Response expected = Response.ok(new Comment("true", "", cd)).build();
+		Response resultResp = locationService.getCommentsForReview(1);
+		Comment result = (Comment)resultResp.getEntity();
+		ArrayList<CommentData> cd = (ArrayList<CommentData>)result.getCd();
+		Comment expected = new Comment("true", "", cd);
 		
 		assertEquals(expected, result);
 	}
@@ -344,8 +398,10 @@ public class LocationServiceTest {
 	@Test
 	public void testGetCommentsWrongReview() {
 		
-		Response result = locationService.getCommentsForReview(007);
-		Response expected = Response.ok(new Comment("false", "Review not found", null)).build();
+		Response resultResp = locationService.getCommentsForReview(007);
+		Comment result = (Comment)resultResp.getEntity();
+		ArrayList<CommentData> cd = (ArrayList<CommentData>)result.getCd();
+		Comment expected = new Comment("false", "Review not found", cd);
 		
 		assertEquals(expected, result);
 	}
@@ -354,11 +410,14 @@ public class LocationServiceTest {
 	 * Testing getting reviews for an existing user
 	 */
 	@Test
-	public void testGetReviewsByUser() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException {
+	public void testGetReviewsByUser() throws ArgumentMissingException, UserNotFoundException, PasswordWrongException, InvalidKeyException, SQLException, WrongEmailFormatException, InputTooLongException, EmailAlreadyExistsException {
 		
+		String firstName = "Karolina";
+		String lastName = "Schliski";
 		String email = "test@web.de";
 		String passwd = "Hi98786";
 		
+		dbAccess.registerNewUser(email, passwd, firstName, lastName, null);
 		UserData userData = dbAccess.loginUser(email, passwd);
 		String loginKey = userData.getLoginKey();
 		
@@ -369,10 +428,11 @@ public class LocationServiceTest {
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
 		
 		int id = Integer.parseInt(userData.getId());
-		Response result = locationService.getReviewsForUser(id);
-		ArrayList<ReviewData> rd = (ArrayList<ReviewData>)result.getEntity();
+		Response resultResp = locationService.getReviewsForUser(id);
 		
-		Response expected = Response.ok(new Review("true", "", rd)).build();
+		Review result = (Review)resultResp.getEntity();
+		ArrayList<ReviewData> cd = (ArrayList<ReviewData>)result.getReviewData();
+		Review expected = new Review("true", "", cd);
 		
 		assertEquals(expected, result);
 	}
@@ -383,8 +443,10 @@ public class LocationServiceTest {
 	@Test
 	public void testGetReviewsByUserWrongId() {
 	
-		Response result = locationService.getReviewsForUser(007);
-		Response expected = Response.ok(new Review("false", "User not found", null)).build();
+		Response resultResp = locationService.getReviewsForUser(007);
+		Review result = (Review)resultResp.getEntity();
+		
+		Review expected = new Review("false", "User not found", null);
 		
 		assertEquals(expected, result);
 	}
