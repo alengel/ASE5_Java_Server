@@ -198,7 +198,7 @@ public class LocationService {
 			comments = dbAccess.getCommentsForReview(reviewId);
 			success = "true";
 		} catch (ReviewNotFoundException e) {
-			message = "Review not found.";
+			message = "Review not found";
 		}
 		
 		Comment comment = new Comment(success, message, comments);

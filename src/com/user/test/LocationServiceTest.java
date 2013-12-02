@@ -35,12 +35,14 @@ public class LocationServiceTest {
 	
 	LocationService locationService;
 	DatabaseAccess dbAccess;
+	DatabaseAccess dbAccess1;
 	
 	
 	@Before
 	public void setUp() throws Exception {
 		locationService = new LocationService();
 		dbAccess = new DatabaseAccess();
+		dbAccess1 = new DatabaseAccess();
 		dbAccess.clearDatabase();
 		
 		
@@ -426,6 +428,7 @@ public class LocationServiceTest {
 		String reviewDescription = "Review description...";
 		
 		dbAccess.storeNewReview(loginKey, venueId, 5, reviewTitle, reviewDescription, null);
+	
 		
 		int id = Integer.parseInt(userData.getId());
 		Response resultResp = locationService.getReviewsForUser(id);
