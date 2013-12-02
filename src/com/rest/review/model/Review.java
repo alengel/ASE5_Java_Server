@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.*;
+
 import com.rest.review.model.data.ReviewData;
 
 @XmlRootElement
@@ -24,6 +25,43 @@ public class Review {
     }
    
  
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((rd == null) ? 0 : rd.hashCode());
+		result = prime * result + ((success == null) ? 0 : success.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Review other = (Review) obj;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (rd == null) {
+			if (other.rd != null)
+				return false;
+		} else if (!rd.equals(other.rd))
+			return false;
+		if (success == null) {
+			if (other.success != null)
+				return false;
+		} else if (!success.equals(other.success))
+			return false;
+		return true;
+	}
+
 	public Review(String success, String message, List<ReviewData> rd) {
 		
 		this.success = success;

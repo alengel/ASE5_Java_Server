@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.*;
+
 import com.rest.location.model.data.LocationData;
 
 @XmlRootElement
@@ -17,7 +18,44 @@ public class Location {
     	
     }
     
-    public Location(String success, String message) {
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ld == null) ? 0 : ld.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((success == null) ? 0 : success.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Location other = (Location) obj;
+		if (ld == null) {
+			if (other.ld != null)
+				return false;
+		} else if (!ld.equals(other.ld))
+			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (success == null) {
+			if (other.success != null)
+				return false;
+		} else if (!success.equals(other.success))
+			return false;
+		return true;
+	}
+
+	public Location(String success, String message) {
     	this.success = success;
     	this.message = message;
     	this.ld = null;
