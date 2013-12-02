@@ -16,7 +16,51 @@ public class User {
 	private String loginKey;
 	
 
-    public User() {
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((loginKey == null) ? 0 : loginKey.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((success == null) ? 0 : success.hashCode());
+		result = prime * result + ((ud == null) ? 0 : ud.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (loginKey == null) {
+			if (other.loginKey != null)
+				return false;
+		} else if (!loginKey.equals(other.loginKey))
+			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (success == null) {
+			if (other.success != null)
+				return false;
+		} else if (!success.equals(other.success))
+			return false;
+		if (ud == null) {
+			if (other.ud != null)
+				return false;
+		} else if (!ud.equals(other.ud))
+			return false;
+		return true;
+	}
+
+	public User() {
             
     }
     
