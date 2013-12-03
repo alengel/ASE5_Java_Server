@@ -1,0 +1,95 @@
+//register
+@startuml
+actor User
+User->App:register
+App->Server:makePostRequest()
+Server->Database:register()
+Database->Server:ResultSet
+alt email is unique
+	Server->App:HTTP Response(success:true, data)
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+//login
+@startuml
+actor User
+User->App:log in
+App->Server:makePostRequest()
+Server->Database:login()
+Database->Server:ResultSet
+alt email exists
+	alt password is correct
+		Server->App:HTTP Response(success:true, data)
+	else password is wrong
+		Server->App:HTTP Response(success:false)
+	end
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+//logout
+@startuml
+actor User
+User->App:log out
+App->Server:makePostRequest()
+Server->Database:logout()
+Database->Server:ResultSet
+alt login key is correct
+	Server->App:HTTP Response(success:true, data)
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+//update settings
+@startuml
+actor User
+User->App:update settings
+App->Server:makePostRequest()
+Server->Database:updateSettings()
+Database->Server:ResultSet
+alt login key is correct
+	Server->App:HTTP Response(success:true, data)
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+//follow
+@startuml
+actor User
+User->App:follow another user
+App->Server:makePostRequest()
+Server->Database:follow()
+Database->Server:ResultSet
+alt login key is correct
+	alt user is found
+		Server->App:HTTP Response(success:true, data)
+	else else
+		Server->App:HTTP Response(success:false)	
+	end
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+//get user profile
+@startuml
+actor User
+User->App:reviw my profile
+App->Server:makePostRequest()
+Server->Database:getUserProfile()
+Database->Server:ResultSet
+alt login key is correct
+	Server->App:HTTP Response(success:true, data)
+else else
+	Server->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+
