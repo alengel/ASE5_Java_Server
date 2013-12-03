@@ -13,6 +13,7 @@ create table t5_users(
     gps_push_time int(10),
 	min_distance int(10),
 	picture varchar(200),
+	password_key varchar(200),
 
     dated varchar(20),
     primary key(id)

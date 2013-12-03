@@ -5,9 +5,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.rest.comment.model.data.CommentData;
 import com.rest.location.model.Location;
+import com.rest.location.model.data.LocationData;
 import com.rest.review.model.Review;
 import com.rest.review.model.data.ReviewData;
 import com.rest.user.model.User;
@@ -44,6 +53,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String USER_EMAIL = "email ";
 	private final static String USER_PASSWORD = "passwd ";
 	private final static String USER_LOGINKEY = "login_key ";
+	private final static String USER_PASSWORD_KEY = "password_key ";
+	
 	
 	
 	
@@ -678,6 +689,57 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		return true;
 	}
 
+	public boolean resetPassword(String email) {
+
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+
+		String to = email;
+		String from = "support@t5team.com";
+		String host = "localhost";
+
+		Properties properties = System.getProperties();
+		properties.setProperty("mail.smtp.host", host);
+
+		Session session = Session.getDefaultInstance(properties);
+		long timeStamp = System.currentTimeMillis();
+
+		ResultSet keyFromDb;
+		try {
+
+			String updateSettings = UPDATE + USER_TABLE + SET
+					+ USER_PASSWORD_KEY + "= '" + timeStamp + "' " + WHERE
+					+ USER_EMAIL + "= '" + email + "';";
+			statement.executeUpdate(updateSettings);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		dbConnection.closeConn();
+
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					to));
+
+			message.setSubject("Please reset your Password.");
+			message.setContent("Hi, <bR> Please click below link to reset your password.<br><a href='http://www.switchcodes.in/sandbox/projectpackets/t5/user/reset-password/x/"
+					+ timeStamp + "'>Click here to reset.</a><br><br>Thanks",
+                    "text/html" );
+			
+			// Send message
+			Transport.send(message);
+			
+		} catch (MessagingException mex) {
+			mex.printStackTrace();
+		}
+		
+		return true;
+	}
+	
 	public User getUserProfile(String key) throws InvalidKeyException {
 
 		String firstName = "";

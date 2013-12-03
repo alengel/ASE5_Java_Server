@@ -264,5 +264,41 @@ import java.io.ByteArrayInputStream;
                                
 		
 
+		@GET
+        @Path("/forgotpassword/{email}")
+        @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response forgotPassword(@PathParam ("email") String email) {
+			
+			String success = "true";
+			String message = "";
+			
+            dbAccess = new DatabaseAccess();
+            boolean u;
+            u = dbAccess.resetPassword(email);
+            if(u == false) {
+                success = "false";
+            }
+
+			return Response.ok(new User(success, message)).build();
+        }
+                               
+		
+
+
+		
+		//this method is for checking some stuff at the server, not used in real app
+		@GET                                
+		@Path("/info")
+	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	//	@Produces(MediaType.APPLICATION_JSON)
+		public Response getInfo(@Context HttpServletRequest servletRequest) {
+			
+			String rootFolder = servletRequest.getSession().getServletContext().getRealPath("/");
+			System.out.println(rootFolder);			
+
+			return Response.ok("debug info <br />"+ "root folder: "+ rootFolder).build();
+		}
+
 	}
 
