@@ -265,7 +265,7 @@ import java.io.ByteArrayInputStream;
 		
 
 		@GET
-        @Path("/forgotpassword")
+        @Path("/forgotpassword/{email}")
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Produces(MediaType.APPLICATION_JSON)
         public Response forgotPassword(@PathParam ("email") String email) {
