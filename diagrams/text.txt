@@ -1,4 +1,4 @@
-//register
+			//register
 @startuml
 actor User
 User->App:register
@@ -6,15 +6,14 @@ App->Server:makePostRequest()
 Server->Database:registerNewUser()
 Database-->Server:ResultSet
 alt email is unique
-	Server-->App:HTTP Response(success:true, data)
+	Server-->App:HTTP Response(success:true)
 else else
 	Server-->App:HTTP Response(success:false)
 end
 @enduml
 
 
-
-//login
+			//login
 @startuml
 actor User
 User->App:log in
@@ -32,7 +31,9 @@ else else
 end
 @enduml
 
-//logout
+
+
+			//logout
 @startuml
 actor User
 User->App:log out
@@ -40,13 +41,16 @@ App->Server:makePostRequest()
 Server->Database:logoutUser()
 Database-->Server:ResultSet
 alt login key is correct
-	Server-->App:HTTP Response(success:true, data)
+	Server-->App:HTTP Response(success:true)
 else else
 	Server-->App:HTTP Response(success:false)
 end
 @enduml
 
-//update settings
+
+
+
+			//update settings
 @startuml
 actor User
 User->App:update settings
@@ -54,13 +58,15 @@ App->Server:makePostRequest()
 Server->Database:updateSettings()
 Database-->Server:ResultSet
 alt login key is correct
-	Server-->App:HTTP Response(success:true, data)
+	Server-->App:HTTP Response(success:true)
 else else
 	Server-->App:HTTP Response(success:false)
 end
 @enduml
 
-//follow
+
+
+			//follow
 @startuml
 actor User
 User->App:follow another user
@@ -69,7 +75,7 @@ Server->Database:follow()
 Database-->Server:ResultSet
 alt login key is correct
 	alt user is found
-		Server-->App:HTTP Response(success:true, data)
+		Server-->App:HTTP Response(success:true)
 	else else
 		Server-->App:HTTP Response(success:false)	
 	end
@@ -78,11 +84,13 @@ else else
 end
 @enduml
 
-//get user profile
+
+
+			//get user profile
 @startuml
 actor User
 User->App:reviw my profile
-App->Server:makePostRequest()
+App->Server:makeGetRequest()
 Server->Database:getUserProfile()
 Database-->Server:ResultSet
 alt login key is correct
@@ -92,25 +100,142 @@ else else
 end
 @enduml
 
-//reset forgotten password
+			//reset forgotten password
 @startuml
 actor User
 User->App:reset forgotten password
-App->Server:makePostRequest()
+App->Server:makeGetRequest()
 Server->Database:resetPasssword()
 Database-->Server:ResultSet
 alt email exists
 	Server->Email:Reset password link
+	Server-->App:HTTP Response(success:true)
 	opt user clicks the link
 		Email-->Server:resetpassword=true
 		Server->Database:reset password
-		Database-->Server:ResultSet
-		Server-->App:HTTP Response(success:true, data)
 	end
 else else
 	Server-->App:HTTP Response(success:false)
 end
 @enduml
+
+			//check in
+@startuml
+actor User
+User->App:check in
+App->FoursquareAPI:gps data
+FoursquareAPI-->App:list of venues
+App->App:user picks a venue
+App->Server:makePostRequest()
+Server->Database:checkIn()
+Database-->Server:ResultSet
+alt login key is correct
+	Server-->App:HTTP Response(success:true)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+			//send a review
+@startuml
+actor User
+User->App:send a review
+App->Server:makePostRequest()
+Server->Database:storeNewReview()
+Database-->Server:ResultSet
+alt login key is correct
+	Server-->App:HTTP Response(success:true)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+			//get reviews for venue
+@startuml
+actor User
+User->App:get all reviews for venue
+App->Server:makeGetRequest()
+Server->Database:getReviews()
+Database-->Server:ResultSet
+
+	Server-->App:HTTP Response(success:true, data)
+
+@enduml
+
+			//vote
+@startuml
+actor User
+User->App:vote for review
+App->Server:makePostRequest()
+Server->Database:vote()
+Database-->Server:ResultSet
+alt login key is correct
+	alt review is found
+	Server-->App:HTTP Response(success:true)
+	else else
+	Server-->App:HTTP Response(success:false)
+	end
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+			//comment on review
+@startuml
+actor User
+User->App:comment on review
+App->Server:makePostRequest()
+Server->Database:putComment()
+Database-->Server:ResultSet
+alt login key is correct
+	alt review is found
+		Server-->App:HTTP Response(success:true)
+	else else
+		Server-->App:HTTP Response(success:false)	
+	end
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+			//get comments for review
+@startuml
+actor User
+User->App:get all comments for review
+App->Server:makeGetRequest()
+Server->Database:getCommentsForReview()
+Database-->Server:ResultSet
+alt review is found
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+			//get reviews of another user
+@startuml
+actor User
+User->App:get all reviews of another user
+App->Server:makeGetRequest()
+Server->Database:gerReviewsForUser()
+Database-->Server:ResultSet
+alt user is found
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+
+
 
 
 
