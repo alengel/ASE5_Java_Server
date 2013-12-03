@@ -1,0 +1,119 @@
+//register
+@startuml
+actor User
+User->App:register
+App->Server:makePostRequest()
+Server->Database:registerNewUser()
+Database-->Server:ResultSet
+alt email is unique
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+//login
+@startuml
+actor User
+User->App:log in
+App->Server:makePostRequest()
+Server->Database:loginUser()
+Database-->Server:ResultSet
+alt email exists
+	alt password is correct
+		Server-->App:HTTP Response(success:true, data)
+	else else
+		Server-->App:HTTP Response(success:false)
+	end
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+//logout
+@startuml
+actor User
+User->App:log out
+App->Server:makePostRequest()
+Server->Database:logoutUser()
+Database-->Server:ResultSet
+alt login key is correct
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+//update settings
+@startuml
+actor User
+User->App:update settings
+App->Server:makePostRequest()
+Server->Database:updateSettings()
+Database-->Server:ResultSet
+alt login key is correct
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+//follow
+@startuml
+actor User
+User->App:follow another user
+App->Server:makePostRequest()
+Server->Database:follow()
+Database-->Server:ResultSet
+alt login key is correct
+	alt user is found
+		Server-->App:HTTP Response(success:true, data)
+	else else
+		Server-->App:HTTP Response(success:false)	
+	end
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+//get user profile
+@startuml
+actor User
+User->App:reviw my profile
+App->Server:makePostRequest()
+Server->Database:getUserProfile()
+Database-->Server:ResultSet
+alt login key is correct
+	Server-->App:HTTP Response(success:true, data)
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+//reset forgotten password
+@startuml
+actor User
+User->App:reset forgotten password
+App->Server:makePostRequest()
+Server->Database:resetPasssword()
+Database-->Server:ResultSet
+alt email exists
+	Server->Email:Reset password link
+	opt user clicks the link
+		Email-->Server:resetpassword=true
+		Server->Database:reset password
+		Database-->Server:ResultSet
+		Server-->App:HTTP Response(success:true, data)
+	end
+else else
+	Server-->App:HTTP Response(success:false)
+end
+@enduml
+
+
+
+
+
+
