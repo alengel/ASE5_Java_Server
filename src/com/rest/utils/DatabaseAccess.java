@@ -53,6 +53,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String USER_EMAIL = "email ";
 	private final static String USER_PASSWORD = "passwd ";
 	private final static String USER_LOGINKEY = "login_key ";
+	private final static String USER_PASSWORD_KEY = "password_key ";
+	
 	
 	
 	
