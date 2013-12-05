@@ -621,8 +621,10 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 							String firstName = resUserById.getString(queriesGenerator.getUserFirstname());
 							String lastName = resUserById.getString(queriesGenerator.getUserLastname());
 							String picture = resUserById.getString(queriesGenerator.getUserPicture());
-		
-							ud.add(new UserData(email, null, firstName, lastName, picture, null, null, null, null, null, null, null));
+							
+							UserData userData = new UserData(email, null, null, null, null, null, null, null, null, null, null, null);
+							userData.setEmail(null);
+							ud.add(userData);
 							}
 							}
 					}

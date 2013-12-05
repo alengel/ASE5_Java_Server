@@ -284,7 +284,7 @@ import java.io.ByteArrayInputStream;
         }
                                
 		@GET
-        @Path("/find-user/key/{key}/venueid/{venueid}/timestamp/{timestamp}")
+        @Path("/find-user/key/{key}/venue_id/{venueid}/timestamp/{timestamp}")
         @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
         @Produces(MediaType.APPLICATION_JSON)
         public Response findUser(@PathParam ("key") String loginKey, @PathParam ("venueid") String venueId, @PathParam ("timestamp") long timeStamp) {
@@ -300,7 +300,7 @@ import java.io.ByteArrayInputStream;
 
 
 		
-		//this method is for checking some stuff at the server, not used in real app
+		//this method is for checking some stuff at the server, not used in real app 
 		@GET                                
 		@Path("/info")
 	//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
