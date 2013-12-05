@@ -1,6 +1,10 @@
 package com.rest.user.model.data;
 
+import java.sql.ResultSet;
+
 import javax.xml.bind.annotation.XmlElement;
+
+import com.rest.utils.DBCon;
 
 public class UserData {
 	
@@ -37,6 +41,18 @@ public class UserData {
 		this.minDistance = minDistance;
 		this.picture = picture;
 		this.loginKey = loginKey;
+		
+		
+		try {
+			DBCon dbcn = new DBCon();		
+			ResultSet idRes = dbcn.getStatement().executeQuery("SELECT * FROM t5_users WHERE email = '" + email+"';");
+			if(idRes.next()) {
+				this.id = idRes.getInt("id")+"";
+			}
+			dbcn.closeConn();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

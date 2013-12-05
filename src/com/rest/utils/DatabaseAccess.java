@@ -55,6 +55,8 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 	private final static String USER_LOGINKEY = "login_key ";
 	private final static String USER_PASSWORD_KEY = "password_key ";
 	
+	private final static String CHECKINS_TABLE = "t5_checkins ";
+	private final static String LOCATIONS_ID = "locations_id ";
 	
 	
 	
@@ -561,9 +563,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			// check if reviewer_id exists
 			String getId = queriesGenerator.getUserById(reviewer_id);
-			statement.executeQuery(getId);
+			ResultSet resReviwerId = statement.executeQuery(getId);
 
-			if (!keyFromDb.next()) {
+			if (!resReviwerId.next()) {
 				throw new UserNotFoundException();
 			}
 
@@ -577,6 +579,69 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 		dbConnection.closeConn();
 
 		return true;
+	}
+	
+	public User findUser (String key, String venueId, long timeStamp) throws InvalidKeyException {
+		
+		DBCon dbConnection = new DBCon();
+		Statement statement = dbConnection.getStatement();
+		DBCon dbConnection1 = new DBCon();
+		Statement statement1 = dbConnection1.getStatement();
+		// check if key is valid
+				String getKeyFromDb = SELECT + "* " + FROM + USER_TABLE + WHERE
+						+ USER_LOGINKEY + "= '" + key + "';";
+				ResultSet keyFromDb;
+				try {
+					keyFromDb = statement.executeQuery(getKeyFromDb);
+					if (!keyFromDb.next()) {
+						throw new InvalidKeyException();
+					} 
+					
+					// get locationId					
+					ResultSet getLocationId = statement.executeQuery(queriesGenerator.getLocationIdFromLocationsByVenueId(venueId));
+					getLocationId.next();
+					String locationId = getLocationId.getString(1);
+					
+					String usersByLocId = SELECT + "* " + FROM + CHECKINS_TABLE + WHERE
+							+ LOCATIONS_ID + "= '" + locationId + "';";
+					ResultSet resUsersByLocId = statement.executeQuery(usersByLocId);
+					List<UserData> ud = new ArrayList<UserData>();
+					while(resUsersByLocId.next()) {
+						long checkinTimeStamp = Long.parseLong(resUsersByLocId.getString("dated"));
+						System.out.println(timeStamp+" "+checkinTimeStamp); //
+						System.out.println(timeStamp-checkinTimeStamp); //
+						if (timeStamp - checkinTimeStamp < 300000) {
+							int userId = resUsersByLocId.getInt("users_id");
+							String userById = SELECT + "* " + FROM + USER_TABLE + WHERE
+									+ "id " + "= '" + userId + "';";
+							ResultSet resUserById = statement1.executeQuery(userById);
+							if (resUserById.next()) {
+								System.out.println("1");      //
+							String email = resUserById.getString(queriesGenerator.getUserEmail());
+							String firstName = resUserById.getString(queriesGenerator.getUserFirstname());
+							String lastName = resUserById.getString(queriesGenerator.getUserLastname());
+							String picture = resUserById.getString(queriesGenerator.getUserPicture());
+							
+							UserData userData = new UserData(email, null, null, null, null, null, null, null, null, null, null, null);
+							userData.setEmail(null);
+							ud.add(userData);
+							}
+							}
+					}
+					dbConnection.closeConn();
+					dbConnection1.closeConn();
+					return new User ("true", "", ud);
+					
+				} catch (SQLException e) {
+						e.printStackTrace();
+						return new User ("false", "Error occured");
+				}
+				
+			
+		
+			
+			
+				
 	}
 
 	public boolean putComment(String key, int reviewId, String comment)
