@@ -561,9 +561,9 @@ public class DatabaseAccess implements DatabaseAccessInterface {
 
 			// check if reviewer_id exists
 			String getId = queriesGenerator.getUserById(reviewer_id);
-			statement.executeQuery(getId);
+			ResultSet resReviwerId = statement.executeQuery(getId);
 
-			if (!keyFromDb.next()) {
+			if (!resReviwerId.next()) {
 				throw new UserNotFoundException();
 			}
 
