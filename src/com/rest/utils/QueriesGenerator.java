@@ -339,9 +339,9 @@ final class QueriesGenerator {
 	
 	public String insertCheckin(String timestamp, String key, String venueId) {
 		return INSERT_IGNORE_INTO + CHECKIN_TABLE + "("
-		+ CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID  + ") " + "(" + SELECT
+		+ CHECKIN_LOCATION_ID + ", " + CHECKIN_USER_ID  + ", dated) " + "(" + SELECT
 		+ DISTINCT + "t5_locations." + LOCATIONS_ID + ", t5_users."
-		+ USER_ID + FROM
+		+ USER_ID + ", '"+timestamp+"' " + FROM
 		+ LOCATIONS_TABLE + ", " + USER_TABLE + WHERE
 		+ USER_LOGINKEY + "= '" + key + "' " + AND
 		+ LOCATIONS_FSQUARE_VENUE_ID + "= " + "'" + venueId + "'"

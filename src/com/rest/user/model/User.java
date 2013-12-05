@@ -76,10 +76,19 @@ public class User {
 		this.success = success;
 		this.loginKey = loginKey;
 		this.ud.add(0, ud);
+	
+		
 
     
 		
 	} 
+	
+	public User(String success, String loginKey, List<UserData> ud) {
+		this.success = success;
+		this.loginKey = loginKey;
+		this.ud = ud;
+	}
+	
 	 @XmlElement
 	public String getSuccess() {
 		return success;

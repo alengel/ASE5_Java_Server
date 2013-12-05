@@ -40,7 +40,7 @@ public class LocationService {
     public Response checkIn(@FormParam ("key") String loginKey, @FormParam("venue_id") String venueId) throws SQLException, ArgumentMissingException, InvalidKeyException {
 		
 		dbAccess = new DatabaseAccess();
-		long timeStamp = System.currentTimeMillis()/1000L;
+		long timeStamp = System.currentTimeMillis();
 		try {
 			Location location = dbAccess.checkIn(loginKey, venueId, ""+timeStamp);
 			return Response.ok(location).build();
